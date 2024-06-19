@@ -1,0 +1,13 @@
+
+// lfGlobalMessage("Valeur du champ initier comite: "+ %key%.initierComiteAgrement);
+if(argv["initierComiteAgrement"] == "Oui") {
+// lfGlobalMessage("Valeur du champ initier comite: "+ %key%.initierComiteAgrement);
+   lfShow("membreComiteAgre");
+   lfShow("dateComiteAgre");
+   lfSet(initierComiteAgrement, "Oui");
+}else{
+// lfGlobalMessage("Valeur du champ initier comite: "+ %key%.initierComiteAgrement);
+    lfHide("membreComiteAgre");
+    lfHide("dateComiteAgre");
+    lfSet(initierComiteAgrement, "Non");
+}

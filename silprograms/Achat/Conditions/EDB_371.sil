@@ -1,0 +1,4 @@
+if(devisSend == "Oui" && %key%.totalDevis > 0){
+    return true;
+}
+return false;

@@ -1,0 +1,6 @@
+if(argv["screen"] == "create"){
+    lfWatch("capital", {"capital", "iban"}, "Achat/lf/Agrement/checkIban.incl", {"keyup"});
+    lfWatch("iban", {"iban"}, "Achat/lf/Agrement/checkIban.incl", {"keyup"});
+
+}
+

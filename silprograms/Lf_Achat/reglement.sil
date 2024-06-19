@@ -1,0 +1,15 @@
+// lfShowFieldMessage("typeReglement", "Type de règlement changé", "SUCCESS");
+// lfGlobalMessage("Test règlement");
+if (argv["typeReglement"] == "Chèque") {
+        lfHide("numCompte");
+        lfHide("numRef");
+        lfShow("numCheque");
+    } else if (argv["typeReglement"] == "Virement") {
+        lfShow("numCompte");
+        lfHide("numRef");
+        lfHide("numCheque");
+    } else if (argv["typeReglement"] == "Caisse") {
+        lfHide("numCompte");
+        lfShow("numRef");
+        lfHide("numCheque");
+    }

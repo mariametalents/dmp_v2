@@ -1,0 +1,3 @@
+autotransition("31", key, true, true, true);
+
+%key%.assignee = "agbq";

@@ -1,0 +1,64 @@
+struct Option{
+    string name;
+    string value;
+}
+
+struct ProductDecision{
+    string idescription;
+    int issueId;
+    number iquantite;
+    int modified;
+    int id;
+    string idecision;
+    Option iname;
+}
+
+struct ProductDevis{
+    string idescription;
+    string idecision;
+    int istock;
+    number iprix;
+    number iprixu;
+    int issueId;
+    number iquantite;
+    int modified;
+    int id;
+    string iname;
+}
+
+struct ProductDevisRow{
+    string idescription;
+    string iname;
+    number iquantite;
+    number istock;
+    number iprix;
+    number iprixu;
+}
+
+struct Products{
+    number startAt;
+    number maxResults;
+    number total;
+    ProductDecision[] values;
+}
+
+struct ProductsDevis{
+    number startAt;
+    number maxResults;
+    number total;
+    ProductDevis[] values;
+}
+
+struct Row{
+    ProductDevisRow[] rows;
+}
+
+
+struct Produit_Service{
+    string iproduit;
+    number iquantite;
+    string description;  
+    boolean stockable;
+}
+
+

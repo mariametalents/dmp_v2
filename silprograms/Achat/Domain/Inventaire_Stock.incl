@@ -1,0 +1,63 @@
+struct Reference {
+    string name;
+    string value;
+}
+
+struct Agence {
+    string name;
+    string value;
+}
+
+struct Service {
+    string name;
+    string value;
+}
+
+struct Magasin {
+    string name;
+    string value;
+}
+
+struct Stock {
+    string name;
+    string value;
+}
+/*
+struct Validation {
+    string name;
+    string value;
+}
+*/
+//gd.columns=refArticle,agence,service,magasin,stTheorique,stPhysique,observation,ecart
+struct ArticleInventaire{
+    Reference refArticle;
+    Agence agence;
+    Service service;
+    Magasin magasin;
+    Stock stTheorique;
+    number stPhysique;
+    string observation;
+    number ecart;
+    int issueId;
+    int modified;
+    int id;
+}
+
+
+struct GInventaireArticle{
+    number startAt;
+    number maxResults;
+    number total;
+    ArticleInventaire[] values;
+}
+
+struct Inventaires{
+    Reference refArticle;
+    Agence agence;
+    Service service;
+    Magasin magasin;
+    Stock stTheorique;
+    number stPhysique;
+    string observation;
+    number ecart;
+}

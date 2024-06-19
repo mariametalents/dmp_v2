@@ -1,0 +1,82 @@
+include "Achat/Services/JiraIssueService.incl";
+include "Achat/Services/OrderService.incl";
+include "Achat/Services/ProviderService.incl";
+include "Achat/Services/DocumentService.incl";
+include "Achat/utils.incl";
+
+//Send mail to provider or update provider portal db
+
+// boolean isAgreedProvider = fournisseurAgree == "Oui";
+
+boolean isAgreedProvider = true;
+
+// Function to copy command grid data to reception grid
+copyCommandToReceptionGrid(key, getCommandColumnsData(key));
+
+// runnerLog("Id du fournisseur "+getChoosedProviderId("PFA"));
+
+if(isAgreedProvider){
+    //Recuperer l'id du provider
+    string providerId = getChoosedProviderId("PFA_OLD");
+        
+    string orderId = getOrderId("PFA_OLD");
+    boolean isSaved = isNotNull(orderId);
+    
+    if(!isSaved){
+        //Recuperer l'id de l'issue
+        string issueId = getIssueId();
+        
+        runnerLog(issueId);
+        
+        //Recuperer les informations de la demande courante
+        // Order order = getCurrentOrder(issueId);
+        
+        //Inserer la commande dans la base de donnees
+        //insertOrderLine(order, providerId, "PFA");
+        
+    }else{
+        //Mise a jour du statut de la commande
+       // updateOrderStatus(orderId,"CREATED","PFA");
+    }
+    
+    //Get Attachment File details
+    string inpath = getAttachmentPath(key, attachments[0]);
+    string ext = substring(attachments[0], indexOf(attachments[0], ".") + 1, -1);
+    string newName = "BC"+replace(key, "-", "");
+    string origineName = replace(attachments[0],"."+ext,"");
+    //Setting out path
+    string outpath = "\\\\zeus\\Users\\ZEUS\\Documents\\pfa\\"+rcc+"\\documents\\"+newName;
+    //Setting document details
+    Document document;
+    document.sens = "IN";
+    document.title = "Bon de commande";
+    document.label = "BC";
+    document.name = newName;
+    document.ext = ext;
+    document.origineName = origineName;
+    //Getting Order Id
+    orderId = getOrderId("PFA_OLD");
+    //Inserting Document
+    insertDocument(document, providerId, orderId, "", "", "", "PFA_OLD");
+    //Copying file to provider folder
+    fileCopy(inpath, outpath);
+    
+}
+
+//Envoi mail fournisseur
+if(isNotNull(email)){
+    string from = "";
+    string to = "cherif.diallo@talentsconsult.org";
+    string cc = "";
+    string subject = "ACHAT_NEW_ORDER_NOTIFICATION_SUBJ.tpl";
+    string body = "ACHAT_NEW_ORDER_NOTIFICATION_BODY.tpl";
+    sendEmail(from,to,cc,subject,body);
+}
+
+//Assigner au Service Approvisionnement
+%key%.assignee = "Approvisionnement";
+%key%.montantRegle = 0;
+//%key%.montantRestant = %key%.total;
+
+//%key%.assignee = "dga";
+

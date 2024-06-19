@@ -1,0 +1,80 @@
+include "Achat/utils.incl";
+//include "Achat/Services/EDBService.incl";
+
+struct Categories{
+ string label;
+}
+struct Produits{
+ string label;
+}
+struct Colones {
+    number prixu;
+    Categories categorie;
+    number prix;
+    Produits produits;
+    number quantite;
+}
+
+struct Lignes {
+    string rowId;
+    Colones columns;
+    number order;
+}
+
+struct Devis {
+    string customFieldId;
+    Lignes[] rows;
+}
+function getTotalDevis(string gridId, string issueId){
+    getTableGridValues(gridId, issueId);
+    
+    runnerLog(getTableGridValues(gridId, issueId));
+    string result = getTableGridValues(gridId, issueId);
+    Devis[] devis = fromJson(result);
+    
+    int totalDevis = 0;
+    for(Devis devs in devis){
+        for(Lignes lg in devis[0].rows ){
+            //for(Colones col in  devis[0].rows[0].columns){
+            totalDevis += lg.columns.prix;
+                runnerLog("d " +totalDevis);
+            //}
+        }
+    }
+    
+    return totalDevis;
+    
+}
+
+//string t = "GDAG-352";
+
+string t = "GDAG-352";
+
+getTotalDevis("10225",%t%.id);
+
+//getTotalDevis("10225",%t%.id);
+
+//runnerLog("******* "+getTotalAmountDevis(%t%.id));
+
+// struct Decision {
+//     string fournisseur;
+//     string categorie;
+//     string produitsServicesOffre;
+//     number cout;
+//     string delais;
+//     number scoreTechnique;
+//     number scoreFinancier;
+//     number score;
+//     string description;
+// }
+
+// struct DecisionRows {
+//     string rowId;
+//     Decision [] columns;
+//     number order;
+// }
+
+// struct DecisionValue {
+//     string customFieldId;
+//     DecisionRows [] rows;
+// }

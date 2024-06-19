@@ -1,0 +1,95 @@
+include "Achat/Domain/Document.incl";
+
+function getDocuments(string issueId){
+    
+    //Recuperation details 
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/10607/issue/"+issueId;
+    string json = httpGet(url, request);
+    
+    //Return documents
+    GDocument gdocuments = fromJson(json);
+    runnerLog(gdocuments);
+    return gdocuments.values;
+}
+
+function getCurrentDocumentsString(){
+    //Recuperation items documents
+    string ao = arrayGetElement(linkedIssues(key, "Relates"), 0);
+    
+    GDocumentItem[] documentItems = getDocuments(%ao%.id);
+	
+	//Convert to string
+	string documentNames = "";
+	for(GDocumentItem item in documentItems){
+	    documentNames += item.idocuments.name + "|";
+	}
+	documentNames = substring(documentNames, 0, lastIndexOf(documentNames,"|"));
+	//retour string documents
+    runnerLog("TEST "+ documentNames);
+	return documentNames;
+
+}
+
+function insertDocument(Document doc, string providerId, string orderId, string offerId, string app_providerId, string app_offerId, string source){
+
+    //Save Document
+    string query1 = "insert into fj_document(sens,name,ext,title,label,origine_name,provider,jorder,offer,application_provider,application_offer) ";
+           query1 += "values('"+doc.sens+"','"+doc.name+"','"+doc.ext+"','"+doc.title+"','"+doc.label+"','"+doc.origineName+"'";
+    if(isNull(providerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+providerId+"'";
+    }
+    if(isNull(orderId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+orderId+"'";
+    }
+    if(isNull(offerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+offerId+"'";
+    }    
+    if(isNull(app_offerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+app_offerId+"'";
+    }
+    if(isNull(app_providerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+app_providerId+"'";
+    }    
+    query1 += ")";
+    
+    sql(source, query1);
+    
+}
+
+/*function getDocumentsFromProvider(string providerId, string source){
+    string query = "select sens, name, ext, title, label, origine_name from fj_document where  sens = 'OUT' and provider = "+providerId;
+    Document[] documents = sql(source,query);
+    return documents;
+}*/
+
+function getDocumentsFromEntity(string entityName, string _id, string source){
+    //Getting comments
+    string query = "select sens, name, ext, title, label, origine_name, jorder, offer, provider, application_offer, application_provider from fj_document  where sens = 'OUT' and status = 'NOK' and "+entityName+" is not null";
+    if(isNotNull(_id)){
+        query += " and "+entityName+" = "+_id;
+    }
+    logPrint("ERROR","IIIIIIIIIIIIIIIIIIIIIII"+query);
+    Document[] documents = sql(source,query);
+    //Updating comments
+    query = "update fj_document set status = 'OK' where status = 'NOK'and "+entityName+" is not null";
+    if(isNotNull(_id)){
+        query += " and "+entityName+" = "+_id;
+    }
+    sql(source,query);
+    
+    return documents;
+}
+

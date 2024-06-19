@@ -1,0 +1,11 @@
+//include "Achat/Services/EDBService.incl";
+include "Achat/utils.incl";
+
+//string issueId = getIssueId();
+
+//createServiceForEDB(issueId);
+
+%key%.assignee = getAchatResponsable();
+
+%key%.rejetDga = "Non";
+%key%.rejetDmg = "Non";

@@ -1,0 +1,9 @@
+// if(derogation == "Oui" || devis == "Oui") {
+//     return true;
+// }
+if(valideBudget == "Oui" || devis == "Oui" || devisSend == "Oui" ) {
+    return true;
+}
+else {
+    return false;
+}

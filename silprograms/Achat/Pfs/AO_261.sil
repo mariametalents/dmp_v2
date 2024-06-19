@@ -1,0 +1,50 @@
+include "Achat/functionsTest.sil";
+
+// createTGEUpdateRequestBody(TwoDArray grid2DValues)
+// sendUpdateTGEGridRequest(string content, string issueId, string gridId, string method);
+
+// sendEmail("", %key%.fournisseurSelect.email, "", "Réponse à la question",": "+%key%.dateLivraison, reponses);
+
+
+function replaceEC (string value ){
+// runnerLog("+++++++++++++++ Value ++++++++++++");
+// runnerLog(value);
+    string valueString = value;
+    string valueObject = fromJson(valueString);
+    string libelleValue = valueObject.substring(valueObject, 1, length(valueObject) -1);
+    // runnerLog("LIBELLE ::: " +libelleValue);
+    return libelleValue;
+}
+
+struct Offre{
+    string fournisseur;
+    string categorie;
+    string produitsServicesOffre;
+    number cout;
+    string delais;
+    number scoreTechnique;
+    number scoreFinancier;
+    number score;
+    string description;
+
+}
+
+struct Offres{
+    Offre[] rows;
+}
+function getOffre(string ticket){
+    Offre offre;
+    // offre.fournisseur = replaceEC(ticket.fournisseurOffre);
+    offre.fournisseur = ticket.fournisseurOffre;
+    // runnerLog("Fournisseur :"+offre.fournisseur);
+    offre.categorie = replaceEC(ticket.categorie);
+    offre.produitsServicesOffre = replaceEC(ticket.produitsServicesOffre);
+    offre.cout = ticket.cout;
+    offre.delais = ticket.delais;
+    offre.scoreTechnique = 0;
+    offre.scoreFinancier = 0;
+    offre.score = 0;
+    offre.description = ticket.descriptions;
+    
+    return offre;
+}

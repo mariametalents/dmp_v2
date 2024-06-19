@@ -1,0 +1,11 @@
+//Assigner a l'agent traitant
+%key%.assignee = agentTraitant;
+
+//Mettre a jour les motifs de rejet
+%key%.motifsText = "";
+for(string motif in motifs){
+    %key%.motifsText += motif + "\n"; 
+}
+if(hasInput("comment")){
+    %key%.motifsText += getComment(); 
+}

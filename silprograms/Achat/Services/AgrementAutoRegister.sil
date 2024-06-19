@@ -1,0 +1,57 @@
+include "Achat/Services/CommentService.incl";
+include "Achat/Services/DocumentService.incl";
+include "Achat/Services/ProviderService.incl";
+
+//Recuperer les fournisseurs enregistres dans la bdd et n'ayant pas de cle jira
+
+Provider[] providers = getAllProviders("PFA");
+
+//Pour chaque fournisseur 
+for(Provider provider in providers){
+
+    //Champs demandes
+    string[] sectors = getSectorsFromProvider("PFA", provider.id);
+    string[] products = getProductsFromProvider("PFA",provider.id);
+    
+    
+    string entreprise = "entreprise|"+provider.name;
+    string ninea = "ninea|"+provider.ninea;
+    string rcc = "rcc|"+provider.rcc;
+    string legal = "formeJuridique|"+provider.legal;
+    string exoTaxe = "exoTaxe|Oui";
+    string capital = "capital|"+provider.capital;
+    string iban = "iban|"+provider.iban;
+    string adresse = "adresse|"+provider.adress;
+    string email = "email|"+provider.email;
+    string phone = "tel|"+provider.phone;
+    string auto = "automatique|Oui";
+    string assignation = "assignee|Achat";
+    string fsectors = "secteursText|"+join(sectors, ",");
+    string fproducts = "produitsServices|"+join(products, ",");
+
+    string field_mappings = entreprise+"|"+ninea+"|"+rcc+"|"+legal+"|"+exoTaxe+"|"+capital+"|";
+    field_mappings += iban + "|" + adresse + "|" + email + "|" + phone + "|" + auto + "|" + assignation + "|" + fsectors+ "|" + fproducts;
+    
+    //Creer une sous tache agrement
+    string key = createIssue("GDA", "", "Agrement", "Agrement " + provider.name, "", "", "", "", "", "", field_mappings);
+    //string key = createIssue("GDA", "", "Agrement", "Agrement " + provider.name);
+
+    //Mettre a jour la cle JIRA du forunisseur dans BDD
+    string query = "update j_provider set code = '"+key+"' where id="+provider.id;
+    sql("PFA", query);
+
+    //Ajouter les commentaires 
+	Comment[] comments = getCommentsFromEntity("provider", provider.id, "PFA");
+	for(Comment c in comments){
+		addComment(key,"admin",c.description);
+	}
+
+	//Joindre le document en piece jointe
+    Document[] documents = getDocumentsFromEntity("provider", provider.id, "PFA");
+	for(Document d in documents){
+		string inpath = "\\\\tc-jira-test\\pfa\\"+provider.rcc+"\\documents\\"+d.name;
+		string outpath = "C:\\Users\\ZEUS\\Documents\\pfa\\tmp\\"+d.title+"."+d.ext;
+		fileCopy(inpath,outpath);
+		attachFile(outpath, key);
+	}
+}

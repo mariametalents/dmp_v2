@@ -1,0 +1,4 @@
+if(%key%.devis == "Oui"){
+    return true;
+}
+return false;

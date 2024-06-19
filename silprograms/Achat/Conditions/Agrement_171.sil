@@ -1,0 +1,7 @@
+include "Achat/utils.incl";
+
+//Afficher que pour l'agent responsable du departement Achat et si la demande vient d'n agent du departement ou du fournisseur
+if ((isUserInGroup("Responsable", currentUser()) && !isDepartmentAgent(currentUser())) && (!isDepartmentAgent(reporter) || origineWorkflow != "Jira")) {
+    return true;
+}
+return false;

@@ -1,0 +1,6 @@
+if(%key%.montantRestant <= 0 ){
+    autotransition("151", key, true, true, true);
+    %key%.assignee = "Achat";
+
+ //   updateOrderStatus(orderId,"DONE","PFA");
+}

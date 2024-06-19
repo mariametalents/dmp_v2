@@ -1,0 +1,70 @@
+include "Achat/utils.incl";
+include "Achat/Services/OrderService.incl";
+///Creer une sous tache achat
+//string akey = createIssue("GDAG", "", "Achat", "Achat 2024", "", "", "", "", "", "", field_mappings);
+
+//string akey = createIssue("GDAG","","Achat","Achat 2024", " ");
+
+if(%key%.ActionEntreprendre == "Effectuer l'achat"){
+    //lfGlobalMessage("Teste-----------    "+%key%.emailFournisseu);
+    string akey = createIssue("GDAG", "", "Achat", "Achat " + " - " + split(currentDate(), " ")[0]);
+
+    // %akey%.adresseLivraison = %key%.adresseLivraison;
+    // %akey%.modalitePaiement = %key%.modalitePaiement;
+    // %akey%.entreprise = %key%.fournisseur;
+    // %akey%.produitServiceEDB = %key%.produitServiceEDB;
+    %akey%.commande = %key%.commande;
+    %akey%.rcc = %key%.rcc;
+    %akey%.adresse = %key%.adresse;
+    %akey%.tel = %key%.tel;
+    %akey%.emailFournisseur = %key%.emailFournisseur;
+    %akey%.dateLivraison = %key%.dateLivraison;
+    %akey%.adresseLivraison = %key%.adresseLivraison;
+    %akey%.modalitePaiement = %key%.modalitePaiement;
+    %akey%.tva = %key%.tva;
+    %akey%.pourcentageAcompte = %key%.pourcentageAcompte;
+    
+    
+    ProduitServiceRows[] lines = getOrderLines(%key%.id);
+    
+    %akey%.totalHT = getCurrentOrderTotal(lines);
+    %akey%.total = (number)((number)%akey%.totalHT +((number)%akey%.totalHT*(number)%akey%.tva/100));
+     
+    %akey%.acompte = (number)((number)%akey%.pourcentageAcompte*(number)%akey%.total/100);
+    
+    %akey%.montantRestant = %akey%.acompte;
+    linkIssue(key, akey, "Relates");
+}else if(%key%.ActionEntreprendre == "Lancer appel d'offres"){
+    string okey = createIssue("GDAG", "", "Appel d'offre", "Appel d'offre " + " - " + split(currentDate(), " ")[0]);
+
+    //referenceAO
+
+    %okey%.commande = %key%.commande;
+    %okey%.typeAO = %key%.typeAO;
+    %okey%.secteurs = %key%.secteurs;
+    %okey%.fournisseurs = %key%.fournisseurs;
+    
+     %okey%.referenceAO = %key%.referenceAO;
+    %okey%.titre = %key%.titre;
+    %okey%.objectifGeneral = %key%.objectifGeneral;
+    %okey%.resultatAttendu = %key%.resultatAttendu;
+    
+     %okey%.descriptions = %key%.descriptions;
+    %okey%.dateDeGrace = %key%.dateDeGrace;
+    %okey%.dateFinDep = %key%.dateFinDep;
+    %okey%.dateFinTravaux = %key%.dateFinTravaux;
+    
+    %okey%.dateDebutTravaux = %key%.dateDebutTravaux;
+    %okey%.modApp = %key%.modApp;
+    %okey%.adresseDepot = %key%.adresseDepot;
+    %okey%.attachments = %key%.attachments; 
+    
+    %okey%.besoin = %key%.besoin;
+    
+    
+   
+    linkIssue(key, okey, "Relates");
+}else{
+   // lfGlobalMessage("Obligatoire");
+}
+

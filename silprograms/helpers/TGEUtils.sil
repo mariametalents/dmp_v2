@@ -1,0 +1,62 @@
+function createTGEAddRequestBody(TwoDArray grid2DValues){
+    string data = "";
+    string[] headers;
+    
+    for(number i = 0; i <= grid2DValues.arraySize; i++){
+        headers += grid2DValues.array[i];
+    }
+    
+    number linesCount = size(grid2DValues.array) / grid2DValues.arraySize;
+    
+    for(number i = 1; i < linesCount; i++){
+    
+        string columns;
+        for(number j = 0; j < grid2DValues.arraySize; j++){
+            columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * grid2DValues.arraySize + j];
+        }
+        data += ",{"+substring(columns, 1, length(columns)) +"}";
+    }
+    
+    data = substring(data, 1,content.length(data));
+    string updateRequest = "{"+
+        "\"rows\":["+data+"]"+
+    "}";
+    
+    return updateRequest;
+}
+
+function createTGEUpdateRequestBody(TwoDArray grid2DValues){
+
+    number rowIdIndex;
+    string data = "";
+    string[] headers;
+    
+    for(number i = 0; i <= grid2DValues.arraySize; i++){
+        if(grid2DValues.array[i] == "rowId"){
+            rowIdIndex = i;
+        }
+        headers += grid2DValues.array[i];
+    }
+    
+    number linesCount = size(grid2DValues.array) / grid2DValues.arraySize;
+    
+    for(number i = 1; i < linesCount; i++){
+    
+        string columns;
+        for(number j = 0; j < grid2DValues.arraySize; j++){
+            columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * grid2DValues.arraySize + j];
+            
+            if(j == rowIdIndex){
+                continue;
+            }
+        }
+        data += ",{\"rowId\" : "+grid2DValues.array[i * grid2DValues.arraySize + rowIdIndex]+", \"columns\": {"+substring(columns, 1, length(columns))+"} }";
+    }
+    
+    data = substring(data, 1,content.length(data));
+    string updateRequest = "{"+
+        "\"rows\":["+data+"]"+
+    "}";
+    
+    return updateRequest;
+}

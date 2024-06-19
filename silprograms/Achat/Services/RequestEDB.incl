@@ -1,0 +1,40 @@
+include "Achat/Domain/Demandeur.incl";
+
+function getInfoDemandeur(string user){
+    //Determiner les infos du Demandeur
+    
+  string  query="select \"nomComplet\" as nom, \"responsable\", \"departement\", \"poste\", \"matricule\" FROM employe WHERE \"user\"=?";
+  Demandeur[] demandeur=sql("PERSONNEL", query, user);
+  return getElement(demandeur, 0);
+}
+
+function getResponsibleAgent(string user){
+    string query = "select \"userResp\" as responsible FROM employe WHERE \"user\"=?";
+    string[] responsibles = sql("PERSONNEL", query, user);
+    if(size(responsibles)==0){
+        return "rsa";
+    }else{
+        return getElement(responsibles, 0);
+    }
+}
+
+function getRemainingBudget(string departement){
+    string query = "SELECT \"budgetRestant\" FROM j_budget WHERE \"departement\"=?";
+    string[] budgets = sql("PFA", query, departement);
+    return getElement(budgets, 0);
+}
+
+function getUnitPrice(string label){
+    string query="SELECT price FROM referentiel.\"Produits\" WHERE label=?";
+    number prixunitaire = sql("jira_pfa", query, label);
+    runnerLog("UnitPrice : "+prixunitaire);
+    return prixunitaire;
+    //return getElement(prixunitaire, 0);
+   
+}
+
+/*function getUnitPrice( string product){
+    string query="SELECT \"price\" FROM f_product WHERE \"product\" =?";
+    string[] prixunitaire = sql("PFA", query, product);
+    return getElement(prixunitaire, 0);
+}*/

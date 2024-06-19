@@ -1,0 +1,4 @@
+if(rejetDmg == "Oui") {
+    return true;
+}
+return false;

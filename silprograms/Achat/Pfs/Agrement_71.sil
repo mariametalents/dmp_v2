@@ -1,0 +1,25 @@
+include "Achat/utils.incl" ;
+include "Achat/Services/ProviderService.incl";
+//include "Achat/Services/gridFunctions.sil";
+
+//Mise a jour du statut fournisseur dans la base de donnee intermedaire
+string STATUS = "ACTIVE";
+string SOURCE = "PFA";
+string APPROVED= true;
+string query = "update provider set status='"+STATUS+"' where rcc = '"+%key%.rcc+"'";
+sql(SOURCE,query);
+
+//Creation compte gerant
+
+//Envoi par mail identifiant d'acces
+//Notifier le fournisseur pour acces
+string from = "";
+string to = email;
+// string cc = "";
+// string subject = "AGREMENT_APPROVED_SUBJ.tpl";
+// string body = "AGREMENT_APPROVED_BODY.tpl";
+// sendEmail(from,to,cc,subject,body,key, attachments);
+
+//Assigner a l'agent traitant
+//%key%.assignee = agentTraitant;
+%key%.assignee = %key%.reporter;

@@ -1,0 +1,27 @@
+struct Amortissement {
+    string annee;
+    number amortissement;
+    number cumul;
+    number valeur;
+}
+
+struct AmortissementLine{
+    string annee;
+    number amortissement;
+    number cumul;
+    number valeur;
+    int issueId;
+    int modified;
+    int id;
+}
+
+struct GAmortissement{
+    number startAt;
+    number maxResults;
+    number total;
+    Amortissement[] values;
+}
+
+struct AmortissementRows {
+    Amortissement [] rows;
+}

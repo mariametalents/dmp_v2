@@ -1,0 +1,7 @@
+include "Achat/Services/EDBService.incl";
+
+// string issueId = getIssueId();
+
+// createServiceForEDB(issueId);
+
+%key%.assignee = "dga";

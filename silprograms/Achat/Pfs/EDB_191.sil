@@ -1,0 +1,22 @@
+include "Achat/Services/RequestEDB.incl";
+include "Achat/Services/EDBService.incl";
+
+number budgetDeptRestant = getRemainingBudget(%key%.departement);
+
+number plafondRespBudget = silEnv("plafondRespBudget");
+
+number montantDevis = getTotalAmountDevis(%key%.id);
+
+runnerLog("-- " +plafondRespBudget+" -- "+montantDevis+ "  --- "+budgetDeptRestant);
+
+if(currentUser() == "dg1"){ // si le dg accepte la derogation on passe automatiquement en traitement
+    //Auto-accepter
+    autotransition(131, key, true, true, true); 
+}
+
+if((montantDevis - budgetDeptRestant)>plafondRespBudget){ // sinon on verifie si le montant risque de depasser le plafond
+        %key%.assignee = "dg";
+}else{
+    //Auto-accepter
+    autotransition(131, key, true, true, true);
+}

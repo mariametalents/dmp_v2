@@ -1,0 +1,5 @@
+include "Achat/utils.incl";
+
+autotransition("131", key, true, true, true);
+%key%.valideBudget = "";
+%key%.assignee = getAchatResponsable();

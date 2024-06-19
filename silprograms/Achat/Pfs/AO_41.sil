@@ -1,0 +1,48 @@
+include "Achat/Services/OfferService.incl";
+// include "/Achat/Services/CommandeService.incl";
+include "Achat/utils.incl";
+// include "helpers/TGEUtil.sil";
+include "Achat/functionsTest.sil";
+// include "helpers/Utils.sil";
+
+
+// Function to copy command grid data to reception grid
+copyReceptionOffreToDecisionOffreGrid(key, getReceptionOffreColumnsData(key));
+
+//Transitionner Offres à "en traitement" une fois dépouillement lancer
+string[] Offres = subtasks(key);
+
+
+for(string of in Offres) { //Soumis
+    if(of.status == "Initié(e)"){
+        //Mettre a jour le statut jira de l'application
+        autotransition(11, of, true, true, true);
+        
+        //Mettre a jour le statut de l'application dans bdd
+       // updateApplicationStatus(%of%.key,"PROGRESS","PFA");
+    }
+}
+
+//Envoi invitations aux participants pour la commission
+
+string from = "";
+string[] to  = key.commiteOffre;
+string [] cc = "";
+string subject = "Score DE L'APPEL D'OFFRE";
+string body = "Score DE L'APPEL D'OFFRE";
+for(string p in to) {
+    runnerLog("====Emails=== "+getEmail(p));
+    sendEmail(from, getEmail(p), cc, subject, body,"");
+}
+
+
+// copy offre grid to decision one
+string fromGridId = "10401";
+string toGridId = "10900";
+// copyGridRow(key, fromGridId, toGridId);
+
+// copyTGEGridT(fromGridId, toGridId, key.id, key.id, false);
+// copyTGEGrid(fromGridId, toGridId, "GDAG-377", "GDAG-377", false);
+
+//Mettre a jour le statut de l'offre dans la bdd
+//updateOfferStatus(key, "PROGRESS", "PFA");

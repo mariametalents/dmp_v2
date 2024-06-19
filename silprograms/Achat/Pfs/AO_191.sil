@@ -1,0 +1,21 @@
+include "Achat/utils.incl";
+include "Achat/Services/CommandeService.incl";
+include "Achat/functionsTest.sil";
+
+//string t = "GDAG-311";
+
+
+copyDecisionAoToChoixFournisseurGrid(key, getDecisionAOColumnsData(key));
+
+
+
+compteurEvaluation +=1;
+
+
+// updateScore(key);
+
+// string fromGridId = "10900"; 
+// string toGridId = "10401";
+// updateTGEGrid(fromGridId, toGridId, %key%.id, %key%.id);
+// updateTGEGrid(fromGridId, toGridId, key.id, key.id);
+//resetScore(t);

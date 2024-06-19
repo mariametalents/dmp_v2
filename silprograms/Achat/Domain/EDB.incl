@@ -1,0 +1,99 @@
+struct ProductDecision{
+    string idescription;
+    int issueId;
+    number iquantite;
+    string icategorie;
+    int modified;
+    int id;
+    string idecision;
+    string iname;
+}
+
+struct ProductDevis{
+    string idescription;
+//  string idecision;
+    string icategorie;
+    string iproduct;
+//  int istock;
+    number iprix;
+    number iprixu;
+//  int issueId;
+    number iquantite;
+//  int modified;
+//  int id;
+}
+
+//icategorie,iproduct,iquantite,idescription,iprixu,iprix
+
+struct ProductDevisRow{
+    string idescription;
+    string iproduct;
+    string icategorie;
+    number iquantite;
+ // number istock;
+    number iprixu;
+    number iprix;
+    
+}
+
+struct Products{
+    number startAt;
+    number maxResults;
+    number total;
+    ProductDecision[] values;
+}
+
+struct ProductsDevis{
+    int startAt;
+    int maxResults;
+    int total;
+    ProductDevis[] values;
+}
+
+struct Row{
+    ProductDevis[] rows;
+}
+
+struct Type {
+    string name;
+    string value;
+}
+
+struct Categorie {
+    string name;
+    string value;
+}
+
+struct Produit {
+    string name;
+    string value;
+}
+
+struct Stockable {
+    string name;
+    string value;
+}
+
+struct Produit_Service{
+    Type itype;
+    Categorie icategorie;
+    Produit iproduct;
+    string idescription; 
+    number iunite;
+    number iquantite;
+    Stockable istockable;
+    int id;
+    int issueid;
+    int modified;
+}
+//gd.columns=itype,icategorie,iproduct,idescription,iunite,iquantite,istockable
+
+//icategorie,iproduct,iquantite,idescription,iprixu,iprix
+
+struct Product_values {
+    int startAt;
+    int maxResults;
+    int total;
+    Produit_Service [] values;
+}
+

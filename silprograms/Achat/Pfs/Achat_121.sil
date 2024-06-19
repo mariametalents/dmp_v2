@@ -1,0 +1,6 @@
+include "Achat/utils.incl";
+//assigner au responsable appro pour validation
+//%key%.assignee = getApproResponsable();
+%key%.assignee = "Comptabilite";
+
+%key%.montantRestant = (number)((number)%key%.total - (number)%key%.montantRegle);

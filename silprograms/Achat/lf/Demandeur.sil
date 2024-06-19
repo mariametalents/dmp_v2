@@ -1,0 +1,18 @@
+include "Achat/Services/RequestEDB.incl";
+if(argv["issueType"]=="Expression de besoins"){
+    
+    Demandeur demandeur = getInfoDemandeur(getUser(currentUser())[1]); 
+    
+    lfGlobalMessage("Bonjour " + demandeur);
+    
+    lfSet("matricule", demandeur.matricule);
+    lfDisable("matricule");
+    lfSet("nom", demandeur.nom);
+    lfDisable("nom");
+    lfSet("poste", demandeur.poste);
+    lfDisable("poste");
+    lfSet("departement", demandeur.departement);
+    lfDisable("departement");
+    lfSet("responsable", demandeur.responsable);
+    lfDisable("responsable");
+}

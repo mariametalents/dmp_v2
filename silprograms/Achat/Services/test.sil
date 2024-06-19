@@ -1,0 +1,9 @@
+include "Achat/Services/OrderService.incl";
+string  cle = "GDAG-282";
+// number a;
+// runnerLog( %cle%.id);
+// a = %cle%.total;
+// a += 5;
+// runnerLog(a); 
+
+getOrderLines(%cle%.id);

@@ -1,0 +1,6 @@
+// String[] subTasks = subtasks(%key%.id);
+// for(string subtask in subTasks) {
+//     if(subtask.subtaskStatus == "Planification Termine") {
+        
+//     }
+// }

@@ -1,0 +1,36 @@
+include "Achat/utils.incl";
+include "Achat/Services/JiraIssueService.incl";
+include "Achat/Services/OrderService.incl";
+
+//Achat fields
+string _summary = %key%.libelle;
+string attachment = "";
+string fournisseurAgree = "fournisseurAgree|Oui";
+string fournisseur = "fournisseur|"+%key%.fournisseur;
+string rcc = "rcc|"+%key%.rcc;
+string adresse = "adresse|"+%key%.adresse;
+string phone = "tel|"+%key%.tel;
+string email = "email|"+%key%.email;
+string tva = "tva|"+%key%.tva;
+string dateLivraison = "dateLivraison|"+%key%.dateLivraison;
+string adresselivraison = "adresseLivraison|"+%key%.adresseLivraison;
+string modalitePaiement = "modalitePaiement|"+%key%.modalitePaiement;
+string assignation = "assignee|Achat";
+string appelDOffre = "appelDOffre|"+key;
+
+string field_mappings =fournisseur+ fournisseurAgree+"|"+rcc+"|"+adresse+"|"+phone+"|";
+field_mappings += email + "|" + tva + "|" + dateLivraison + "|" + phone + "|" + modalitePaiement + "|" + appelDOffre;
+
+//sub-task automatic creation
+string akey = createIssue("GDAG", "", "Achat", _summary, "", "", "", "", "", "", field_mappings);
+
+%akey%.fournisseur = fournisseur + fournisseurAgree;
+%akey%.modalitePaiement = %key%.modalitePaiement;
+%akey%.tva = %key%.tva;
+%akey%.rcc = %key%.rcc;
+%akey%.email = %key%.email;
+%akey%.dateLivraison = %key%.dateLivraison;
+
+%akey%.assignee = "rsa";
+//llinker la demande
+linkIssue(key, akey, "Relates");

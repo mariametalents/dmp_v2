@@ -1,0 +1,142 @@
+/*include "Achat/Domain/Application.incl";
+include "Achat/Services/OrderService.incl";
+include "Achat/Services/ProviderService.incl";
+include "Achat/Services/DocumentService.incl";*/
+//include "Achat/bd.incl";
+
+//creation de la soumission
+// string offre = createIssue( "GDAG", key, "Offres", "Offre - "+fournisseurs);
+// %offre%.summary = "Offre - " + %key%.fournisseurs + " - " + formatDate(currentDate(), "dd/MM/yyyy");
+// %offre%.fournisseur = %key%.fournisseurs;
+//%key%.fournisseurs = %key%.provider;
+
+function replaceEC (string value ){
+// runnerLog("+++++++++++++++ Value ++++++++++++");
+// runnerLog(value);
+    string valueString = value;
+    string valueObject = fromJson(valueString);
+    string libelleValue = valueObject.substring(valueObject, 1, length(valueObject) -1);
+    // runnerLog("LIBELLE ::: " +libelleValue);
+    return libelleValue;
+}
+
+struct Offre{
+    string fournisseur;
+    string categorie;
+    string produitsServicesOffre;
+    number cout;
+    string delais;
+    number scoreTechnique;
+    number scoreFinancier;
+    number score;
+    string description;
+
+}
+
+struct Offres{
+    Offre[] rows;
+}
+
+function getRequest(){
+    HttpRequest request;
+   // HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    
+    request.headers += authHeader;
+    HttpHeader contentTypeHeader = httpCreateHeader("Content-Type", "application/json");
+    request.headers += contentTypeHeader;
+    return request;
+}
+
+function getOffre(string ticket){
+    Offre offre;
+    // offre.fournisseur = replaceEC(ticket.fournisseurOffre);
+    offre.fournisseur = ticket.fournisseurOffre;
+    // runnerLog("Fournisseur :"+offre.fournisseur);
+    offre.categorie = replaceEC(ticket.categorie);
+    offre.produitsServicesOffre = replaceEC(ticket.produitsServicesOffre);
+    offre.cout = ticket.cout;
+    offre.delais = ticket.delais;
+    offre.scoreTechnique = 0;
+    offre.scoreFinancier = 0;
+    offre.score = 0;
+    offre.description = ticket.descriptions;
+    
+    return offre;
+}
+
+function addRowsInGrid(string gridID, string issueID, string json){
+    string url = getJIRABaseUrl() + "/rest/idalko-grid/1.0/api/grid/"+gridID+"/issue/"+issueID;
+    string[] results;
+
+    if(isNotNull(json)){
+        HttpRequest request = getRequest();
+        results = httpPost(url, request, json);
+    runnerLog(httpGetErrorMessage()); 
+    return results;
+    }
+}
+
+function encode(string text){
+    
+        // Accent aigu
+        text = replace(text, "?", "&eacute;");
+        text = replace(text, "?", "&Eacute;");
+        
+        // Accent grave
+        text = replace(text, "?", "&egrave;");
+        text = replace(text, "?", "&Egrave;");
+        
+        // Accent circonflexe 
+        text = replace(text, "?", "&icirc;");
+        text = replace(text, "?", "&Icirc;");
+        
+        runnerLog("text"+text);
+        return text;
+        
+}
+
+function addToTableGridExistantes(string dataObject, string gridId, string issueId){
+// lfGlobalMessage("===== Issue id ===== "+issueId);
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+    
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+    string data = "{\"rows\":["+dataObject+"]}";
+    runnerLog("DATA :::::::: "+data);
+    
+    httpPost(url, request, encode(data));
+    
+    runnerLog(httpGetStatusCode());
+    
+    // lfGlobalMessage("Statut code :"+ httpGetStatusCode());
+    
+    runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+}
+
+
+Offre offre = getOffre(key);
+addToTableGridExistantes(toJson(offre), "10401", key.id);
+
+/*Offre offre = getOffre("GDAG-377");
+addToTableGridExistantes(toJson(offre), "10401", "GDAG-377");*/
+
+// Compteur d'offre
+%key%.compteurOffre+= 1;
+
+// Notify rapporteur to date de grace
+
+/*if(currentDate() < dateDeGrace) {
+    sendSMS(senderName, phone, text);
+    sendEmail([EmailMessage] or [[from], to, [cc], subject_or_template, body_or_template, [language] [, wildcard_path_array] [, issue_key, regex_array]]);
+}*/
+
+// Passer automatiquement a la transition suivante une fois que la date est arrivee
+if((isNotNull(dateFinDep) && currentDate() == dateFinDep) || compteurOffre>2) {
+// if(currentDate() >= dateFinDep) {
+    // autotransition(transition, issueKey [, skipConditions, skipValidators]);
+    autotransition(51, key, true, true, true);
+}

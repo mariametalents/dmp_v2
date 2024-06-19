@@ -1,0 +1,56 @@
+include "Achat/Services/CommentService.incl";
+include "Achat/Services/OrderService.incl";
+include "Achat/Services/ProviderService.incl";
+//Assigner a la comptabilite
+%key%.assignee = "Comptabilite";
+//Remettre valide a non
+//%key%.valide = "Non";
+//Mettre a jour le champs reglements
+%key%.reglements += " valide par " + currentUsername();
+
+
+//Mise a jour des montant et totaux
+if(isNull(montantRegle)){
+    %key%.montantRegle = %key%.montant;
+}else{
+    %key%.montantRegle += %key%.montant;
+}
+//%key%.montantRestant = (number)total - %key%.montantRegle;
+%key%.montantRestant = %key%.montantRestant-%key%.montant;
+
+%key%.montant = "";
+
+%key%.typeReglement = "";
+
+%key%.numCompte = "";
+
+logPrint("ERROR","TESTTTTTTTTTSSSSSSSSSSSSSSSSSSSSS :  "+montantRegle);
+
+//Order Id
+//string orderId = getOrderId("PFA");
+//Recuperer L'id du provider
+
+/*
+//Insert comment
+    Comment comment;
+    comment.sens = "OUT";
+    comment.title = "reglement";
+    comment.label = "reglement";
+    comment.description = "<span class=\"badge badge-light text-success\">Reglement</span> : <span class=\"text-primary\">"+%key%.montant+"</span> - Montant regle : <span class=\"text-success\">"+%key%.montantRegle+"</span> - Montant restant : <span class=\"text-danger\">"+%key%.montantRestant+"</span>";
+    insertComment(comment, providerId, orderId, "", "", "", "PFA");
+ 
+logPrint("ERROR","RETESTTTTTTTTTSSSSSSSSSSSSSS :  "+comment); 
+
+//Insertion reglement
+Settlement settlement;
+settlement.amount = montant;
+settlement.paid = %key%.montantRegle;
+settlement.remaining = %key%.montantRestant;
+insertSettlement(settlement, "PFA");
+*/
+if(%key%.montantRestant <= 0 ){
+    autotransition("151", key, true, true, true);
+    %key%.assignee = "Achat";
+
+ //   updateOrderStatus(orderId,"DONE","PFA");
+}

@@ -1,0 +1,46 @@
+//gd.columns=nature,category,product,desc
+
+struct Nat {
+    string name;
+    string value;
+}
+
+struct Categ {
+    string name;
+    string value;
+}
+
+struct Prod {
+    string name;
+    string value;
+}
+
+struct ProduitLine{
+    Nat nature;
+    Categ category;
+    Prod product;
+    string desc;
+    int issueId;
+    int modified;
+    int id;
+}
+
+struct GProduit{
+    number startAt;
+    number maxResults;
+    number total;
+    ProduitLine[] values;
+}
+
+struct Produit{
+    Nat nature;
+    Categ category;
+    Prod product;
+    string desc;
+}  
+
+struct ProduitRows{
+    Produit[] rows;
+}
+
+

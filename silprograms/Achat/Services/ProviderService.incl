@@ -1,0 +1,110 @@
+include "Achat/Domain/Provider.incl";
+
+// //Retourner l'id du fournisseur choisi
+// function getChoosedProviderId(string source){
+
+//     string query = "select id from j_provider where rcc = '"+rcc+"'";
+//     string id = sql(source, query);
+    
+//     return id;
+// }
+
+//Retourner l'id du fournisseur choisi
+function getChoosedProviderId(string source){
+
+    // string query = "select id from public.provider where rcc = '"+rcc+"'";
+    string query = "select id from j_provider where rcc = '"+rcc+"'";
+    string id = sql(source, query);
+    
+    return id;
+}
+
+
+
+function getChoosedProviderFournisseurName(string name){
+
+    //string query = "select address, rcc, capital, city, phone from public.provider where name = '"+name+"'";
+    string query = "select address, rcc, capital, city, phone from j_provider where name = '"+name+"'";
+    
+   // Provider[] result = sql("PFA", query);
+     Provider[] result = sql("PFA", query);
+    
+    runnerLog("RESULT :::::" + " " + result);
+    
+    return result;
+}
+
+//Retourner l'id du fournisseur choisi
+function getRccProviderFromEntity(string entityName, string _id, string source){
+
+    string query = "select rcc from j_provider where id = (select provider from "+entityName+" where id = "+_id+")";
+    string rcc = sql(source, query);
+    
+    return rcc;
+}
+
+function getAllProviders(string source){
+    string query = "select '', name, address, '', country, ninea, rcc, '', legal, exo_taxe, iban, email, phone, capital, id ";
+    query += "from j_provider where code is null";
+    Provider[] providers = sql(source, query);
+    
+    return providers;
+}
+
+function getSectorsFromProvider(string source, string providerId){
+    string query = "select concat(id,'-',description) ";
+    query += "from f_sector where id in (select sector from provider_sector where provider = "+providerId+")";
+    string[] sectors = sql(source, query);
+    
+    return sectors;
+}
+
+function getProductsFromProvider(string source, string providerId){
+    string query = "select concat(id,'-',description) ";
+    query += "from f_sproduct where id in (select product from provider_product where provider = "+providerId+")";
+    string[] products = sql(source, query);
+    
+    return products;
+}
+
+
+/*function getSectorsFromProvider(string source, string providerId){
+    string query = "select concat(id,'-',description) ";
+    query += "from f_sector where id in (select sector from provider_sector where provider = "+providerId+")";
+    string[] sectors = sql(source, query);
+    
+    return sectors;
+}*/
+
+
+function getApprovedSectorsFromProvider(string source, string providerId){
+    string query = "select concat(id,'-',description) from f_sector";
+    query += " where approved=true and id in (select sector from provider_sector where provider = "+providerId+")";
+    string[] sectors = sql(source, query);
+    
+    return sectors;
+}
+
+/*
+function getSectorinGrid(string [] secteur ) {
+    secteurs = %key%.custom_field_10347;
+     for (string s in secteurs) 
+    return  split(s,"  ")
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

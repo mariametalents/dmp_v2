@@ -1,0 +1,4 @@
+if(dateDebutPlanificationBudget == currentDate()) {
+    return false;
+}
+return true;

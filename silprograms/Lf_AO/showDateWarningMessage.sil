@@ -1,0 +1,4 @@
+if(argv["dateDeGrace"] >= dateFinDep) {
+    lfGlobalMessage("Comparaison des dates (date de fin de depot et date de grace)");
+    lfShowFieldMessage("dateDeGrace", "Délai de grâce supérieur à la date de fin de dépôt ", "WARNING");
+}

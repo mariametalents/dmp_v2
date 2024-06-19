@@ -1,0 +1,75 @@
+struct Agences {
+    string name;
+    string value;
+}
+
+struct Services {
+    string name;
+    string value;
+}
+
+struct Designations {
+    string name;
+    string value;
+}
+
+struct Matricule {
+    string name;
+    string value;
+}
+
+struct Type {
+    string name;
+    string value;
+}
+
+struct DateAcquisition {
+    string name;
+    string value;
+}
+
+struct ValeurAcquisition {
+    string name;
+    string value;
+}
+
+struct localisation {
+    string name;
+    string value;
+}
+
+struct Statut {
+    string name;
+    string value;
+}
+
+struct Validation {
+    string name;
+    string value;
+}
+
+//gd.columns=agence,service,designation,matricule,typ,dateAcquisition,valeurAcquisition,localisation,statut,observation,validation
+
+struct InventaireLine{
+    Agences agence;
+    Services service;
+    Designations designation;
+    Matricule matricule;
+    Type typ;
+    DateAcquisition dateAcquisition;
+    ValeurAcquisition valeurAcquisition;
+    Localisation localisation;
+    Statut statut;
+    string observation;
+    Validation validation;
+    int issueId;
+    int modified;
+    int id;
+}
+
+struct GInventaire{
+    number startAt;
+    number maxResults;
+    number total;
+    InventaireLine[] values;
+}

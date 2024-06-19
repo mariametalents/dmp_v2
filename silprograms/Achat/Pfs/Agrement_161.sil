@@ -1,0 +1,14 @@
+include "Achat/utils.incl";
+
+//Notifier le fournisseur pour informations complï¿½mentaire
+// string from = "";
+// string to = email;
+// string cc = "";
+// string comment = getComment();
+// string subject = "AGREMENT_INFOS_SUBJ.tpl";
+// string body = "AGREMENT_INFOS_BODY.tpl";
+// sendEmail(from,to,cc,subject,body,key, attachments);
+
+// assigner le ticket au responsable du departement de l'entité
+%key%.assignee = getDepartmentResponsable(reporter);
+updateStatusProvider(key);

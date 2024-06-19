@@ -1,0 +1,9 @@
+//lfSet("total", argv["totalHT"]+argv["totalHT"]*argv["tva"]/100+1);
+if(argv["issueType"]=="Agrement"){
+    if(!isNull(argv["totalHT"]) && !isNull(argv["tva"])){
+        number totalHT = argv["totalHT"];
+        number tva = argv["tva"];
+        totalHT = totalHT * (1 + tva / 100);
+        lfSet("total", totalHT);
+    }
+}

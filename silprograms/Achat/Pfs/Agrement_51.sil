@@ -1,0 +1,23 @@
+//Affecter au responsable achat // DMG
+include "Achat/utils.incl" ;
+include "Achat/Services/gridFunctions.sil";
+
+//%key%.assignee = getAchatResponsable();
+%key%.assignee = "Comite Agrement";	
+
+/*
+string [] sectors_activity = %key%.secteurs;
+string fournisseur = %key%.entreprise;
+SectorGridRows sectorProvider;
+
+for (string s in sectors_activity) {
+    SectorGrid sect ;
+    sect.ifournisseur=fournisseur;
+    sect.isecteur=s;
+    sect.idecision="OUI";
+    sectProvider.rows+=sect;
+}
+ //SectorGrid[] sGrid = sectProvider.rows;
+ loadGridDatas(%key%.id, "11400", toJson(sectorProvider));
+ 
+*/

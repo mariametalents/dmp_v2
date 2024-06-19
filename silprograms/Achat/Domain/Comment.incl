@@ -1,0 +1,11 @@
+struct Comment{
+    string sens;
+    string title;
+    string label;
+    string description;
+    string order;
+    string offer;
+    string provider;
+    string appOffer;
+    string appProvider;
+}

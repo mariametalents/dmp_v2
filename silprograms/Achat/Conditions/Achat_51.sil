@@ -1,0 +1,5 @@
+// include "Achat/utils.incl";
+// if( %key%.reporter == getAchatResponsable()){
+//     //currentUsername()
+//     return false;
+// }

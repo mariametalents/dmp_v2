@@ -1,0 +1,10 @@
+include "Achat/Services/RequestEDB.incl";
+
+// if(isUserInGroup(%key%.groupeDemandeur, currentUser()) && %key%.valideBudget == "Oui") {
+//     return true;
+// }
+
+if(%key%.valideBudget == "Oui" && currentUsername() == getResponsibleAgent(getUser(%key%.reporter)[1])) {
+    return true;
+}
+return false;

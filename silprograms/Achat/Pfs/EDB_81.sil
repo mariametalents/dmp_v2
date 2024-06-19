@@ -1,0 +1,5 @@
+include "Achat/Services/EDBService.incl";
+
+string issueId = getIssueId();
+%key%.assignee = %key%.reporter;
+createServiceForEDB(issueId);

@@ -1,0 +1,136 @@
+ include "helpers/TGEUtil.sil";
+include "Achat/Services/RequestEDB.incl";
+
+function getCurrentUserInformations(string user) {
+    runnerLog("===================User infos====================");
+    runnerLog(getInfoDemandeur(user));
+}
+
+getCurrentUserInformations("agsa");
+    
+
+// string ticketGrid = "GDAG-356";
+// string fromGridId = "10401";
+// string toGridId = "10900";
+// copyGridRow(ticketGrid, fromGridId, toGridId);
+// runnerLog("test::: "+ substring("0,\"fournisseur\"", 0, 4));
+// string value = "\"Yan\"ne,ss\",\"fournisseur\"";
+// value = substring(value, 0, lastIndexOf(value, ","));
+// //value = substring(value, 0, lastIndexOf(value, "\""));
+// runnerLog("test::: "+ value);
+
+// struct TwoDArray {
+//     string[] array;
+//     number arraySize;
+// }
+
+// function createTGEAddRequestBody(TwoDArray grid2DValues){
+//     string data = "";
+//     string[] headers;
+    
+//     for(number i = 0; i <= grid2DValues.arraySize; i++){
+//         headers += grid2DValues.array[i];
+//     }
+    
+//     number linesCount = size(grid2DValues.array) / grid2DValues.arraySize;
+    
+//     for(number i = 1; i < linesCount; i++){
+    
+//         string columns;
+//         for(number j = 0; j < grid2DValues.arraySize; j++){
+//             columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * grid2DValues.arraySize + j];
+//         }
+//         data += ",{"+substring(columns, 1, length(columns)) +"}";
+//     }
+    
+//     data = substring(data, 1,content.length(data));
+//     string updateRequest = "{"+
+//         "\"rows\":["+data+"]"+
+//     "}";
+    
+//     return updateRequest;
+// }
+
+// function createTGEUpdateRequestBody(TwoDArray grid2DValues){
+
+//     number rowIdIndex;
+//     string data = "";
+//     string[] headers;
+    
+//     for(number i = 0; i <= grid2DValues.arraySize; i++){
+//         if(grid2DValues.array[i] == "rowId"){
+//             rowIdIndex = i;
+//         }
+//         headers += grid2DValues.array[i];
+//     }
+    
+//     number linesCount = size(grid2DValues.array) / grid2DValues.arraySize;
+    
+//     for(number i = 1; i < linesCount; i++){
+    
+//         string columns;
+//         for(number j = 0; j < grid2DValues.arraySize; j++){
+//             columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * grid2DValues.arraySize + j];
+            
+//             if(j == rowIdIndex){
+//                 continue;
+//             }
+//         }
+//         data += ",{\"rowId\" : "+grid2DValues.array[i * grid2DValues.arraySize + rowIdIndex]+", \"columns\": {"+substring(columns, 1, length(columns))+"} }";
+//     }
+    
+//     data = substring(data, 1,content.length(data));
+//     string updateRequest = "{"+
+//         "\"rows\":["+data+"]"+
+//     "}";
+    
+//     return updateRequest;
+// }
+
+
+/*string reg = "(?<=[^\\\\:]\"):";
+string[] lines = "\"scoreFinancier\":0,\"fournisseur\":\"REST\",\"description\":\":\",\"score\":0,\"categorie\":\"Liquides Consommables non stockes\",\"scoreTechnique\":0,\"delais\":\"2 mois\",\"produitsServicesOffre\":\"2-Logiciel Informatique\",\"cout\":750000";
+lines += lines[0];
+
+string[] chunks;
+string[] headers;
+string[] lineValues;
+string[] gridValues;
+
+boolean firstIteration = true;
+for(string line in lines){
+    
+    chunks = split(line, reg);
+    lineValues = "";
+    for(number i=0; i<size(chunks); i++) {
+        string[] chunkParts = split(chunks[i], ",(?=\"[^,])");
+        
+        if( firstIteration && (i == 0 || size(chunkParts) == 2) ){
+            int headerIndex = i == 0 ? 0 : 1;
+            headers += replace(chunkParts[headerIndex], "\"", "");
+        }
+        
+        if(i == 0) { continue; }
+        
+        lineValues += chunkParts[0];
+    }
+    
+    if(firstIteration){
+        gridValues += headers;
+    }
+    gridValues += lineValues;
+    
+    firstIteration = false;
+}
+
+TwoDArray grid2DValues;
+grid2DValues.array = gridValues;
+grid2DValues.arraySize = size(headers);
+
+//runnerLog("Lines " + grid2DValues.array);
+
+runnerLog("TEST " + createTGEUpdateRequestBody(grid2DValues));*/
+
+  
+
+

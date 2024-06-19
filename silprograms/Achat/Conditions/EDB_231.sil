@@ -1,0 +1,7 @@
+if(devis == "Non") {
+    return true;
+}
+
+if(derogation == "Non") {
+    return true;
+}

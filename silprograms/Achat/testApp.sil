@@ -1,0 +1,253 @@
+struct TwoDArray {
+    string[] array;
+    number arraySize;
+}
+
+function encode(string text) {
+
+    // Accent aigu
+    text = replace(text, "?", "&eacute;");
+    text = replace(text, "?", "&Eacute;");
+    
+    // Accent grave
+    text = replace(text, "?", "&egrave;");
+    text = replace(text, "?", "&Egrave;");
+    
+    // Accent circonflexe 
+    text = replace(text, "?", "&icirc;");
+    text = replace(text, "?", "&Icirc;");
+    
+    runnerLog("text"+text);
+    return text;
+    
+}
+
+function createTGEAddRequestBody(TwoDArray grid2DValues, number arraySize){
+    string data = "";
+    string[] headers;
+    
+    for(number i = 0; i <= arraySize; i++){
+        headers += grid2DValues.array[i];
+    }
+    number linesCount = size(grid2DValues.array) / size(headers);
+
+    for(number i = 1; i < linesCount; i++){
+    
+        string columns;
+        for(number j = 0; j < size(headers)-1; j++){
+            // if(grid2DValues.array[i * size(headers) + j] != "{}"){
+            // if(grid2DValues.array[i * size(headers) + j] != ""){
+                columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * size(headers) + j];
+            // }
+        }
+        
+        data += ",{"+substring(columns, 1, length(columns)) +"}";
+    }
+    
+    data = substring(data, 1,content.length(data));
+    string updateRequest = "{"+
+        "\"rows\":["+data+"]"+
+    "}";
+    
+    
+    return updateRequest;
+}
+
+function createTGEUpdateRequestBody(TwoDArray grid2DValues){
+
+    number rowIdIndex;
+    string data = "";
+    string[] headers;
+    
+    for(number i = 0; i <= grid2DValues.arraySize; i++){
+        if(grid2DValues.array[i] == "rowId"){
+            rowIdIndex = i;
+        }
+        headers += grid2DValues.array[i];
+    }
+    
+    number linesCount = size(grid2DValues.array) / grid2DValues.arraySize;
+    
+    for(number i = 1; i < linesCount; i++){
+    
+        string columns;
+        for(number j = 0; j < grid2DValues.arraySize; j++){
+            columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * grid2DValues.arraySize + j];
+            
+            if(j == rowIdIndex){
+                continue;
+            }
+        }
+        data += ",{\"rowId\" : "+grid2DValues.array[i * grid2DValues.arraySize + rowIdIndex]+", \"columns\": {"+substring(columns, 1, length(columns))+"} }";
+    }
+    
+    data = substring(data, 1,content.length(data));
+    string updateRequest = "{"+
+        "\"rows\":["+data+"]"+
+    "}";
+    
+    return updateRequest;
+}
+
+
+function createTGEDeleteRequestBody(string[] rowIds){
+
+    string updateRequest = "{"+
+        "\"rows\":[\""+replace(join(rowIds, "\",\""), "\"\"", "\"") +"\"]"+
+    "}";
+    
+    return updateRequest;
+}
+
+
+function sendUpdateTGEGridRequest(string content, string issueId, string gridId, string method) {
+
+    runnerLog("=============== Content ===============");
+    runnerLog(content);
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+   
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+    
+    if(method == "POST") {
+        httpPost(url, request, encode(content));
+    } else{
+        httpPut(url, request, encode(content));
+    }
+    runnerLog(httpGetStatusCode());
+}
+
+function sendClearTGEGridRequest(string content, string issueId, string gridId) {
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+   
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+    httpDelete(url, request, encode(content));
+}
+
+
+function getTGEGridData(string gridId, string issueId){
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+   
+    string result = httpGet(url, request);
+    runnerLog(httpGetStatusCode());
+
+    return result;
+}
+
+function getTGEGridDataAs2DArray(string gridId, string issueId){
+    
+    TwoDArray grid2DValues;
+    string gridJsonString = getTGEGridData(gridId, issueId);
+    string[] splitedLines = split(gridJsonString, "columns\":\\{");
+    
+    boolean firstRound = true;
+    string[] lines;
+    for(string splitedLine in splitedLines) {
+        if(firstRound) {
+            firstRound = false;
+            continue;
+        }
+        lines += substring(splitedLine, 0, indexOf(splitedLine, "}"));
+    }
+    
+    string reg = "(?<=[^\\\\:]\"):";
+    string[] chunks;
+    string[] headers;
+    string[] lineValues;
+    string[] gridValues;
+    
+    boolean firstIteration = true;
+    for(string line in lines){    
+        chunks = split(line, reg);
+        lineValues = "";
+        for(number i=0; i<size(chunks); i++) {
+            string[] chunkParts = split(chunks[i], ",(?=\"[^,])");
+            
+            if( firstIteration && (i == 0 || size(chunkParts) == 2) ){
+                number headerIndex = i == 0 ? 0 : 1;
+                headers += replace(chunkParts[headerIndex], "\"", "");
+            }
+            
+            if(i == 0) { continue; }
+            
+            lineValues += chunkParts[0];
+        }
+        
+        if(firstIteration){
+            gridValues += headers;
+        }
+        gridValues += lineValues;
+        
+        firstIteration = false;
+    }
+    
+    grid2DValues.array = gridValues;
+    grid2DValues.arraySize = size(headers);
+    // runnerLog("----------- Grid values size -------------");
+    // runnerLog(grid2DValues.arraySize);
+        
+    return grid2DValues; // gridValues;
+}
+
+function getColumns(string[] columns , boolean exclude, TwoDArray gridData) {
+    number[] indexes;
+    TwoDArray reducedGridData;
+    
+    for(number i = 0; i <= gridData.arraySize; i++) {
+        if(arrayElementExists(columns, gridData.array[i])) {
+            indexes += i;
+        }
+    }
+    
+    number linesCount = (number)size(gridData.array) / gridData.arraySize;
+    runnerLog("::::"+linesCount);
+    for(number i = 0; i < linesCount; i++) {
+        for(number j = 0; j <= gridData.arraySize; j++){
+            boolean takeValue = (!exclude && arrayElementExists(indexes, j)) || (exclude && !arrayElementExists(indexes, j));
+            if(takeValue) {
+                reducedGridData.array += gridData.array[i * gridData.arraySize + j];
+            }
+        }
+    }
+    
+    return reducedGridData;
+}
+
+function copyTGEGrid(string fromGridId, string toGridId, string fromIssueId, string toIssueId, boolean clearDestination){
+    TwoDArray fromGridData = getTGEGridDataAs2DArray(fromGridId, fromIssueId);
+    runnerLog("======= Table grid of offres ======= ");
+    runnerLog(fromGridData);
+    string fromContent = createTGEAddRequestBody(getColumns("rowId", true, fromGridData), fromGridData.arraySize);
+    runnerLog("======= *********** ======= ");
+    runnerLog(fromContent);
+    
+    if(clearDestination){
+        TwoDArray toGridData = getTGEGridDataAs2DArray(toGridId, toIssueId);
+        string toContent = createTGEDeleteRequestBody(getColumns("rowId", false, toGridData));
+        runnerLog("======= Table grid of decisions ======= ");
+        runnerLog(toContent);
+        sendClearTGEGridRequest(toContent, toIssueId, toGridId);
+    }
+    
+    sendUpdateTGEGridRequest(fromContent, toIssueId, toGridId, "POST");
+}
+  
+/*==================== Test copy function ==============*/
+string fromGridId = "10401";
+string toGridId = "10900";
+string fromIssueId = "GDAG-373";
+string toIssueId = "GDAG-373";
+copyTGEGrid(fromGridId, toGridId, %fromIssueId%.id, %toIssueId%.id, false);
+

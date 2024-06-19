@@ -1,0 +1,268 @@
+include "Achat/utils.incl";
+include "Achat/Services/RequestEDB.incl";
+
+// Prepare and return the request
+// function getRequest(){
+//     HttpRequest request;
+//   // HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    
+//     request.headers += authHeader;
+//     HttpHeader contentTypeHeader = httpCreateHeader("Content-Type", "application/json");
+//     request.headers += contentTypeHeader;
+//     return request;
+// }
+
+// struct Produits {
+//      string label;
+// }
+
+// function getTableGridValues(string gridId, string issueId){
+
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+   
+//     string result = httpGet(url, request);
+//     runnerLog(httpGetStatusCode());
+
+//     runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+//     return result;
+// }
+
+// // For adding rows in all grids
+// function addRowsInGrid(string gridID, string issueID, string json){
+//     string url = getJIRABaseUrl() + "/rest/idalko-grid/1.0/api/grid/"+gridID+"/issue/"+issueID;
+//     string[] results;
+
+//     if(isNotNull(json)){
+//         HttpRequest request = getRequest();
+//         results = httpPost(url, request, json);
+//     runnerLog(httpGetErrorMessage()); 
+//     return results;
+//     }
+// }
+// struct UpdateGridCulumn{
+//     string fournisseur;
+//     string categorie;
+//     string produit;
+//     string cout;
+//     string delais;
+//     number scoreTechnique;
+//     number scoreFinancier;
+//     number score;
+//   // number total;
+// }
+// struct Option{
+//     string name;
+//     string value;
+// }
+
+// struct OptionPut{
+//     Option status;
+// }
+// struct UpdateGridRow{
+//     number rowId;
+//     OptionPut values;
+// }
+// struct UpdateGrid{
+//     UpdateGridRow[] rows;
+// }
+// // For putting rows for all grids
+// function putRowsInGrid(string gridID, string issueID, string json){
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+//     string url = getJIRABaseUrl() + "/rest/idalko-grid/1.0/api/grid/10402/issue/"+issueID;
+//     string[] results;
+//     if(isNotNull(json)){
+//         //HttpRequest request = getRequest();
+
+//         results = httpPut(url, request , json);
+//         // runnerLog(httpGetStatusCode());
+
+//         // runnerLog("*********"+ results[0]);
+
+//     }
+//     return results;
+// }
+// struct OptionObject{
+//     string label;
+// }
+// struct Categorie{
+//     string label;
+//     string value;
+//     OptionObject optionObject;
+// }
+// struct Produit{
+//     string label;
+//     string value;
+//     OptionObject optionObject;
+// }
+// struct Fournisseurs {
+//      string label;
+//      string value;
+//      OptionObject optionObject;
+// }
+// struct Decision {
+//     Fournisseurs[] fournisseur;
+//     number score;
+//     Categorie categorie;
+//     string delais;
+//     Produit produit;
+//     number cout;
+//     number scoreTechnique;
+//     number scoreFinancier;
+//     number score;
+// }
+
+// struct DecisionRows {
+//     string rowId;
+//     Decision [] columns;
+//     number order;
+// }
+
+// struct DecisionValue {
+//     string customFieldId;
+//     DecisionRows [] rows;
+// }
+// string t = "GDAG-370";
+
+// runnerLog("===== Fournisseur sélectionné ====== "+%t%.fournisseurSelectFirst);
+// runnerLog("===== Email du fournisseur sélectionné ====== "+%t%.fournisseurSelectFirst.email);
+// runnerLog("****** Delai de confirmation ****** "+%t%.delaiConfirmationFournisseurRetenu);
+
+// string word = "Armande t (armandet@gmail.com)";
+// string returned = split(word, "\\(")[1];
+// runnerLog(returned);
+// string result = split(returned, "\\)")[0];
+// runnerLog(result);
+
+
+
+// runnerLog(getResponsibleAgent(%t%.agentTraitant));
+
+//updateScore(%t%.id);
+// string tableauDecision = getTableGridValues("10402",%t%.id);
+// DecisionValue[] decisions = fromJson(tableauDecision);
+    
+// string tableauOffre = getTableGridValues("10401",t); // "GDAG-236");
+// UpdateGrid[] offres = fromJson(tableauOffre);
+    
+//      runnerLog( "Decision::: "+fromJson(tableauDecision));
+//         runnerLog( "Offres::: "+decisions);
+
+//      runnerLog("Offre::: "+fromJson(tableauOffre));
+//     for(DecisionValue d in decisions) {
+//         runnerLog("Decision:: "+d);
+        
+//         for(DecisionRows decisionRow in d.rows){
+        
+//             for(Decision dec in decisionRow.columns){
+//               runnerLog("Decision: "+dec.scoreFinancier);
+
+//             }
+//           //putRowsInGrid("10402","GDAG-125", (toJson(offres)));
+//         }
+//     }
+
+//     runnerLog(decisionRow.columns[0].score);
+        //     runnerLog(substring(toJson(offres), 1, length(toJson(offres))));
+        //   runnerLog(offres[0][0]);
+        //     string patie =  substring(toJson(offres), 1, length(toJson(offres)));
+           // putRowsInGrid("10402","GDAG-102", substring(patie, 0 , length(toJson(offres)) -2));
+           
+           
+           
+struct Application {
+    string type ;
+     string name ;
+}
+
+struct Object {
+    string url;
+    string title;
+}
+
+struct Document {
+    string golbalId;
+    Application application;
+    string relationship;
+    Object object;
+}
+
+
+
+function linkDocument(string ticket, string doc){
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+    string url = getJIRABaseUrl()+"/rest/api/latest/issue/" + ticket.id + "/remotelink/5";
+    httpPost(url, request, doc);
+    runnerLog(httpGetStatusCode());
+    
+    runnerLog("le document :: " +doc);
+
+    runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+}
+
+function getDocument(){
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+    string url = getJIRABaseUrl()+"/rest/stonikbyte-documents-api/1.0/document/5";
+    string document = httpGet(url, request);
+    runnerLog(httpGetStatusCode());
+    
+    runnerLog("le document :: " +document);
+
+    runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+}
+
+
+
+string ticket = "GDAG-402";
+
+Object obj;
+obj.url = getJIRABaseUrl()+"/data/achat-talents/ACHAT/data/attachments/documentsaddon/Document?id=5";
+obj.title = "Bonjour";  
+
+Application app;
+app.type =  "com.stonikbyte.jira.plugins.project-docs-plugin"; 
+app.name =  "Documents";
+
+Document doc;
+doc.golbalId = "stonikbyte:document-5";
+doc.application = app;
+doc.relationship =  "linked documents";
+doc.object = obj;
+
+// /data/achat-talents/ACHAT/data/attachments/documentsaddon/Document?id=5
+ 
+           
+getDocument();
+
+linkDocument(ticket, toJson(doc));
+
+ 
+
+
+
+
+
+
+
+
+
+
+

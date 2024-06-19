@@ -1,0 +1,263 @@
+include "Achat/Domain/EDB.incl";
+include "Achat/Services/StockService.incl";
+include "Achat/Services/JiraIssueService.incl";
+include "Achat/Services/RequestEDB.incl";
+
+int devisField=10225;
+int decisionField=10901;
+int prodServiceField=10217;
+int stockable= 10900;
+
+string username = "admin";
+string password = "admin";
+
+function getObject(string issueId, string fieldId){
+    
+    HttpRequest request;
+//  HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+fieldId+"/issue/"+issueId;
+    runnerLog(url);
+    string json = httpGet(url, request);
+    return json;
+}
+
+function getRequest(){
+    HttpRequest request;
+   // HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    
+    request.headers += authHeader;
+    HttpHeader contentTypeHeader = httpCreateHeader("Content-Type", "application/json");
+    request.headers += contentTypeHeader;
+    return request;
+}
+
+function getProducts(string issueId){
+
+//     HttpRequest request;
+// //  HttpHeader authHeader = httpBasicAuthHeader(username, password);
+//     HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+//     request.headers += authHeader;
+    HttpRequest request = getRequest();  //https://databuckets.net/rest/tgc/api/v1/grids/{gridId}/issue/{issueIdOrKey}
+    //string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+prodServiceField+"/issue/"+issueId;
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+prodServiceField+"/issue/"+issueId;
+    Product_values products = httpGet(url, request);
+    runnerLog("values : "+getJIRABaseUrl());
+    runnerLog("STATUS : "+httpGetStatusCode());
+    runnerLog("ERROR : "+httpGetErrorMessage());
+    return products.values;
+}
+
+function getDevis(string issueId){
+
+   HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+    
+    //string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+devisField+"/issue/"+issueId;
+    
+    
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+devisField+"/issue/"+issueId;
+   
+    string result = httpGet(url, request);
+    
+    
+    runnerLog(url);
+   // string json = httpGet(url, request);
+    ProductsDevis products =  fromJson(result);
+    runnerLog("Products"+result);
+    return products.values;
+}
+
+function getTotalAmountDevis(string issueId){
+
+    ProductDevis[] products = getDevis(issueId);
+    number totalAmount = 0;
+    for(ProductDevis pro in products){
+        if(isNotNull(pro.iquantite) && isNotNull(pro.iprix)){
+            totalAmount += pro.iprix; // pro.iquantite * 
+        }
+    }
+    return totalAmount;
+}
+
+
+function getStockableProducts(string issueId){
+
+    Product_values produits; 
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+stockable+"/issue/"+issueId;
+    runnerLog (url);
+    produits=httpGet(url,request);
+    logPrint("ERROR", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+httpGetStatusCode());
+    logPrint("ERROR", "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"+httpGetErrorMessage());
+    runnerLog ("STATUS : "+httpGetStatusCode());
+    runnerLog ("ERROR : "+httpGetErrorMessage());
+    return produits.values;
+}
+
+function insertDatagrid(string issueId,Produit_Service[] pr){
+    string url=getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+stockable+"/issue/"+issueId;
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader;
+    httpPost(url,request,pr);
+}
+
+//icategorie,iproduct,iquantite,idescription,iprixu,iprix
+
+function addProductsToDevisGrid(Produit_Service[] products, string issueId){
+    
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader; 
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+devisField+"/issue/"+issueId;
+    runnerLog(url);
+    Row productDevis;
+    for(Produit_Service product in products){
+        
+        //if(product.idecision == "OUI"){
+            ProductDevis pro;
+            pro.iproduct = product.iproduct.value;
+            pro.icategorie = product.icategorie.value;
+            pro.iquantite = product.iquantite;
+            pro.idescription = product.idescription;
+            pro.iprixu=getUnitPrice(product.iproduct.value);
+            pro.iprix=pro.iprixu * pro.iquantite;
+            productDevis.rows += pro;
+        //}
+    }
+    //Row rows;
+   // rows.rows = productDevis;
+   //  runnerLog(url + " ++ "+toJson(rows));
+    
+    int[] keys = httpPost(url, request, productDevis);
+    runnerLog("STATUS : "+httpGetStatusCode());
+    runnerLog("ERROR : "+httpGetErrorMessage());
+    
+    return  keys;
+}
+//Teste TableGrid
+struct Categories {
+     string label;
+}
+struct Produits {
+     string label;
+}
+struct ProduitService {
+     Categories[] categorie;
+     Produits[] produit;
+    number quantite;
+    string description;
+}
+
+struct ProduitServiceRows {
+    string rowId;
+    ProduitService [] columns;
+}
+
+struct ProduitServiceValue {
+    string customFieldId;
+    ProduitServiceRows [] rows;
+}
+function getTableGridValues(string gridId, string issueId){
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+   
+    string result = httpGet(url, request);
+    runnerLog(httpGetStatusCode());
+
+    runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+    return result;
+}
+
+function createServiceForEDB(string issueId){
+    //Produit_Service[] products = getProducts(issueId);
+    string monTableau = "["+getTableGridValues(prodServiceField, issueId) + "]";
+    ProduitServiceValue[] produits = fromJson(monTableau);
+    
+    for(ProduitServiceValue p in produits){
+    
+        for(ProduitServiceRows productRow in p.rows){
+            string article = createIssue("GDAG", key, "Article", key +"  - teste");
+            %article%.quantite = productRow.columns[0].quantite;
+            %article%.quantite = productRow.columns[0].quantite;
+            %article%.quantiteRestante = productRow.columns[0].quantite;;
+            %article%.produitsServices = productRow.columns[0].produit[0];
+            %article%.departement = key.departement;
+            %article%.assignee = key.reporter;
+            %article%.reporter = key.reporter;
+
+            linkIssue(key, article, "Relates");
+        }
+    }
+
+    // for(Produit_Service p in products){
+    //     string article = createIssue("GDAG", key, "Article", key +"  - "+ p.iproduct.value);
+    //     %article%.quantite = p.iquantite;
+    //     %article%.quantiteRestante = p.iquantite;
+    //     %article%.produitsServices = p.iproduct.value;
+    //     %article%.departement = key.departement;
+    //     %article%.assignee = key.reporter;
+    //     %article%.reporter = key.reporter;
+    //     linkIssue(key, article, "Relates");
+    // }
+}
+
+
+/*
+function verifyStockForProductInSoldOut(){
+    string jql = "issuetype = Article  AND status in (\"En attente Stock\", \"En attente livraison\")";
+    string[] articles = selectIssues(jql);
+    for (string article in articles){
+       int stock = getStock(%article%.produitsServices);
+       if(stock > 0){
+            %article%.ruptureStock = "Non";
+            // Mettre en rupture en stock 
+            autotransition(31, article, true, true, true);
+         }else{
+            %article%.ruptureStock = "Oui";
+            // Mettre en attente livrasion 
+          autotransition(11, article, true, true, true);
+         }
+ 
+ */
+/*
+function createServiceForEDB(string issueId){
+    ProductDevis[] products = getDevis(issueId);
+    for(ProductDevis pro in products){
+        string article = createIssue("GDA",key,"Article",key +" - "+pro.iproduct);
+        %article%.quantite = pro.iquantite;
+        %article%.quantiteRestante = pro.iquantite;
+        %article%.categorie = pro.icategorie;
+        %article%.produitsServices = pro.iproduct;
+        %article%.departement = key.departement;
+        %article%.assignee = key.reporter;
+        %article%.reporter = key.reporter;
+        %article%.prixTotal = pro.iprix;
+        
+         if(pro.istock == 0)
+             %article%.ruptureStock = "Oui";
+          else
+            %article%.ruptureStock = "Non";
+            
+    }
+}
+*/
+
+
+runnerLog(getTableGridValues(prodServiceField, "GDAG-46"));
+string ticket = "GDAG-46";
+string monTableau = "["+getTableGridValues(prodServiceField, ticket) + "]";
+//runnerLog(test[0].rows[0].columns[0].categorie[0]);

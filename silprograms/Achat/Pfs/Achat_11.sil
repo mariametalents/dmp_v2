@@ -1,0 +1,34 @@
+include "Achat/utils.incl";
+include "Achat/Services/OrderService.incl";
+
+//key = "GDA-1051";
+
+//Affecter au responsable budget
+%key%.assignee = getAchatResponsable();
+
+//Mettre a jour Agent traitant
+%key%.agentTraitant = currentUser();
+
+//Mis a jour Entreprise
+%key%.entreprise = fournisseur;
+//string appelDOffre = %key%.appelDOffre;
+/* A COMPLETER */
+    //Recuperer les rows commandes
+    // if(isNotNull(appelDOffre)){
+    //   POrderLine[] lines = getPOrderLines(%appelDOffre%.id);
+    //     OrderRows rows;
+    //     rows.rows = lines;
+    //     string data = toJson(rows,true,true);
+    //     logPrint("ERROR", "LOOOOOOOOOL" + data);
+    //     //Post data
+    //   // system("C:/WINDOWS/system32/cmd.exe /c ping 127.0.0.1 -n 10 > nul;");
+    //     string result = postOrderLines(%key%.id, data);
+    //     logPrint("ERROR", "BLOOOOOOOOOL" + result);
+        
+    //     //Gestion total;
+    //     %key%.total = getCurrentPOrderTotal(lines);
+    // }else{
+    //     %key%.total = getCurrentOrderTotal(getOrderLines(%key%.id));
+    // }
+    
+//%key%.totalHT = (number)%key%.totalHT * (100-%key%.tva)/100;

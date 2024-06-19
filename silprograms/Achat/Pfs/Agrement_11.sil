@@ -1,0 +1,2 @@
+//Mettre a jour agent traitant
+%key%.agentTraitant = currentUser();

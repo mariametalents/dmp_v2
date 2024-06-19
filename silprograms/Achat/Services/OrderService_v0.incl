@@ -1,0 +1,165 @@
+include "Achat/Domain/Order.incl";
+
+function getOrderLines(string issueId){
+    
+    //Recuperation details champ commande id 10401
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/10401/issue/"+issueId;
+    string json = httpGet(url, request);
+    
+    //Retourn details commandes
+    GOrder gOrder = fromJson(json);
+    return gOrder.values;
+}
+
+function getPOrderLines(string issueId){
+    OrderLine[] lines = getOrderLines(issueId);
+    POrderLine[] pLines;
+
+    for(OrderLine line in lines){
+    
+        POrderLine pLine;
+        
+        pLine.ref = line.ref;
+        pLine.desc = line.desc;
+        pLine.price = line.price;
+        pLine.quantity = line.quantity;
+        pLine.remarks = line.remarks;
+        pLine.type = line.type.value;
+        
+        pLines += pLine;
+    }
+    
+    return pLines;
+}
+
+function getCurrentOrderTotal(OrderLine[] lines){
+    number total = 0;
+    for(OrderLine line in lines){
+        total += line.price * line.quantity;
+    }
+    return total;
+}
+
+function getCurrentPOrderTotal(POrderLine[] lines){
+    number total = 0;
+    for(POrderLine line in lines){
+        total += line.price * line.quantity;
+    }
+    return total;
+}
+
+function getCurrentOrder(string issueId){
+
+    //Recuperation items commandes
+    OrderLine[] lines = getOrderLines(issueId);
+
+    //Setting order
+    Order order;
+    order.reference = key;
+    order.title = summary;
+    order.price = getCurrentOrderTotal(lines);
+	order.rate = tva; 
+	order.mode = modalitePaiement;
+	order.deliveryDate = dateLivraison; 
+	order.deliveryAddress = adresseLivraison;
+	order.lines = lines;
+	
+	//retour objet commande
+	return order;
+}
+
+function getOrderId(string source){
+    //Get order id
+    string query2 = "select id from j_order where jira_key = '"+key+"'";
+    string orderId = sql(source, query2);
+    
+    return orderId;
+}
+
+function getproductIdFromProduct(string product){
+    string productId = substring(product, 0, indexOf(product, "-"));
+    return productId;
+}
+
+function insertOrderLine(Order order, string providerId, string source){
+
+    //Save order
+    string query1 = "insert into j_order(jira_key,reference,title,price,rate,mode,delivery_date,delivery_address,status,provider) ";
+    logPrint("ERROR", "TTTTTTTTTT DELIVERYDATE "+order.deliveryDate);
+           query1 += "values('"+key+"','"+order.reference+"','"+order.title+"','"+order.price+"','"+order.rate+"','"+order.mode+"','"+order.deliveryDate+"','"+order.deliveryAddress+"','"+"CREATED"+"','"+providerId+"')";
+    sql(source, query1);
+    
+    //Get order id
+    string orderId = getOrderId("PFA");
+    
+    //Saving lines
+    OrderLine[] lines = order.lines;
+    for(OrderLine line in lines){
+        string query3 = "insert into j_order_line(reference,label,quantity,price,comment,jorder,product,has_default,received) ";
+               query3 += "values('"+line.ref+"','"+line.desc+"','"+line.quantity+"','"+line.price+"','"+line.remarks+"','"+orderId+"','"+getproductIdFromProduct(line.type.value)+"',false,false)";
+        sql(source, query3);
+    }
+}
+
+function insertSettlement(Settlement settlement, string source){
+    //Get order id
+    number orderId = (number)getOrderId("PFA");
+    //Insert Settlement
+    string query3 = "insert into j_settlement(amount,paid,remaining,jorder) values(?,?,?,?) ";
+    sql(source, query3, settlement.amount, settlement.paid, settlement.remaining, orderId);
+}
+
+function updateOrderLineDefault(string orderLineId, boolean hasDefault, string source){
+    //Update 
+    string query = "update j_order_line set has_default="+hasDefault+" where id="+orderLineId;
+    sql(source, query);
+}
+
+function getUnreceveidOrderLineIds(string orderId, string source){
+    string query = "select id from j_order_line where jorder='"+orderId+"' and received=false";
+    string[] ids = sql(source, query);
+    
+    return ids;
+}
+
+function updateOrderLineReception(string orderLineId, string source){
+    string query = "update j_order_line set received = true where id="+orderLineId;
+    sql(source,query);
+}
+
+function getProductIdFromOrderLine(string orderLineId, string source){
+    string query = "select product from j_order_line where id = "+orderLineId;
+    string product = sql(source,query);
+    
+    return getproductIdFromProduct(product);
+}
+
+function getProductQuantityFromOrderLine(string orderLineId, string source){
+    string query = "select quantity from j_order_line where id = "+orderLineId;
+    string quantity = sql(source,query);
+    
+    return quantity;
+}
+
+function updateOrderStatus(string orderId, string status, string source){
+    string query = "update j_order set status = '"+status+"' where id="+orderId;
+    sql(source,query);
+}
+
+function postOrderLines(string issueId, string data){
+    
+    //Recuperation details champ commande id 10401
+    HttpRequest request;
+    HttpHeader contentHeader = httpCreateHeader("Content-Type", "application/json");
+    request.headers += contentHeader; 
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/10401/issue/"+issueId;
+    string returnData  = httpPost(url, request , data);
+    
+    return returnData;
+}
+

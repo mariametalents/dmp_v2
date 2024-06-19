@@ -1,0 +1,95 @@
+struct Nature {
+    string name;
+    string value;
+}
+
+struct Category {
+    string name;
+    string value;
+}
+
+struct Product {
+    string name;
+    string value;
+}
+
+struct Sector {
+    string name;
+    string value;
+}
+
+// grid 10401
+//gd.columns=ref,nature,sector,category,product,desc,price,quantity,total
+struct OrderLine{
+    string ref;
+    Nature nature;
+    Sector sector;
+    Category category;
+    Product product;
+    string desc;
+    number price;
+    number quantity;
+    //number total;
+    int issueId;
+    int modified;
+    int id;
+}
+
+struct OrderGridLoad{
+    string ref;
+    string nature;
+    string sector;
+    string category;
+    string product;
+    string desc;
+    number price;
+    number quantity;    
+}
+
+struct OrderLineRows {
+    OrderGridLoad [] rows;
+}
+
+
+struct Settlement{
+    number amount;
+    number paid;
+    number remaining;
+}
+
+struct POrderLine{
+    string ref;
+    string desc;
+    number price;
+    number quantity;
+}
+
+struct OrderRows {
+    POrderLine [] rows;
+}
+
+struct Order{
+	string reference;
+	string title;
+	number price;
+	number rate; 
+	date deliveryDate;
+	string deliveryAddress;
+	string mode;
+	OrderLine[] lines;
+}
+
+/*struct Order{
+	string categorie;
+	string type;
+	number quantity;
+	number remarque; 
+	OrderLine[] lines;
+}*/
+
+struct GOrder{
+    number startAt;
+    number maxResults;
+    number total;
+    OrderLine[] values;
+}

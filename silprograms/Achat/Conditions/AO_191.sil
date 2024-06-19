@@ -1,0 +1,9 @@
+include "Achat/utils.incl";
+
+if(!arrayElementExists(%key%.commiteOffre, currentUser())){
+    // if(compteurEvaluation >0  && (statutMaj == 204 || statutMaj == 200)) {
+    //     resetDecisionTable(%key%.id);
+    // }
+    return true;
+}
+ 

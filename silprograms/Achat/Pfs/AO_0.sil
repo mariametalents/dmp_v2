@@ -1,0 +1,27 @@
+include "Achat/utils.incl";
+
+//Assign� la demande au responsable achat
+%key%.assignee = getAchatResponsable();
+//%key%.assignee = currentUser();
+
+// mettre format AO
+%key%.summary = "APPEL D'OFFRE - " + key.referenceAO + " - " + formatDate(currentDate(), "dd/MM/yyyy");
+
+// Initialisation du compteur d'OFFRE
+%key%.compteurOffre = 0;
+%key%.compteurEvaluation = 0;
+
+
+
+//autotransition(241, key, true, true, true);
+
+/*int i;
+int nombreLots = key.nombreLots;
+for (i=1; i<=nombreLots;i++) {
+    //createIssue("GDA", key , "Lot offres", key + " -"  +" Lot "+i);
+    string lot = createIssue("GDA", key, "Lot Offres", "Lot ") ;
+    %lot%.assignee = key.reporter;
+    %lot%.reporter = key.reporter; 
+}
+//string lot = createIssue("GDA", key, "Lot Offres", "Lot "+s) ;
+*/

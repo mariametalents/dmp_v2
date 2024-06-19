@@ -1,0 +1,6 @@
+include "Achat/Services/RequestEDB.incl";
+
+%key%.assignee = getResponsibleAgent(%key%.agentTraitant);
+
+// Initialize rejetDmg to true
+%key%.rejetDmg = "Oui";

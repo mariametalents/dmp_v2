@@ -1,0 +1,50 @@
+include "Achat/lf/Demandeur.sil";
+include "Achat/Domain/Demandeur.incl";
+include "Achat/Services/RequestEDB.incl";
+//verifer
+if(argv["screen"]=="create"){
+    lfGlobalMessage("===================User infos====================", getInfoDemandeur(getUser(currentUser()));
+    //lfWatch("issueType", {"issueType"}, "", {"change"});
+    //if(argv["issueType"]=="Expression de besoins"){
+    
+        // lfGlobalMessage("Bonjour ");
+        
+        Demandeur demandeur = getInfoDemandeur(getUser(currentUser())[1]); 
+        
+        lfSet("matricule", demandeur.matricule);
+        lfDisable("matricule");
+        lfSet("nom", demandeur.nom);
+        lfDisable("nom");
+        lfSet("poste", demandeur.poste);
+        lfDisable("poste");
+        lfSet("departement", demandeur.departement);
+        lfDisable("departement");
+        lfSet("responsable", demandeur.responsable);
+        lfDisable("responsable");
+   // }
+    //lfInstantHook("issueType", "Achat/lf/Demandeur.sil");
+
+}
+    //lfDialogMessage(currentUser(), "ERROR");
+/*
+if(argv["screen"] == "view"){
+    lfHide("produitServiceEDB");
+    lfHide("produitServiceDecision");
+    lfHide("produitServiceDevis") ;
+    //lfDialogMessage(devisSend, "ERROR");
+    if(valide=="Non" && devisSend=="Non"){
+        lfShow("produitServiceEDB");
+    }else if(devisSend == "Non"){
+        lfShow("produitServiceDecision");   
+    }else{
+        lfShow("produitServiceDevis");   
+    }
+}
+
+*/
+
+if(argv["screen"]=="trans_41"){
+    lfDisable("quantiteRestante");
+}
+
+//lfDialogMessage(currentUser(), "ERROR");

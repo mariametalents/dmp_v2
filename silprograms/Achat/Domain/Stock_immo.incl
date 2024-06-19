@@ -1,0 +1,43 @@
+include "Achat/Domain/EDB.incl";
+
+struct Magasin {
+    int magasinId;
+    string nom ;
+    string rayon;
+}
+
+struct Agence {
+    int agenceId;
+    string nomAgence;
+    string adresse;
+}
+
+struct Service {
+    int serviceId;
+    string nomService;
+}
+
+struct TypeArticle {
+    int typeId;
+    string codeArticle;
+    string libelle;
+    boolean stockable;
+    boolean immobilisable;
+    boolean transferable;
+}
+
+struct Stock {
+   Produit_Service [] articles;
+    Magasin [] magasin ;
+    TypeArticle [] categorie;
+    Produit_Service [] articles;
+    int quantite;
+}
+
+
+struct Immobilisation {
+    int immobilisationId;
+    string familleImmo;
+    Agence [] agence ; 
+    Produit_Service [] articles;
+}

@@ -1,0 +1,128 @@
+// include "Achat/lf/Agrement/agrement.sil";
+// include "Achat/lf/EDB.sil";
+include "Achat/utils.incl";
+
+//lfHide("fournisseurs");
+// ===================== Achat =============
+
+if(argv["screen"] == "create"){
+    lfSet("summary", "Création en cours...");
+    lfHide("summary");
+    
+    // lfHide("fournisseurs");
+    //lfExecuteJS("Achat/lf/Js/hideNfeedField.js");
+    
+    //lfExecuteJS("Achat/Lf_Achat/Js/nfeed.js");
+    
+    lfExecuteJS("Achat/lf/teste.js");
+    
+    
+    // Show message to preventthat selai must not be bigger than date fin depot 
+    /*if(issueType == "Appel d'offre") {
+        lfGlobalMessage("Creation d'un nouveau ticket Appel d'offre");
+        lfWatch("dateDeGrace", {"dateDeGrace"}, "Lf_AO/showDateWarningMessage.sil", {"change"});
+    }*/
+
+}
+
+// Cache les champs à l'entrée de l'écran de la transition
+if(argv["screen"] == "trans_231" || argv["screen"] =="trans_241" || argv["screen"] == "trans_141") {
+    // lfGlobalMessage("231");
+        lfHide("numCompte");
+        lfHide("numRef");
+        lfHide("numCheque");
+        lfDisable("montantRegle");
+        lfWatch("typeReglement", {"typeReglement", "numCheque", "numCompte", "numRef"}, "Lf_Achat/reglement.sil", {"change"});
+        // lfRestrictSelectOptions("typeReglement", {"Aucun"});
+
+}
+
+if(argv["screen"] == "trans_231" || argv["screen"] == "trans_131" || argv["screen"] == "trans_141") {
+        lfDisable("total");
+        lfDisable("montantRegle");
+        lfDisable("montantRestant");
+        if("montantRegle" > 0) {
+        // lfGlobalMessage("Test montant restant automatique");
+            lfWatch("montantRegle", {"montantRegle"}, "Lf_Achat/changeleftprice.sil", {"keyup"});
+        }
+
+}
+
+if(argv["screen"] == "trans_81") {
+        lfHide("motifReserve");
+        if("reserve" == "Oui") {
+            // lfWatch("reserve", {"reserve"}, "Lf_Achat/changeleftprice.sil", {"keyup"});
+            lfShow("motifReserve");
+        }
+
+    }
+
+// ================ Appel d'offre ====================
+if(argv["screen"] == "view"){
+    lfHideTab("Decision");
+    lfHideTab("Commande");
+
+}
+
+if(argv["screen"] == "trans_171" && issueType == "Appel d'offre"){
+    // lfGlobalMessage("**** Fournisseur retenu: "+fournisseurSelectFirst+" ****");
+    lfDisable("fournisseurRetenu");
+    lfDisable("fournisseurFEnAttente");
+    lfDisable("fournisseurSEnAttente");
+    lfDisable("fournisseurTEnAttente");
+    lfDisable("fournisseurSelectFourth");
+
+}
+
+// if(argv["screen"] == "trans_191" && issueType == "Appel d'offre"){
+//     lfHideTab("score");
+
+// }
+
+// if(argv["screen"] == "view" && issueType == "Expression de besoins"){
+//     lfHideTab("Commande");
+// }
+
+// if(argv["screen"] == "trans_191"  && issueType == "Appel d'offre" && compteurEvaluation == 1){
+//     lfRefreshScreen();
+// }
+
+
+
+
+// =============== Agrement =============
+// if(issueType == "Agrement" && argv["screen"] == "trans_131") {
+//     // lfGlobalMessage("Initier comité?");
+//     lfHide("membreComiteAgre");
+//     lfHide("dateComiteAgre");
+ 
+ if(argv["screen"] == "trans_131" && issueType == "Agrement" ){
+      lfWatch("initierComiteAgrement", {"initierComiteAgrement"}, "Lf_Agrement/showComiteeSelection.sil",{"change"});
+      lfRestrictSelectOptions("initierComiteAgrement", {"Aucune", "Aucun"}); //, "None"});
+      lfHide("membreComiteAgre");
+      lfHide("dateComiteAgre");
+      
+// }
+    // lfWatch("initierComiteAgrement", {"initierComiteAgrement"}, "Lf_Agrement/showComiteeSelection.sil", {"change"});
+}
+  
+    
+//====================EDB========
+
+if(argv["screen"]== "trans_421"){
+    lfHideTab("Informations fournisseur");
+    
+    lfHideTab("Resumé Commande");
+
+    lfHideTab("Détails Commande");
+    
+    lfHideTab("Détails");
+    
+    lfHideTab("Produits et services");
+
+    lfWatch("ActionEntreprendre", {"ActionEntreprendre","referenceAO"}, "Lf_Achat/ActionEntreprendre.sil", {"change"});
+
+}
+
+
+lfExecuteJS("Achat/JS/customize.js");

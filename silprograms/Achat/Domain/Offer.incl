@@ -1,0 +1,25 @@
+//champ offre
+struct Offer{
+    string jira_key;
+   // string attachments;
+    string reference;
+    string description;
+    string requirements;
+    string mode; 
+    string location;
+    string process;
+    string expected_result;
+    string objectif;
+    date ended;
+    date duedate;
+    date started;
+    date published;
+    string title;
+    string status; 
+
+}
+
+struct sector{
+    string offer;
+    string sector;
+}

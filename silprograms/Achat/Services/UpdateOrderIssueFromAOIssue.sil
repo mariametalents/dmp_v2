@@ -1,0 +1,21 @@
+include "Achat/Services/OrderService.incl";
+
+string jql = "project = GDA and issuetype = Achat and status = \"Initie(e)\" and \"Appel d'offre\" is not EMPTY";
+string[] keys = selectIssues(jql);
+for(string akey in keys){
+    string aoKey = %akey%.appelDOffre;
+    //Recuperer les rows commandes
+    POrderLine[] lines = getPOrderLines(%aoKey%.id);
+    OrderRows rows;
+    rows.rows = lines;
+    string data = toJson(rows,true,true);
+    //Post data
+    string result = postOrderLines(%akey%.id, data);
+
+    //Gestion total;
+    %akey%.total = getCurrentPOrderTotal(lines);
+    %akey%.totalHT = (number)%akey%.total * 100/(100+%akey%.tva);
+    
+    //Auto envoyer en validation
+    autotransition("Envoyer en validation", akey, true, true, true);
+}

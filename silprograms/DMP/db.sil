@@ -1,0 +1,12 @@
+include "DMP/Domain/client.sil";
+include "DMP/conf/query.sil";
+
+function getClient(string numero_client){
+    Client[] client;
+    string req = replace(QUERY_CLIENT, "%numc", numero_client);
+   client = sql("DMP", req);
+ 
+
+    return client;
+}
+

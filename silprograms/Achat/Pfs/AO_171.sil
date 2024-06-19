@@ -1,0 +1,25 @@
+// Mettre a jour automatiquement les valeurs des fournisseurs
+// lfGlobalMessage("**** Fournisseur précédemment selectionné "+fournisseurSelectFirst+"****");
+fournisseurRetenu = fournisseurSelectSecond;
+fournisseurFEnAttente = fournisseurSelectThird;
+fournisseurSEnAttente = fournisseurSelectFourth;
+fournisseurTEnAttente = null;
+
+fournisseurSelectFirst = fournisseurSelectSecond;
+fournisseurSelectSecond = fournisseurSelectThird;
+fournisseurSelectThird = fournisseurSelectFourth;
+fournisseurSelectFourth = "";
+
+// Notification au fournisseur retenu et aux autres en attente
+string from = "";
+string[] to  = split(split(fournisseurRetenu, "\\(")[1], "\\)")[0];
+
+string [] cc = "";
+string subject = "Resultat après délibération des offres";
+string body = "Nous vous informons que vous avez été retenu pour l'offre pour l'appel d'offre: "+%key%.id;
+sendEmail(from, to, cc, subject, body,"");
+    
+// Notification aux fournisseurs en attente
+string[] toLeft  = {split(split(fournisseurFEnAttente, "\\(")[1], "\\)")[0], split(split(fournisseurSEnAttente, "\\(")[1], "\\)")[0], split(split(fournisseurTEnAttente, "\\(")[1], "\\)")[0]};
+string bodyForLeft = "Nous vous informons que vous êtes sur liste d'attente pour l'appel d'offre: "+%key%.id;
+sendEmail(from, toLeft, cc, subject, bodyForLeft,"");

@@ -1,0 +1,7 @@
+//Afficher si agent traitant n'est pas affecte et si l'utilisateur actuel n'est pas le responsable achat
+include "Achat/utils.incl";
+
+boolean isAchatManager = (currentUser() == getAchatResponsable());
+if(isNotNull(agentTraitant) || (isNull(agentTraitant) && isAchatManager)){
+    return false;
+}

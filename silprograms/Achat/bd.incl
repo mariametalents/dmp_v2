@@ -1,0 +1,85 @@
+include "Achat/Domain/Application.incl";
+include "Achat/Domain/Document.incl";
+include "Achat/Domain/Comment.incl";
+include "Achat/Domain/Offer.incl";
+include "Achat/Domain/Provider.incl";
+
+// recup�ration des soumissions
+function getApplication(){
+    string request = "SELECT \"offer\" as offerId, \"provider\" as providerId, \"status\", \"submitted\" FROM fj_application WHERE status='SUBMITTED' AND jira_key is null;";
+    Application[] applications = sql(silEnv("datasource"), request);
+    return applications;
+}
+
+// m�j recuperation soumissions
+function updateAppJiraKey(number offerId, number providerId, string key){
+    string request = "UPDATE fj_application SET jira_key=? WHERE \"offer\"=? AND \"provider\"=? AND jira_key is null;";
+    sql(silEnv("datasource"), request, key, offerId,providerId);
+}
+
+// m�j des status des soumissions
+function updateStatusApplications(Application[] applications){
+    for(Application app in applications){
+        string request = "UPDATE fj_application SET \"status\"='"+status+"' WHERE \"offer\"=? AND \"provider\"=?;";
+        sql(silEnv("datasource"), request, app.offerId, app.providerId);
+    }
+}
+
+// Get All Documents Form Applications with parameters providerId and offerId
+function getDocumentsFromApplication(number offerId, number providerId){
+    string request = "SELECT \"sens\", \"name\", \"ext\", \"title\", \"label\", \"origine_name\" as origineName, jorder, offer, provider, application_offer, application_provider FROM fj_document WHERE status='NOK' AND \"application_offer\"=? AND \"application_provider\"=? AND \"sens\"='OUT';";
+    Document[] documents = sql(silEnv("datasource"), request, offerId, providerId);
+    return documents;
+}
+
+// recuperation des comments en fonction de l'ID provider et offer
+function getCommentsFromApplication(number offerId, number providerId){
+    string request = "SELECT \"sens\", \"title\", \"label\", \"description\", jorder, offer, provider, application_offer, application_provider FROM fj_comment WHERE status='NOK' AND \"application_offer\"=? AND \"application_provider\"=? AND \"sens\"='OUT';";
+    Comment[] comments = sql(silEnv("datasource"), request, offerId, providerId);
+    return comments;
+}
+//recuperation de l'offre
+function getOffer(number offerId){
+    string request = "SELECT \"jira_key\", \"reference\", \"description\",  \"requirements\", \"mode\", \"location\", \"process\", \"expected_result\", \"objectif\", \"ended\", \"duedate\", \"started\", \"published\", \"title\", \"status\" FROM j_offer WHERE \"id\"=?;";
+    Offer[] offers = sql(silEnv("datasource"), request, offerId);
+    return isNotNull(offers)?offers[0]:offers;
+}
+
+//recuperation du fournisseur
+function getProvider(number providerId){
+    string request = "SELECT \"code\", \"name\", \"address\", \"city\", \"country\", \"ninea\", \"rcc\" FROM j_provider WHERE \"id\"=?;";
+    Provider[] providers = sql(silEnv("datasource"), request, providerId);
+
+    //return provider;
+    return isNotNull(providers)?providers[0]:providers;
+}
+
+// Marquer comme OK ap recuperation
+function updateStatusDocument(number offerId, number providerId){
+    string query = "UPDATE fj_document set status='OK' WHERE \"application_offer\"=? AND \"application_provider\"=?";
+    sql(silEnv("datasource"), query, offerId, providerId);
+}
+
+// Marquer comme OK ap recuperation
+function updateStatusComment(number offerId, number providerId){
+    string query = "UPDATE fj_comment set status='OK' WHERE \"application_offer\"=? AND \"application_provider\"=?";
+    sql(silEnv("datasource"), query, offerId, providerId);
+}
+
+
+function getOfferId(){
+    //Get offer id
+    string request = "select id from j_offer where jira_key = '"+key+"'";
+    string offerId = sql("PFA", request);
+    
+    return offerId;
+}
+
+function getProviderId(){
+    //Get Provider id
+    string query = "select id from j_provider where rcc = '"+rcc+"'";
+    logPrint("ERROR", "BEAST " + query);
+    string providerId = sql("PFA", query);
+    
+    return providerId;
+}

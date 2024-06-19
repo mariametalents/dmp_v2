@@ -1,0 +1,21 @@
+if(argv["typeAchat"] == "Achat"){
+    lfHideTab("Contrat|Abonnement");
+}else{
+    if(argv["typeAchat"] == "Contrat|Abonnement"){
+    lfShowTab("Contrat|Abonnement");
+    }
+}
+
+
+if(argv["modaliteReglement"] == "forfaitaire"){
+     lfShow("PeriodiciteReglement");
+     lfShow("ReglementContrat");
+    
+}else{
+    if(argv["modaliteReglement"] == "facture"){
+     lfHide("PeriodiciteReglement");
+     lfHide("ReglementContrat");
+     lfHide("reglementContrat");
+    }
+}
+

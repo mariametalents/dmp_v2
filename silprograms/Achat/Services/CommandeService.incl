@@ -1,0 +1,115 @@
+include "Achat/Domain/Commande.incl";
+include "Achat/Services/gridFunctions.sil";
+
+int receptionCommande = 10268;
+
+function getReceptionLines(string issueId){
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+    //Recuperation ligne champ rec commande id 12001
+   // HttpRequest request; /rest/idalko-grid/1.0/api/grid/
+    //HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+receptionCommande+"/issue/"+issueId;
+    string json = httpGet(url, request);
+    runnerLog("STATUS : "+httpGetStatusCode());
+    runnerLog("ERROR : "+httpGetErrorMessage());
+    GReception gReception = fromJson(json);
+    runnerLog("************************"+gReception);
+    return gReception.values;
+}
+
+
+function getROrderLines(string issueId){
+    ReceptionLine [] lines = getReceptionLines(issueId);
+    ROrderLine[] pLines;
+
+    for(ReceptionLine line in lines){
+    
+        ROrderLine pLine;
+        
+        pLine.ref = line.ref;
+        pLine.price = line.price;
+        pLine.recquant = line.recquant;
+       
+        pLines += pLine;
+    }
+    
+    return pLines;
+}
+
+function getCurrentTotalOrder(ReceptionLine[] lines){
+    number total = 0;
+    for(ReceptionLine line in lines){
+        total += line.price * line.recquant;
+    }
+    return total;
+}
+
+function clearDefaults(string issueId){
+    
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+receptionCommande+"/issue/"+issueId+"/clear";
+    string json = httpPut(url, request);
+}
+
+
+function getCommandInfos(string issueId) {
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+silEnv("GRID_COMMAND_ID")+"/issue/"+issueId;
+    string json = httpGet(url, authentication());
+    return json;
+}
+
+
+// Function to get command columns DATA
+function getCommandColumnsData(string ticket) {
+    string commandeJson = getCommandInfos(%ticket%.id);
+    
+    Commande[] commandeObject = fromJson(commandeJson);
+    runnerLog("Commande columns :::: " + commandeObject[0].rows);
+    
+    return commandeObject[0].rows;
+}
+
+
+// Function start to copy reception offre data in decision offre
+function getReceptionOffreInfos(string issueId) {
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+silEnv("GRID_RECEPTION_OFFRE_ID")+"/issue/"+issueId;
+    string json = httpGet(url, authentication());
+    return json;
+}
+
+
+// Function to get reception offre columns DATA
+function getReceptionOffreColumnsData(string ticket) {
+    string receptionOffreJson = getReceptionOffreInfos(%ticket%.id);
+    
+    ReceptionOffre[] receptionOffreObject = fromJson(receptionOffreJson);
+    runnerLog("Commande columns :::: " + receptionOffreObject[0].rows);
+    
+    return receptionOffreObject[0].rows;
+}
+
+
+// Function start to copy reception offre data in decision offre
+function getDecisionOffreInfos(string issueId) {
+    string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+silEnv("GRID_DECISION_OFFRE_ID")+"/issue/"+issueId;
+    string json = httpGet(url, authentication());
+    runnerLog("JSON ::: " + json);
+    return json;
+}
+
+
+// Function to get reception offre columns DATA
+function getDecisionAOColumnsData(string ticket) {
+    string decisionOffreJson = getDecisionOffreInfos(%ticket%.id);
+    
+    DecisionAO[] DecisionAOObject = fromJson(decisionOffreJson);
+    runnerLog("Decision columns :::: " + DecisionAOObject[0].rows);
+    
+    return DecisionAOObject[0].rows;
+}

@@ -1,0 +1,6 @@
+if(%key%.devisSend == "Oui" || %key%.valideBudget == "Oui") {
+    return true;
+}
+else {
+    return false;
+}

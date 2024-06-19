@@ -1,0 +1,73 @@
+include "Achat/utils.incl";
+include "Achat/Domain/Provider.incl";
+include "Achat/Services/ProviderService.incl";
+include "Achat/Services/OrderService.incl";
+
+//Affecter au responsable budget
+
+if(!isNull(%key%.fournisseurOffre)){
+    %key%.summary = "Achat - " + %key%.fournisseurOffre + " - " + formatDate(currentDate(), "dd/MM/yyyy");
+}else if (!isNull(%key%.fournisseurs)){
+    %key%.summary = "Achat - " + getValueFromElementConnectField(%key%.fournisseurs) + " - " + formatDate(currentDate(), "dd/MM/yyyy");
+}
+
+
+//%key%.summary = "Achat - " + key.fournisseur + " - " + formatDate(currentDate(), "dd/MM/yyyy");fournisseurS
+
+//%key%.referenceCommande= "BC -"+%key%.id;
+
+if(isNull(appelDOffre)){
+    
+    //Mettre a jour Agent traitant
+    %key%.agentTraitant = currentUser();
+
+    
+    //Mis a jour Entreprise
+    %key%.entreprise = fournisseur;
+    
+    //Recuperer les commandes
+    ProduitServiceRows[] lines = getOrderLines(%key%.id);
+    //ProduitServiceRows[] lines = getOrderLines("GDAG-107");
+     %key%.totalHT = getCurrentOrderTotal(lines);
+     %key%.total = (number)((number)%key%.totalHT +((number)%key%.totalHT*(number)%key%.tva/100));
+     
+    %key%.acompte = (number)((number)%key%.pourcentageAcompte*(number)%key%.total/100);
+    
+    %key%.montantRestant = %key%.acompte;
+         
+    %key%.assignee = currentUser();
+    
+    if(currentUsername() == getAchatResponsable()){
+        autotransition("11", key, true, true, true);
+    }
+    
+    //Auto envoyer en validation
+    // autotransition("Envoyer en validation", key, true, true, true);
+}else{
+    string ao = key.appelDOffre;
+    %key%.dateLivraison = %ao%.dateFinTravaux;
+    //Mettre a jour Agent traitant
+    %key%.agentTraitant = currentUser();
+    
+    //Mis a jour Entreprise
+    %key%.entreprise = fournisseur;
+    %key%.assignee = getAchatResponsable();
+    autotransition("11", key, true, true, true);
+}
+
+/*
+if (%key%.typeAchat == "Contrat|Abonnement") {   
+    %key%.echeance = day(%key%.datePremiereEcheance);
+}
+
+if (%key%.modalitePaiement =="1 mois") {
+   %key%.nombreMois = 30;
+}
+*/
+
+
+
+
+
+
+

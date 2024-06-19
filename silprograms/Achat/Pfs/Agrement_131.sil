@@ -1,0 +1,26 @@
+include "Achat/utils.incl";
+
+string from = "";
+string[] to  = %key%.membreComiteAgre;
+string [] cc = "";
+string subject = "STATUEZ SUR LES AGREMENTS";
+string body = "Au plutard avant le: "+%key%.dateComiteAgre;
+
+// Déclenche automatiquement l'état auto-comite si le champ initier comite est a oui
+if(initierComiteAgrement == "Oui") {
+    autotransition("21", key, true, true, true);
+    %key%.membreComiteAgre[size(%key%.membreComiteAgre)] = getUser("sc")[0]; 
+    %key%.assignee = userFullName("sc");
+    // string [] to = {"testJiraUser1", "testEmail@kepler.ro", "testJiraUser2"};
+    //  string [] cc = {"testEmail2@kepler.ro"};
+    //  sendEmail("testFrom@kepler.ro", to, cc, "testSubject.tpl", "testBody.tpl",
+    //  "en_US");
+    for(string p in to) {
+        sendEmail(from, getEmail(p), cc, subject, body,"");
+    }
+}
+// Déclenche automatiquement l'état agrée si le champ initier comite est a non
+else {
+    autotransition("171", key, true, true, true);
+} 
+

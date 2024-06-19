@@ -1,0 +1,14 @@
+include "Achat/utils.incl";
+/*
+//si l'utilisateur connecté est un responsable et que la demande vient d'un de ses agents ou du fournisseur ou qu'il a l'avis du resp. du departement concerné
+if ((isUserInGroup("Responsable", currentUser()) && !isDepartmentAgent(currentUser())) &&
+    (areTheyInSameDepartment(reporter, currentUser()) || isNotNull(avisResponsable) || (origineWorkflow != "Jira"))) {
+    return true;
+}
+return false;
+*/
+//Afficher que pour l'agent responsable du departement Achat et si la demande vient d'un agent du departement ou du fournisseur
+if ((isUserInGroup("Responsable", currentUser()) && !isDepartmentAgent(currentUser())) && ((isNotNull(avisResponsable) && isDepartmentAgent(reporter)) || !isDepartmentAgent(reporter) || origineWorkflow != "Jira")) {
+    return true;
+}
+return false;

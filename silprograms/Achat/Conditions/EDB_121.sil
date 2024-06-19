@@ -1,0 +1,4 @@
+if(%key%.valideDGA == "Oui" || %key%.valideDG == "Oui"){
+    return false;
+}
+return true;

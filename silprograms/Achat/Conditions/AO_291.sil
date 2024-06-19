@@ -1,0 +1,4 @@
+if(compteurOffre != 0) {
+    return true;
+}
+return false;

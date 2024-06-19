@@ -1,0 +1,16 @@
+string patternIban = "[a-zA-Z]{2}[0-9]{3}[a-zA-Z0-9]{5}[0-9]{14}";
+
+if(argv["capital"] == ""){
+    if(length(argv["iban"]) == 24 && matches(argv["iban"], patternIban))
+        lfHideFieldMessage("iban");
+}else{
+    if(!matches(argv["iban"], patternIban)){
+        lfShowFieldMessage("iban", "Veuiler verifier le format de l'iban (positionne sur 24 caracteres)"+(argv["capital"] != ""), "ERROR");
+        lfSet("capital", "");
+    }else{
+        lfHideFieldMessage("iban");
+    }
+}
+
+
+

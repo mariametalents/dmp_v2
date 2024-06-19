@@ -1,0 +1,6 @@
+struct Application{
+    int offerId;
+    int providerId;
+    string status;
+    date submitted;
+}

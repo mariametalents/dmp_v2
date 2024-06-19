@@ -1,0 +1,47 @@
+include "Achat/Domain/Provider.incl";
+include "Achat/Services/ProviderService.incl";
+
+// if(argv["issueType"]=="Agrement"){
+//     if(argv["fournisseurAgree"] == "Oui"){
+//         lfHide("entreprise");
+//         lfShow("fournisseur");
+//     }else if(argv["fournisseurAgree"] == "Non"){
+//         lfHide("fournisseur");
+//         lfShow("entreprise");
+//     }
+// }
+
+
+    if(argv["fournisseurAgree"] == "Oui"){
+    
+    
+        // Show Fournisseur Field
+        lfExecuteJS("Achat/lf/JS/showFournisseurNfeedLabel.js");
+        lfExecuteJS("Achat/lf/JS/showFournisseurNfeed.js");
+        
+        // Hide Fournisseurs field
+        lfExecuteJS("Achat/lf/JS/hideFournisseursNfeedLabel.js");
+        lfExecuteJS("Achat/lf/JS/hideFournisseursNfeed.js");
+        
+        lfHide("rcc");
+        lfHide("adresse");
+        lfHide("tel");
+        lfHide("emailFournisseur");
+    }else if (argv["fournisseurAgree"] == "Non"){
+        // Show Fournisseurs field
+        lfExecuteJS("Achat/lf/JS/showFournisseursNfeedLabel.js");
+        lfExecuteJS("Achat/lf/JS/showFournisseursNfeed.js");
+        
+        // Hide fournisseur field
+        lfExecuteJS("Achat/lf/JS/hideFournisseurNfeedLabel.js");
+        lfExecuteJS("Achat/lf/JS/hideFournisseurNfeed.js");
+        
+        lfShow("rcc");
+        lfShow("adresse");
+        lfShow("tel");
+        lfShow("emailFournisseur");
+    }
+    
+    
+lfWatch("fournisseur", {"fournisseur"}, "Achat/lf/fournisseur.sil",{"change"});
+

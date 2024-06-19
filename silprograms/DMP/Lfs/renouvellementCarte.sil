@@ -1,0 +1,18 @@
+<<<<<<< HEAD
+include "DMP/Lfs/displayOrHideFields.incl";
+
+if(argv["renouvellementCarte"]=="NON"){
+lfShow("typePaiement");
+  lfWatch("typePaiement", {"typePaiement"}, "DMP/Lfs/typePaiement.sil",{"change"});
+} else{
+    hideAllFields();
+}
+=======
+
+
+if(argv["renouvellementCarte"]=="NON"){
+  lfWatch("typePaiement", {"typePaiement"}, "DMP/Lfs/typePaiement.sil",{"change"});
+}else if(argv["renouvellementCarte"]=="OUI"){
+    
+}
+>>>>>>> 1b682d6ff4cf7e002ab022aeb99bb08e9dc430fb

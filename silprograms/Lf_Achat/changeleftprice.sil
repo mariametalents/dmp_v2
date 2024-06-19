@@ -1,0 +1,7 @@
+// lfGlobalMessage("Test montant restant automatique");
+if("montantRegle" != 0) {
+   number resultat = (number)"total"-(number)"montantRegle";
+   runnerLog("Resultat montant restant: "+resultat);
+    lfSet("montantRestant", resultat, true);
+    // return resultat;
+}

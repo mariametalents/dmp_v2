@@ -1,0 +1,12 @@
+include "Achat/utils.incl";
+
+//Envoi invitations aux participants pour la commission
+string from = "";
+string[] to  = %key%.participants;
+string [] cc = "";
+string subject = "COMMISSION DE L'APPEL D'OFFRE";
+string body = "REUNION POUR EVALUER LES OFFRES AVANT LA DATE DU: "+%key%.dateCommission;
+for(string p in to) {
+    runnerLog("====Emails=== "+getEmail(p));
+    sendEmail(from, getEmail(p), cc, subject, body,"");
+}

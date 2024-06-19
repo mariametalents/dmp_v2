@@ -1,0 +1,17 @@
+if(argv["typeReglement"] == "Chèque"){
+    lfHide("numCompte");
+    lfShow("numCheque");
+    lfHide("numRef");
+}else if (argv["typeReglement"] == "Virement"){
+    lfShow("numCompte");
+    lfHide("numCheque");
+    lfHide("numRef");
+}else if (argv["typeReglement"] == "Caisse"){
+    lfHide("numCompte");
+    lfHide("numCheque");
+    lfShow("numRef");
+}else{
+    lfHide("numCompte");
+    lfHide("numCheque");
+    lfHide("numRef");
+}

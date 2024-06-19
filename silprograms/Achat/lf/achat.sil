@@ -1,0 +1,154 @@
+include "Achat/lf/Agrement/agrement.sil";
+include "Achat/lf/EDB.sil";
+
+//lfHide("fournisseurs");
+if(argv["screen"] == "create"){
+    
+    lfExecuteJS("Achat/lf/hideSummary.js");
+    // Hide fournisseurs nfeed
+    lfExecuteJS("Achat/lf/JS/hideFournisseursNfeedLabel.js");
+    lfExecuteJS("Achat/lf/JS/hideFournisseursNfeed.js");
+    
+    // Hide Fournisseur Nfeed
+    lfExecuteJS("Achat/lf/JS/hideFournisseurNfeedLabel.js");
+    lfExecuteJS("Achat/lf/JS/hideFournisseurNfeed.js");
+    
+    
+    lfRestrictSelectOptions("modeLivraison", {"Aucune"});
+    lfRestrictSelectOptions("fournisseurAgree", {"Aucune", "Aucun"});
+    lfRestrictSelectOptions("customfield_10502", {"Aucune"});
+    lfRestrictSelectOptions("typeAchat", {"Aucune"});
+    lfRestrictSelectOptions("contratAbonnement", {"Aucune"}); 
+    lfWatch("typeAchat", {"typeAchat"}, "Achat/lf/field.sil",{"change"});
+    lfHide("typeInventaire");
+    lfRestrictSelectOptions("bienAmorti", {"Aucune"}); 
+    lfRestrictSelectOptions("analyseABC", {"Aucune"});
+    lfRestrictSelectOptions("periodiciteContrat", {"Aucune"});
+    lfRestrictSelectOptions("etat", {"Aucune"});
+//  lfRestrictSelectOptions("typeAmortissement", {"Aucune"});
+    lfWatch("dureeText", {"dureeText"}, "Achat/lf/Fields.sil",{"keyup"});
+    lfHide("ficheImmobilisationText");
+    lfHide("numeroInventaire");
+    lfRestrictSelectOptions("modaliteReglement", {"Aucune"});
+    lfRestrictSelectOptions("typeContrat", {"Aucune"});
+    lfRestrictSelectOptions("PeriodiciteReglement", {"Aucune"});
+    lfRestrictSelectOptions("contratRenouvelable", {"Aucun"});
+    
+
+    
+}
+lfExecuteJS("Achat/lf/script.js");
+lfExecuteJS("Achat/lf/hideSuite.js");
+lfAllowSelectOptions("typeAO", {"Ouvert", "Restreint"});
+lfWatch("typeAO", {"typeAO"}, "Achat/lf/Fields.sil",{"change"});
+lfWatch("garderStock", {"garderStock"}, "Achat/lf/Fields.sil",{"change"});
+lfWatch("typeAchat", {"typeAchat"}, "Achat/lf/field.sil",{"change"});
+//lfWatch("totalHT", {"totalHT"}, "Achat/lf/operator.sil");
+lfWatch("tva", {"tva", "totalHT"}, "Achat/lf/operator.sil",{"change"});
+lfWatch("totalHT", {"totalHT", "tva"}, "Achat/lf/operator.sil",{"change"});
+lfDisable("total");
+lfWatch("fournisseurAgree", {"fournisseurAgree"}, "Achat/lf/affiche.sil",{"change"});
+lfWatch("modaliteReglement", {"modaliteReglement"}, "Achat/lf/field.sil",{"change"});
+
+if(argv["screen"] == "trans_81"){
+    lfDisable("customfield_10444");
+    lfDisable("customfield_10302");
+    lfDisable("customfield_10308");
+    lfDisable("customfield_10304");
+    lfDisable("customfield_10353");
+}
+
+string[] fields = {
+    "fournisseurs"
+};
+
+if(argv["screen"] == "trans_41"){
+     lfExecuteJS("Achat/lf/hideSummary.js");
+}
+if(argv["screen"] == "trans_111"){
+     lfRestrictSelectOptions("modeLivraison", {"Aucune"});
+     lfRestrictSelectOptions("garderStock", {"Aucun"});
+     lfDisableTab("Informations fournisseur");
+}
+
+if(argv["screen"] == "trans_331"){
+     lfWatch("acompte", {"acompte"}, "Achat/lf/Fields.sil",{"change"});
+     lfRestrictSelectOptions("acompte", {"Aucune"});
+     lfRestrictSelectOptions("typeAcompte", {"Aucune"});
+}
+
+if(argv["screen"] == "trans_91"){
+     lfExecuteJS("Achat/lf/hideSummary.js");
+}
+
+if(argv["screen"] == "trans_141"){
+    lfWatch("typeReglement", {"typeReglement"}, "Achat/lf/typeReglement.sil",{"change"});
+    lfHide("numCompte");
+    lfHide("numCheque");
+    lfHide("numRef");
+}
+
+if(argv["screen"] == "trans_221"){
+     lfDisable("customfield_11900");
+     lfRestrictSelectOptions("cptReglement", {"Aucune"});
+}
+
+if(argv["screen"] == "trans_211"){
+     lfWatch("tauxAcompte", {"tauxAcompte"}, "Achat/lf/Fields.sil",{"keyup"});
+     lfRestrictSelectOptions("cptReglement", {"Aucune"});
+}
+
+if(argv["screen"] == "trans_11"){
+    lfHide("agent"); 
+    lfHide("respoInventaire");
+    lfHide("comment");
+
+}
+
+if(argv["screen"] == "trans_101"){
+    lfHide("agent"); 
+    lfHide("respoInventaire");
+}
+
+if(argv["screen"] == "trans_101"){
+    lfHide("numeroContratAbonnement"); 
+ // lfHide("respoInventaire");
+
+}
+
+// trans lier contrat a AO
+if(argv["screen"] == "trans_271"){
+    lfHide("numeroContratAbonnement"); 
+    lfRestrictSelectOptions("typeContrat", {"Aucune"});
+    lfRestrictSelectOptions("periodiciteContrat", {"Aucune"});
+    lfRestrictSelectOptions("modaliteReglement", {"Aucune"});
+    lfWatch("modaliteReglement", {"modaliteReglement"}, "Achat/lf/field.sil",{"change"});
+    lfRestrictSelectOptions("PeriodiciteReglement", {"Aucune"});
+    lfExecuteJS("Achat/lf/hideSummary.js");
+    lfRestrictSelectOptions("contratRenouvelable", {"Aucun"});
+    
+}
+
+if(argv["screen"] == "trans_341"){
+    lfHide("referenceDAO"); 
+    lfExecuteJS("Achat/lf/hideSummary.js");
+
+}
+
+// ====================== Flux Budget et Exercice ================
+
+if(argv["screen"] == "create" && issueType == "Exercice budgétaire") {
+    lfGlobalMessage("Test live field");
+}
+
+if(argv["screen"] == "trans_131"){
+   // lfSet(field, value[, triggerChange]);
+
+}
+
+
+
+
+
+
+

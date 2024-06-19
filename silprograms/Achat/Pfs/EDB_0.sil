@@ -1,0 +1,28 @@
+include "Achat/Services/RequestEDB.incl";
+
+if(%key%.issueType == "Expression de besoins"){
+    //%key%.assignee = getResponsibleAgent(currentUser());
+    %key%.summary = "EDB - ";
+}else if(%key%.issueType == "Fourniture"){
+    %key%.summary = "Fourniture - ";
+    autotransition("auto_fourniture", key, true, true, true);
+}else if(%key%.issueType == "Demande d'achat"){
+    %key%.summary = "Demande d'achat - ";
+    autotransition("auto_achat", key, true, true, true);
+}
+
+%key%.summary += %key%.natureDemande + " - " + formatDate(currentDate(), "dd/MM/yyyy");
+%key%.assignee = currentUser();
+// %tickets%.agentTraitant
+
+// autotransition("11", key, true, true, true);
+    // autotransition("71", key, true, true, true);
+    // %key%.assignee = "gestionnaire stock";
+
+if(isUserInGroup("Responsable", currentUser())){
+    autotransition("11", key, true, true, true);
+    // autotransition("71", key, true, true, true);
+    // %key%.assignee = "gestionnaire stock";
+
+}
+

@@ -1,0 +1,18 @@
+    //Assigner au responsable achat si c'est lui qui a initier la demande de complement
+include "Achat/utils.incl";
+
+string STATUS_TRAITEMENT = "EN COURS";
+string jql = "project = " +project+" and issuetype = "+type+" AND issuekey = "+key+" AND status was \""+STATUS_TRAITEMENT+"\"";
+boolean isFirstAchat= isNotNull(selectIssues(jql));
+
+if(isFirstAchat){
+    %key%.assignee = getAchatResponsable();
+    autotransition("131", key, true, true, true);
+       // autotransition("auto_en_cours", key, true, true, true);
+
+}else{
+    %key%.assignee = agentTraitant;
+    autotransition("151", key, true, true, true);
+     //   autotransition("auto_creer", key, true, true, true);
+
+}

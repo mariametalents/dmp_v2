@@ -1,0 +1,7 @@
+string [] requiredFieldAO = {
+"typeAO",
+"titre",
+"produitServiceAO",
+"dateFinDep",
+"modApp"
+};

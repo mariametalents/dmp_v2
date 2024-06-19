@@ -1,0 +1,12 @@
+include "Achat/utils.incl";
+
+string STATUS_TRAITEMENT = "En attente règlement comptabilité";
+string project = "GESTION DES ACHATS";
+string jql = "project = "GDA " and issuetype = "Achat : Abonnement" AND issuekey = "+key+" AND status is \""+STATUS_TRAITEMENT+"\"";
+string [] issues = selectIssues(jql);
+for (string issue in issues) {
+    if (%key%.dateEcheance == currentDate()){
+        autotransition(111, key, true, true, true);
+    }
+    
+}

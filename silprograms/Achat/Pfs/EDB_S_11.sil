@@ -1,0 +1,31 @@
+include "Achat/Services/StockService.incl";
+
+if(isNull(key.quantiteRestante))
+    %key%.quantiteRestante = key.quantite - key.quantiteRecue;
+else
+    %key%.quantiteRestante -= key.quantiteRecue;
+    
+%key%.quantiteRecue = key.quantite - key.quantiteRecue; 
+
+// On verifie si toute la quantite demandee a ete recue si oui on passe a terminer
+if(key.quantiteRestante == 0){
+    autotransition(41, key, true, true, true);
+    %key%.assignee = "Service Stock";
+}
+/*
+if(getStock(key.produitsServices)==0){
+    // Mettre en rupture de stock 
+    autotransition(31, key, true, true, true);
+}
+
+*/
+//string parent="GDA-174";
+string jql = "issuetype = Article AND status != Livre AND parent = \""+parent+"\" AND key!=\""+key+"\"";
+string[] issues = selectIssues(jql);
+if(size(issues)==0){
+    // Auto terminer
+    autotransition(211, parent, true, true, true);
+    // Auto Reception
+    autotransition(311, parent, true, true, true);
+    %parent%.assignee = %parent%.reporter;
+}

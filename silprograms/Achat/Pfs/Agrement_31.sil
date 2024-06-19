@@ -1,0 +1,24 @@
+//Notifier le fournisseur pour informations compl�mentaire
+string from = "";
+string to = email;
+string cc = "";
+string subject = "AGREMENT_REJET_SUBJ.tpl";
+string body = "AGREMENT_REJET_BODY.tpl";
+sendEmail(from,to,cc,subject,body);
+
+//Mettre a jour le statut fournisseur a REJECTED
+string STATUS = "DELETED";
+string SOURCE = "PFA";
+string query = "update j_provider set status='"+STATUS+"' where rcc = '"+rcc+"'";
+sql(SOURCE,query);
+
+
+/*
+JEmailMessage email;
+email.to = {"email", "testEmail@cprime.com", ""};
+email.subject = "Notification d'agrement";
+email.message = "Bonjour.............";
+ 
+sendEmail(email);
+
+*/

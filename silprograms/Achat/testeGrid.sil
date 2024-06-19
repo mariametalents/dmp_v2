@@ -1,0 +1,16 @@
+struct Element{
+    string id;
+    string libelle;
+    string endpoint;
+}
+struct Categorie{
+    Element elements;
+}
+struct ObjetCategie{
+    Categorie[] categories;
+}
+string data = readFromTextFile("Achat/categorie.data");
+runnerLog("From:::::: "+fromJson(data));
+ObjetCategie object = fromJson(data);
+runnerLog(data);
+runnerLog("Object:::"+object);

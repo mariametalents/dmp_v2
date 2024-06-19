@@ -1,0 +1,33 @@
+include "Achat/Domain/Default.incl";
+
+function getCurrentDefaults(string issueId){
+    
+    //Recuperation details champ default id 10405
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "consult@2020*");
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/10405/issue/"+issueId;
+    string json = httpGet(url, request);
+    
+    //Retourn details commandes
+    GDefault gDefault = fromJson(json);
+    return gDefault.values;
+}
+
+function cleanDefaults(string issueId){
+    
+    //Reinitialisation champ default id 10405
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader("admin", "consult@2020*");
+    request.headers += authHeader;
+    string url =  getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/10405/issue/"+issueId+"/clear";
+    string json = httpPut(url, request);
+}
+
+function getDefaultOrderLineIds(Default[] defaults){
+    string[] ids;
+    for(Default _default in defaults){
+        ids += _default.identifier;
+    }
+    return ids;
+}

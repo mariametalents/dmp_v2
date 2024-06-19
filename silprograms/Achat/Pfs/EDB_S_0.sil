@@ -1,0 +1,4 @@
+if(key.ruptureStock == "Oui"){
+    // Mettre en rupture en stock 
+    autotransition(31, key, true, true, true);
+}

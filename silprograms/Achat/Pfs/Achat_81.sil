@@ -1,0 +1,75 @@
+include "Achat/Services/DefaultService.incl";
+include "Achat/Services/CommentService.incl";
+include "Achat/Services/JiraIssueService.incl";
+include "Achat/Services/OrderService.incl";
+include "Achat/Services/ProviderService.incl";
+include "Achat/Services/CommandeService.incl";
+include "Achat/utils.incl";
+//include "Achat/Services/StockService.incl";
+
+//Recuperer l'id de l'issue
+string issueId = getIssueId();
+//Getting Order Id
+//string orderId = getOrderId("PFA");
+//Recuperer L'id du provider
+//string providerId = getChoosedProviderId("PFA");
+
+// parcourir le tableau et s'il y a defaut = 0 et requiredview=non et quantiteCommande=qrecue
+boolean isCorrect = true;
+//ReceptionLine [] rl = getReceptionLines(issueId);
+string t = "GDAG-286";
+ReceptionLine [] rl = getReceptionLines(%key%.id);
+for (ReceptionLine r in rl){
+    runnerLog("*********** ");
+    //isCorrect = isCorrect && (r.quantity == r.recquant) && (r.requirereview.value =="Non");
+} 
+   // if (isCorrect)   
+       // autotransition(121, key, true, true, true);
+
+//runnerLog("Recept : "+rl);
+
+//Envoi mail fournisseur
+// if(isNotNull(email)){
+//     string from = "";
+//     string to = email;
+//     string cc = "";
+//     string subject = "ACHAT_DEFAULT_NOTIFICATION_SUBJ.tpl";
+//     string body = "ACHAT_DEFAULT_NOTIFICATION_BODY.tpl";
+//     sendEmail(from,to,cc,subject,body);
+// }
+
+//autotransition("Valider livraison", key, true, true, true);
+
+/*
+//Effacer les defauts 
+cleanDefaults(issueId);
+
+//Recuperer les ids des commandes non receptionnes
+string[] idReceptionnes = getUnreceveidOrderLineIds(orderId,"PFA");
+//Recuperer les ids des commandes en defauts
+string[] idDefaults = getDefaultOrderLineIds(defaults);
+//Filtrer parmi les commandes non receptionnes les commades en defauts
+string[] idRecNotInDefaults = arrayDiff(idReceptionnes, idDefaults);
+//Pour chaque commande non receptionnes et non en defaut
+for(string idrnd in idRecNotInDefaults){
+   //Mise a jour de la commande a recu
+   updateOrderLineReception(idrnd,"PFA");
+   //Mise a jour stock
+   string productId = getProductIdFromOrderLine(idrnd,"PFA");
+   string quantity = getProductQuantityFromOrderLine(idrnd,"PFA");
+ //  updateStock(productId,quantity,"PFA");
+}
+
+
+//Auto valider si aucun defaut a traiter
+if(!hasDefault){
+    updateOrderStatus(orderId,"DELIVERED","PFA");
+    autotransition("Valider livraison", key, true, true, true);
+}else{
+    updateOrderStatus(orderId,"DELIVERED_WITH_DEFAULT","PFA");
+}
+
+//assigner au responsable appro pour validation
+//%key%.assignee = getApproResponsable();
+
+*/

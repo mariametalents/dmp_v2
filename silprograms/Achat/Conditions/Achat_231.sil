@@ -1,0 +1,4 @@
+if( %key%.montantRestant <= 0) {
+    return false;
+}
+return true;

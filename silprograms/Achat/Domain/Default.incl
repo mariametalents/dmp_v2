@@ -1,0 +1,21 @@
+struct Option{
+    string name;
+    string value;
+}
+
+struct Default{
+    string identifier;
+    Option ref;
+    string desc;
+    number reqquant;
+    number recquant;
+    string defaultdesc;
+    Option requirereview;
+}
+
+struct GDefault{
+    number startAt;
+    number maxResults;
+    number total;
+    Default[] values;
+}

@@ -1,0 +1,17 @@
+include "Achat/utils.incl";
+include "Achat/Domain/Poste_Depenses.incl";
+include "Achat/Services/gridFunctions.sil";
+
+%key%.summary = "Budget - "+ formatDate(currentDate(), "dd/MM/yyyy");
+%key%.nomDepartement = getUserDepartment(currentUser());
+%key%.assignee= getDepartmentResponsable(currentUser());
+
+// PDepensesGridValue[] pDepenses = getPostesDepenses(%key%.id);
+
+// for(PDepensesGridValue pDepense in pDepenses) {
+//     if(pDepense.type_depense == "CAPEX") {
+//         %key%.montantCapex += pDepense.cout;
+//     } else if(pDepense.type_depense == "OPEX") {
+//         %key%.montantOpex += pDepense.cout;
+//     }
+// }

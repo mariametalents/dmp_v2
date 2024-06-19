@@ -1,0 +1,21 @@
+string source = "PFA";
+
+function updateStatusProvider(string ticket){
+    string stateProvider = "ACTEVED";
+    switch(toUpper(%ticket%.status)){
+       case "ETUDE DOSSIER": 
+       case "EN ATTENTE CONFIRMATION ENTIT…":
+       case "EN ATTENTE VALIDATION COMIT…":
+        stateProvider = "CREATED";
+        break;
+       case "AGR……(E)":
+        stateProvider = "APPROVED";
+        break;
+       case "REJET…(E)": 
+        stateProvider = "REJECTED";
+        break;
+    }
+    
+    string req = "UPDATE public.provider SET status='"+stateProvider+"' WHERE code='"+key+"'";
+    sql(req, "PFA");
+}

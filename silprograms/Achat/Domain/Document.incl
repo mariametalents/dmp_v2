@@ -1,0 +1,31 @@
+struct Document{
+    string sens;
+    string name;
+    string ext;
+    string title;
+    string label;
+    string origineName;
+    string order;
+    string offer;
+    string provider;
+    string appOffer;
+    string appProvider;
+}
+
+struct _Type{
+    string name;
+    string value;
+}
+
+struct GDocumentItem{
+    string iobligatoire;
+    _Type idocuments;
+}
+
+struct GDocument{
+    number startAt;
+    number maxResults;
+    number total;
+    GDocumentItem[] values;
+}
+

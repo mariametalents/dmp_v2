@@ -1,0 +1,31 @@
+include "Achat/lf/Agrement/regex_provider.sil";
+
+if(isNotNull(argv["ninea"]) && !matches(argv["ninea"],regex_ninea)){  
+    lfShowFieldMessage("ninea", "veuillez respecter le format du ninea, ex: 48771740T4 ","ERROR"); 
+} else {
+    lfHideFieldMessage("ninea");
+}
+
+// if(isNotNull(argv["rcc"]) && !matches(argv["rcc"],regex_registre)){
+//     lfShowFieldMessage("rcc","veuillez respecter le format du registre de commerce","ERROR");
+// } else {
+//     lfHideFieldMessage("rcc");
+// }
+
+if(isNotNull(argv["iban"]) && !matches(argv["iban"],regex_iban)) {
+    lfShowFieldMessage("iban","veuillez respecter le format de l'iban sur 24 caracteres, ex: SN47Y9023903489193093490","ERROR");
+} else {
+    lfHideFieldMessage("iban");
+}
+
+if(isNotNull(argv["email"]) && !matches(argv["email"],regex_email)) {
+    lfShowFieldMessage("email", "veuillez verifier le format de l'email","ERROR");
+} else {
+    lfHideFieldMessage("email");
+}
+
+if(isNotNull(argv["tel"]) && !matches(argv["tel"],regex_phone)) {
+    lfShowFieldMessage("tel","veuillez verifier le format du numero de telephone","ERROR");
+} else {
+    lfHideFieldMessage("tel");
+}

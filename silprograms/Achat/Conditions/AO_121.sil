@@ -1,0 +1,4 @@
+if(isNull(dateCommission) || !hasInput("dateCommission")) {
+    return true;
+}
+return false;

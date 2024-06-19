@@ -1,0 +1,7 @@
+include "Achat/utils.incl";
+
+// si la demande vient d'un agent autre que le departement achat ou du fournisseur mais en fonction du type de produit
+if((origineWorkflow == "Jira" && isDepartmentAgent(reporter) && isNull(avisResponsable)) || (origineWorkflow != "Jira" && isNull(avisResponsable))) {
+    return true;
+}
+return false;

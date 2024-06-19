@@ -1,0 +1,123 @@
+include "Achat/Domain/EDB.incl";
+include "Achat/Services/StockService.incl";
+include "Achat/Services/JiraIssueService.incl";
+
+int devisField=10434;
+int decisionField=10433;
+
+string username = "admin";
+string password = "admin";
+
+function getObject(string issueId, string fieldId){
+    
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+fieldId+"/issue/"+issueId;
+    runnerLog(url);
+    string json = httpGet(url, request);
+    return json;
+}
+
+function getProducts(string issueId){
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+decisionField+"/issue/"+issueId;
+    Products products = httpGet(url, request);
+    return products.values;
+}
+
+function getDevis(string issueId){
+
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+devisField+"/issue/"+issueId;
+    runnerLog(url);
+    string json = httpGet(url, request);
+    ProductsDevis products =  fromJson(json);
+    return products.values;
+}
+
+function getTotalAmountDevis(string issueId){
+
+    ProductDevis[] products = getDevis(issueId);
+    number totalAmount = 0;
+    for(ProductDevis pro in products){
+        if(isNotNull(pro.iquantite) && isNotNull(pro.iprix)){
+            totalAmount += pro.iprix; // pro.iquantite * 
+        }
+    }
+    return totalAmount;
+}
+
+function addProductsToDevisGrid(ProductDecision[] products, string issueId){
+    
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(username, password);
+    request.headers += authHeader;
+    request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+devisField+"/issue/"+issueId;
+    runnerLog(url);
+    ProductDevisRow[] productDevis;
+   for(ProductDecision product in products){
+        logPrint("ERROR", "IDECISION "+product.idecision);
+        if(product.idecision == "OUI"){
+            ProductDevisRow pro;
+            Option op = product.iname;
+            pro.iname = op.name;
+            pro.iquantite = product.iquantite;
+            pro.idescription = product.idescription;
+            pro.istock = getStock(op.name);
+            pro.iprixu=getUnitPrice(op.name);
+            pro.iprix=pro.iprixu * pro.iquantite;
+            //addElement(productDevis, pro);
+            productDevis += pro;
+        }
+    }
+    Row rows;
+    rows.rows = productDevis;
+     runnerLog(url + " ++ "+toJson(rows));
+    
+    int[] keys = httpPost(url, request, rows);
+    runnerLog(httpGetErrorMessage());
+    return  keys;
+}
+
+function createServiceForEDB(string issueId){
+    ProductDevis[] products = getDevis(issueId);
+    for(ProductDevis pro in products){
+        string article = createIssue("GDA", key, "Article", key +" - "+ pro.iname);
+        %article%.quantite = pro.iquantite;
+        %article%.quantiteRestante = pro.iquantite;
+        %article%.produitsServices = pro.iname;
+        %article%.departement = key.departement;
+        %article%.assignee = key.reporter;
+        %article%.reporter = key.reporter;
+        %article%.prixTotal = pro.iprix;
+        
+        if(pro.istock == 0)
+            %article%.ruptureStock = "Oui";
+        else
+            %article%.ruptureStock = "Non";
+    }
+}
+
+function verifyStockForProductInSoldOut(){
+    string jql = "issuetype = Article  AND status in (\"En attente Stock\", \"En attente livraison\")";
+    string[] articles = selectIssues(jql);
+    for (string article in articles){
+        int stock = getStock(%article%.produitsServices);
+        if(stock > 0){
+//            %article%.ruptureStock = "Non";
+            // Mettre en rupture en stock 
+//            autotransition(31, article, true, true, true);
+        }else{
+//            %article%.ruptureStock = "Oui";
+            // Mettre en attente livrasion 
+//            autotransition(11, article, true, true, true);
+        }
+    }
+}

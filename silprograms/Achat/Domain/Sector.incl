@@ -1,0 +1,51 @@
+struct SectorGrid{
+    string ifournisseur;
+    string isecteur;
+    string idecision;
+}
+
+struct SectorGridRows{
+    SectorGrid[] rows;
+}
+
+struct Relation{
+    string value;
+    string name;
+}
+
+struct SectorGridValue{
+    string ifournisseur;
+    string isecteur;
+    Relation idecision;
+    int modified;
+    int issueId;
+    int id;
+}
+
+struct SectorsGrid {
+    number startAt;
+    number maxResults;
+    number total;
+    SectorGridValue[] values;
+}
+
+
+struct DeRelation{
+    Relation idecision;
+    int modified;
+    int issueId;
+    int id;
+}
+
+
+struct Decisions {
+    int startAt;
+    int maxResults;
+    int total;
+    DeRelation[] values;
+}
+
+
+
+
+

@@ -1,0 +1,57 @@
+include "Achat/Services/gridFunctions.sil";
+//string key= "GDA-51576";
+
+
+//runnerLog("GROUPBYSECTOR START");
+function groupBySector(OrderLine[] sect){
+    runnerLog("GROUPBYSECTOR START");
+    OrderGridLoad[][] sectorGroups ;
+    int i=0;
+    for(OrderLine s in sect) {
+        OrderGridLoad ol;
+        //if(isNull(s.sector)||s.sector=="") string sector = "Vide";
+        //else sector = s.sector;
+        ol.ref = s.ref;
+        ol.nature = s.nature.value;
+        ol.sector = s.sector.value;
+        ol.category = s.category.value;
+        ol.product = s.product.value;
+        ol.price = s.price;
+        ol.quantity = s.quantity;
+        ol.desc = s.desc;
+        sectorGroups[s.sector.value] += ol; 
+        i++;
+   } 
+    runnerLog("GROUPBYSECTOR END");
+    return sectorGroups;
+}
+//runnerLog("GROUPBYSECTOR END");
+//runnerLog("GETSECTORAO START");
+function getSecteursAO(string issueId){
+    runnerLog("GETSECTORAO START");
+    OrderLine[] sect = getSectorAO(issueId); 
+    runnerLog("SECT "+sect);
+    string[] sects = %key%.secteurs; 
+    //OrderLineRows sectorGroups;
+    OrderGridLoad[][] orders = groupBySector(sect) ;
+    //runnerLog("SECTORGROUPS "+sectorGroups);
+    runnerLog("SECTORGROUPS "+orders);
+    for(string s in sects){
+        OrderLineRows sectorGroups;
+        string sectorName = getElement(split(s, "-"), 1);
+        runnerLog("SECTORNAME "+sectorName);
+        //sectorName = "vide";
+        string lot = createIssue("GDA", key, "Lot offres", "Lot "+s);
+        %lot%.assignee = key.assignee;
+        %lot%.reporter = key.reporter;
+        %lot%.dateFinDep = key.dateFinDep;
+        %lot%.fournisseurs = key.fournisseurs;
+        sectorGroups.rows = orders[sectorName];
+        runnerLog("LOTS "+lot);
+        //if(isNotNull(sectorGroups[sectorName]))
+        loadGridDatas(%lot%.id, "11600", toJson(sectorGroups));
+    } 
+    runnerLog("GETSECTORAO END");
+} 
+//runnerLog(""+getSecteursAO(%key%.id));
+//getSecteursAO(%key%.id);

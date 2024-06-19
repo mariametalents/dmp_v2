@@ -1,0 +1,101 @@
+include "Achat/Services/CommandeService.incl";
+include "Achat/Services/OfferService.incl";
+include "Achat/utils.incl";
+
+copyDecisionAoToChangerFournisseurGrid(key, getDecisionAOColumnsData(key));
+
+//Recuperer toutes les soumissions
+    string gridIdOffre = "10401";
+    string t = "GDAG-241";
+
+    string tableauOffre = getTableGridValues(gridIdOffre,%key%.id);
+    DecisionValue[] offres = fromJson(tableauOffre);
+    
+    runnerLog(tableauOffre);
+    
+    Decision fournisseur;
+    fournisseur.score = 0;
+    for(DecisionValue o in offres){
+    
+        for(DecisionRows offreRow in o.rows){
+        
+            for(Decision of in offreRow.columns){
+                if(of.score >= of.score){
+                    fournisseur = of;
+                }
+                
+                runnerLog("Teste:::: "+ fournisseur);
+                // updateGrid(dec, %ticket%.id, decisionRow.rowId, gridIdDecision);
+    
+
+            } 
+            
+        }
+            
+    }
+    
+    if(fournisseur.score != 0){
+        %key%.fournisseur = fournisseur.fournisseur;
+    }
+    
+    // Notification au fournisseur retenu et aux autres en attente
+    string from = "";
+    string[] to  = split(split(fournisseurSelectFirst, "\\(")[1], "\\)")[0];
+    string pattern = "(?<=\\()";
+    // string returned = split(fournisseurSelectFirst, "\\(")[1];
+    string result = split(split(fournisseurSelectFirst, "\\(")[1], "\\)")[0];
+    // lfGlobalMessage("**** Fournisseur retenu: "+result+" ****");
+    string [] cc = "";
+    string subject = "Resultat après délibération des offres";
+    string body = "Nous vous informons que vous avez été retenu pour l'offre pour l'appel d'offre: "+%key%.id+ ". Vous avez jusqu'à la date du "+delaiConfirmationFournisseurRetenu+" pour confirmer ";
+    sendEmail(from, to, cc, subject, body,"");
+    
+    // Notification aux fournisseurs en attente
+    string[] toLeft  = {split(split(fournisseurSelectSecond, "\\(")[1], "\\)")[0], split(split(fournisseurSelectThird, "\\(")[1], "\\)")[0], split(split(fournisseurSelectFourth, "\\(")[1], "\\)")[0]};
+    string bodyForLeft = "Nous vous informons que vous êtes sur liste d'attente pour l'appel d'offre: "+%key%.id;
+    sendEmail(from, toLeft, cc, subject, bodyForLeft,"");
+    
+// Update selected fields
+fournisseurRetenu = fournisseurSelectFirst;
+fournisseurFEnAttente = fournisseurSelectSecond;
+fournisseurSEnAttente = fournisseurSelectThird;
+fournisseurTEnAttente = fournisseurSelectFourth;
+    
+//Recuperer toutes les soumissions
+// %key%.assignee = currentUser();
+// string[] Offres = subtasks(key);
+// for(string oKey in Offres){
+
+//     string choosedProvider = %key%.fournisseur;
+//     string[] waitingProviders = %key%.fournisseurs;
+//     string appProvider = %oKey%.fournisseur;
+//     string appProviderRcc = %oKey%.fournisseur;
+
+//     //Si le fournisseur est le founisseur selectionne
+//     if(appProvider == choosedProvider){
+//         logPrint("ERROR","CHOOSED");
+//         //transitonner a accorder
+//         autotransition(31, oKey, true, true, true);
+//         //mettre a jour l'application a VALIDATED
+//         //updateApplicationStatus(oKey,"VALIDATED","PFA");
+//     }
+//     //Si le fournisseur est parmi les fournisseurs selectionnes en attente
+//     else if(arrayFind(waitingProviders, appProvider) != -1){
+//         logPrint("ERROR","ATTENTE");
+//         //transitonner a en attente
+//         autotransition(21, oKey, true, true, true);
+//         //mettre a jour l'application a SELECTED
+//         //updateApplicationStatus(oKey,"SELECTED","PFA");
+//     }
+//     //Decliner toutes les autres applications
+//     else{
+//         logPrint("ERROR","REJETE");
+//         //transition a decliner
+//         autotransition(61, oKey, true, true, true);
+//         //mettre a jour l'application a REJECTED
+//         //updateApplicationStatus(oKey,"REJECTED","PFA");
+//     }
+// }
+
+//Mise a jour de l'offre en cours a CHOOSED
+//updateOfferStatus(key, "CHOOSED", "PFA");

@@ -1,0 +1,54 @@
+include "DMP/Lfs/displayOrHideFields.incl";
+include "DMP/db.sil";
+include "DMP/Domain/client.sil";
+
+if(argv["screen"] == "create"){
+<<<<<<< HEAD
+      lfSet("summary","Bienvenue cher client");
+    lfHide("summary");
+  
+=======
+    lfHide("summary");
+    lfSet("summaty","Bienvenue cher client");
+>>>>>>> 1b682d6ff4cf7e002ab022aeb99bb08e9dc430fb
+    
+    lfWatch("numeroClient", {"numeroClient"}, "DMP/Lfs/numeroClient.sil",{"change"});
+ 
+
+   
+   lfDisable("agence");
+   lfDisable("civilite");
+   lfDisable("nom");
+   lfDisable("prenom");
+   lfDisable("profession");
+   lfDisable("adresse");
+   lfDisable("pays");
+   lfDisable("ville");
+   lfDisable("telephone");
+   lfDisable("email");
+   lfDisable("dateNaissance");
+   lfDisable("lieuNaissance");
+   lfDisable("genre");
+   lfDisable("nationalite");
+   lfDisable("typeIdentification");
+   lfDisable("numeroIdentificationNationale");
+   lfDisable("revenuAnnuel");
+    
+    hideAllFields();
+    //Restruction
+    lfRestrictSelectOptions("renouvellementCarte", {"Aucun"});
+    lfRestrictSelectOptions("typePaiement", {"Aucun"});
+    lfRestrictSelectOptions("genre", {"Aucun"});
+    lfRestrictSelectOptions("typeCarte", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("typeChequier", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("typeCompte", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("sousProduitCheque", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("duree", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("sousProduitCarte", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("civilite", {"Aucun", "Aucune"});
+    lfRestrictSelectOptions("typeIdentite", {"Aucun", "Aucune"});
+    
+    
+    lfWatch("renouvellementCarte", {"renouvellementCarte"}, "DMP/Lfs/renouvellementCarte.sil",{"change"});
+}
+

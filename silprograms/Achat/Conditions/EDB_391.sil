@@ -1,0 +1,7 @@
+include "Achat/Services/RequestEDB.incl";
+
+if(userInGroup("Responsable", currentUser()) && userInGroup("Direction Moyens Generaux", currentUser())) {
+    return true;
+} else{
+    return false;
+}

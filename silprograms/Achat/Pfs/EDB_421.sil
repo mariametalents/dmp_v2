@@ -1,0 +1,5 @@
+if(ActionEntreprendre == "Validation DGA"){
+    autotransition("201", key, true, true, true);
+}else{
+    autotransition("321", key, true, true, true);
+}

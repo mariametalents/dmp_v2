@@ -1,0 +1,14 @@
+// %key%.getSubTaskObjects().size();
+subtasks(%key%);
+
+// CustomField total = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName("Total")
+// getCustomFieldValue()
+// double totalSum = 0; double totalCapex=0; double totalOpex=0;
+// for(string subtask in subtasks(%key%)) {
+//     if(subtask.montantCapex != 0 && subtask.montantOpex != 0){
+//         totalCapex += subtask.montantCapex;
+//         totalOpex += subtask.montantOpex;
+//         totalSum = totalCapex + totalOpex;
+//     }
+// }
+// %key%.montantBudgetGlobal = totalSum;

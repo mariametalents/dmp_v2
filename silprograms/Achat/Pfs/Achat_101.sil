@@ -1,0 +1,2 @@
+sendEmail("", %key%.emailFournisseur, "", "MODIFICATION DE LA COMMANDE ","Commande prévue pour la date de livraison: "+%key%.dateLivraison,"");
+%key%.assignee = "Achat";

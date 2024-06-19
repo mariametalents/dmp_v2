@@ -1,0 +1,32 @@
+//envoi devis au controle financier
+
+include "Achat/Services/EDBService.incl";
+//string cle="GDA-1304";
+string issueId = %key%.id;
+Produit_Service[] products = getProducts(issueId);
+runnerLog("Prod : "+products);
+
+if(size(products)>0){
+    addProductsToDevisGrid(products, issueId);
+}
+%key%.assignee = "rsa";
+/*
+// Demander automatiquement un devis 
+autotransition(181, key, true, true, true);
+
+string resp = getResponsibleAgent(currentUser());
+
+if(resp=="rsa"){
+    // Demander automatiquement un devis 
+    autotransition(181, key, true, true, true);
+    runnerLog(resp);
+    %key%.assignee = "";
+
+//    
+}else{
+    // Envoyer en validation
+  //  autotransition(11, key, true, true, true);
+    autotransition(11, key, true, true, true);
+    %key%.assignee = resp;
+}
+*/

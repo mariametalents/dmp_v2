@@ -1,0 +1,26 @@
+include "Achat/Services/OfferService.incl";
+include "Achat/utils.incl";
+
+//Assignï¿½ la demande au responsable achat
+//%key%.assignee = getAchatResponsable();
+
+//Mettre a jour le statut de l'appel d'offre a CLOSED
+updateOfferStatus(key, "CLOSED", "PFA_OLD");
+
+
+
+//Auto transitionner demande a clorturer dès que la date de grâce est atteinte
+if("dateFinDep" == currentDate()) {
+    autotransition("Auto-Cloturer", key, true, true, true);
+}
+
+if("dateDeGrace" > currentDate()) {
+    string from = "";
+    string[] to  = getEmail(%key%.assignee);
+    string [] cc = "";
+    string subject = "Délai de grâce";
+    string body = "Le délai de grâce de l'offre "+%key%.id+"est presqu'atteint, prolongation de la date encore possible";
+    sendEmail(from, to, cc, subject, body,"");
+    // sendSMS(%key%.assignee,"+40123456789","Hello world!");
+}
+//%key%.assignee = currentUser();

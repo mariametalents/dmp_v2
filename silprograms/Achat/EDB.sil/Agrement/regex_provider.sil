@@ -1,0 +1,37 @@
+string regex_email; 
+string regex_registre;
+string regex_phone;
+string regex_ninea;
+string regex_iban;
+
+
+regex_email="^[a-zA-Z]+[\\-_\\.0-9a-zA-Z]*[a-z0-9]+(@){1}[a-z]+(\\.){1}[a-z]+[\\.a-z]*[a-z]+$";
+regex_phone="^(\\+221|00221)[0-9]{9}";
+// regex_registre="^(SN)[A-Z]{2,3}[0-9]{4}[A-Z][0-9]{4}";
+regex_ninea="^[0-9]{8}[A-Z][0-9]";
+regex_iban="^(SN)[0-9]{2}[A-Z][0-9]{19}";
+
+//string email1="tafiscor9@gmail.com" ;
+//runnerLog  (matches(email1, regex_email));
+
+
+if (argv["screen"] =="create") {
+    boolean ok = matches (argv["email"],regex_email) && matches (argv["ninea"],regex_ninea) && matches (argv["tel"],regex_phone) && matches (argv["iban"],regex_iban); // && matches (argv["rcc"],regex_registre) 
+
+    if (!ok) {
+        lfExecuteJS("Achat/lf/hide_create.js");
+        }
+}        
+    
+    
+
+
+
+
+
+/*
+email
+ninea
+iban=
+tel
+*/

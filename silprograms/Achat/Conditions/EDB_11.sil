@@ -1,0 +1,4 @@
+if(currentUser() == %key%.reporter){
+    return true;
+}
+return false;

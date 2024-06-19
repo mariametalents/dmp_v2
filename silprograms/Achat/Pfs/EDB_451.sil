@@ -1,0 +1,3 @@
+include "Achat/Services/RequestEDB.incl";
+%key%.valideBudget = "Non";
+%key%.assignee = getResponsibleAgent(%key%.agentTraitant);

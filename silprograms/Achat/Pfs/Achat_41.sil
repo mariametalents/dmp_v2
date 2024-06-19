@@ -1,0 +1,11 @@
+include "Achat/utils.incl";
+include "Achat/Services/OrderService.incl";
+
+
+//Affecter au responsable budget
+%key%.assignee = getAchatResponsable();
+
+ProduitServiceRows[] lines = getOrderLines(%key%.id);
+    //ProduitServiceRows[] lines = getOrderLines("GDAG-107");
+%key%.totalHT = getCurrentOrderTotal(lines);
+%key%.total = (number)((number)%key%.totalHT +((number)%key%.totalHT*(number)%key%.tva/100));

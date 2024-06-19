@@ -1,0 +1,36 @@
+include "Achat/bd.incl";
+
+Application[] applications = getApplication();
+for(Application app in applications){
+	//Recuperation des information de la sous tache
+	Document[] documents = getDocumentsFromApplication(app.offerId, app.providerId);
+	Comment[] comments = getCommentsFromApplication(app.offerId, app.providerId);
+	
+	Offer offer = getOffer(app.offerId);
+	Provider provider = getProvider(app.providerId);
+	//Creation sous tache // offer.key
+	string sKey = createIssue("GDA", offer.jira_key, "Offres", "Offre - "+provider.name);
+    //Update Application read status
+    updateAppJiraKey(app.offerId,app.providerId, sKey);
+    
+	%sKey%.fournisseur = provider.name;
+	%sKey%.rcc = provider.rcc;
+	//Ajouter les commentaires 
+	for(Comment c in comments){
+		addComment(sKey,"admin",c.description);
+		updateStatusComment(app.offerId, app.providerId);
+	}
+
+	//AJouter les documents
+	for(Document d in documents){
+	    //Document[] documents = getDocumentsFromApplication(app.offerId, app.providerId);
+		string inpath = silEnv("pathFiles")+provider.rcc+"\\documents\\"+d.name;;
+		string outpath = "C:\\Users\\ZEUS\\Documents\\pfa\\tmp\\"+d.title+"."+d.ext;
+		fileCopy(inpath,outpath);
+		attachFile(outpath, sKey);
+		updateStatusDocument(app.offerId, app.providerId);
+	}
+}
+
+
+

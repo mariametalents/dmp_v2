@@ -1,0 +1,17 @@
+include "Achat/utils.incl";
+include "Achat/Domain/Poste_Depenses.incl";
+include "Achat/Services/gridFunctions.sil";
+
+// string ticket = createIssue(project, key, "Budget", "Budget - "+ formatDate(currentDate(), "dd/MM/yyyy"));
+// ticket.postesDepenses = key.postesDepenses;
+// linkIssue(key, ticket, "Subtask");
+
+// PDepensesGridValue[] pDepenses = getPostesDepenses(ticket.id);
+
+// for(PDepensesGridValue pDepense in pDepenses) {
+//     if(pDepense.type_depense == "CAPEX") {
+//         ticket.montantCapex += pDepense.cout;
+//     } else if(pDepense.type_depense == "OPEX") {
+//         ticket.montantOpex += pDepense.cout;
+//     }
+// }

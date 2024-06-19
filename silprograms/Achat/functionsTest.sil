@@ -1,0 +1,417 @@
+// struct TwoDArray {
+//     string[] array;
+//     number arraySize;
+// }
+
+// function encode(string text) {
+
+//     // Accent aigu
+//     text = replace(text, "?", "&eacute;");
+//     text = replace(text, "?", "&Eacute;");
+    
+//     // Accent grave
+//     text = replace(text, "?", "&egrave;");
+//     text = replace(text, "?", "&Egrave;");
+    
+//     // Accent circonflexe 
+//     text = replace(text, "?", "&icirc;");
+//     text = replace(text, "?", "&Icirc;");
+    
+//     return text;
+    
+// }
+
+// function createTGEAddRequestBody(TwoDArray grid2DValues, number arraySize){
+//     string data = "";
+//     string[] headers;
+    
+//     for(number i = 0; i <= arraySize; i++){
+//         headers += grid2DValues.array[i];
+//     }
+//     // runnerLog("********* headers *********");
+//     // runnerLog(headers);
+//     number linesCount = (number)size(grid2DValues.array) / size(headers);
+
+//     for(number i = 1; i < linesCount; i++){
+    
+//         string columns;
+//         for(number j = 0; j < size(headers); j++){
+//             columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * size(headers) + j];
+//         }
+//         data += ",{"+substring(columns, 1, length(columns)) +"}";
+//     }
+    
+    
+//     data = substring(data, 1,content.length(data));
+//     // if(columns != "" && rowHasValues){
+//     //     data += ",{" + substring(columns, 1, length(columns)) + "}";
+//     // }
+    
+//     string updateRequest = "{"+
+//         "\"rows\":["+data+"]"+
+//     "}";
+//     // runnerLog("*********** UpdateRequest ***********");
+//     // runnerLog(updateRequest);
+//     return updateRequest;
+// }
+
+// function createTGEUpdateRequestBody(TwoDArray grid2DValues){
+
+//     number rowIdIndex;
+//     string data = "";
+//     string[] headers;
+    
+//     for(number i = 0; i <= grid2DValues.arraySize; i++){
+//         if(grid2DValues.array[i] == "rowId"){
+//             rowIdIndex = i;
+//         }
+//         headers += grid2DValues.array[i];
+//     }
+    
+//     number linesCount = size(grid2DValues.array) / grid2DValues.arraySize;
+    
+//     for(number i = 1; i < linesCount; i++){
+    
+//         string columns;
+//         for(number j = 0; j < grid2DValues.arraySize; j++){
+//             columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * grid2DValues.arraySize + j];
+            
+//             if(j == rowIdIndex){
+//                 continue;
+//             }
+//         }
+//         data += ",{\"rowId\" : "+grid2DValues.array[i * grid2DValues.arraySize + rowIdIndex]+", \"columns\": {"+substring(columns, 1, length(columns))+"} }";
+//     }
+    
+//     data = substring(data, 1,content.length(data));
+//     string updateRequest = "{"+
+//         "\"rows\":["+data+"]"+
+//     "}";
+    
+//     return updateRequest;
+// }
+
+
+// function createTGEDeleteRequestBody(string[] rowIds){
+
+//     // runnerLog("******** Content of rowIds *********");
+//     // runnerLog(rowIds);
+
+//     string updateRequest = "{"+
+//         "\"rows\":[\""+replace(join(rowIds, "\",\""), "\"\"", "\"") +"\"]"+
+//     "}";
+    
+//     // runnerLog("******** Content to sent *********");
+//     // runnerLog(updateRequest);
+//     return updateRequest;
+// }
+
+
+// function sendUpdateTGEGridRequest(string content, string issueId, string gridId, string method) {
+
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+   
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+    
+//     if(method == "POST") {
+//         httpPost(url, request, encode(content));
+//     } else{
+//         httpPut(url, request, encode(content));
+//     }
+//     runnerLog("=========== Statut code for update =========");
+//     runnerLog(httpGetStatusCode());
+// }
+
+// function sendClearTGEGridRequest(string content, string issueId, string gridId) {
+
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");
+   
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+//     httpDelete(url, request, encode(content));
+//     runnerLog("============ Status code for delete==== "+httpGetStatusCode());
+// }
+
+
+// function getTGEGridData(string gridId, string issueId){
+
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+   
+//     string result = httpGet(url, request);
+//     runnerLog(httpGetStatusCode());
+
+//     return result;
+// }
+
+// function getTGEGridDataAs2DArray(string gridId, string issueId){
+    
+//     TwoDArray grid2DValues;
+//     string gridJsonString = getTGEGridData(gridId, issueId);
+    
+//     string[] splitedLines = split(gridJsonString, "columns\":\\{");
+//     boolean firstRound = true;
+//     string[] lines;
+//     for(string splitedLine in splitedLines) {
+//         if(firstRound) {
+//             firstRound = false;
+//             continue;
+//         }
+//         lines += substring(splitedLine, 0, indexOf(splitedLine, "}"));
+//     }
+    
+//     string reg = "(?<=[^\\\\:]\"):";
+//     string[] chunks;
+//     string[] headers;
+//     string[] lineValues;
+//     string[] gridValues;
+    
+//     boolean firstIteration = true;
+//     for(string line in lines){    
+//         chunks = split(line, reg);
+//         lineValues = "";
+//         for(number i=0; i<size(chunks); i++) {
+//             string[] chunkParts = split(chunks[i], ",(?=\"[^,])");
+            
+//             if( firstIteration && (i == 0 || size(chunkParts) == 2) ){
+//                 number headerIndex = i == 0 ? 0 : 1;
+//                 headers += replace(chunkParts[headerIndex], "\"", "");
+    
+//             }
+            
+//             if(i == 0) { continue; }
+            
+//             lineValues += chunkParts[0];
+//         }
+        
+//         if(firstIteration){
+//             gridValues += headers;
+//         }
+//         gridValues += lineValues;
+        
+//         firstIteration = false;
+//     }
+    
+//     grid2DValues.array = gridValues;
+//     grid2DValues.arraySize = size(headers);
+//     // runnerLog("----------- Grid values size -------------");
+//     // runnerLog(grid2DValues.arraySize);
+        
+//     return grid2DValues; // gridValues;
+// }
+
+// function getColumns(string[] columns , boolean exclude, TwoDArray gridData) {
+//     number[] indexes;
+//     TwoDArray reducedGridData;
+    
+//     for(number i = 0; i <= gridData.arraySize; i++) {
+//         if(arrayElementExists(columns, gridData.array[i])) {
+//             indexes += i;
+//         }
+//     }
+//     number linesCount = (number)size(gridData.array) / gridData.arraySize;
+//     for(number i = 0; i <= linesCount; i++) {
+//         for(number j = 0; j <= gridData.arraySize; j++){
+//             boolean takeValue = (!exclude && arrayElementExists(indexes, j)) || (exclude && !arrayElementExists(indexes, j));
+//             if(takeValue) {
+//                 reducedGridData.array += gridData.array[i * gridData.arraySize + j];
+//             }
+//         }
+//     }
+//     // runnerLog("+++++++++++++ Reduced grid data +++++++++++++++");
+//     // runnerLog(reducedGridData);
+//     return reducedGridData;
+// }
+
+// function createTGEAddRequestBodyTest(TwoDArray grid2DValues, number arraySize){
+//     string data = "";
+//     string[] headers;
+    
+//     for(number i = 0; i <= arraySize; i++){
+//         headers += grid2DValues.array[i];
+//     }
+//     number linesCount = (number)size(grid2DValues.array) / size(headers);
+
+//     for(number i = 1; i < linesCount; i++){
+    
+//         string columns;
+//         for(number j = 0; j < size(headers); j++){
+//             if(headers[j] != "score" && headers[j] != headers[size(headers)-1] && grid2DValues.array[i * size(headers) + j] != "") {
+//                 // runnerLog("====Header====");
+//                 // runnerLog((headers[j]));
+//                 columns += ",\""+headers[j]+"\":"+grid2DValues.array[i * size(headers) + j];
+//             }
+//         }
+//         data += ",{"+substring(columns, 1, length(columns)) +"}";
+//     }
+    
+//     data = substring(data, 1,content.length(data));
+    
+//     // runnerLog("*********** Data ***********");
+//     // runnerLog(replace(data, ",{}", ""));
+    
+//     // string updateRequest = "{"+
+//     //     "\"rows\":["+data+"]"+
+//     // "}";
+//     string updateRequest = "{"+
+//         "\"rows\":["+replace(data, ",{}", "")+"]"+
+//     "}";
+//     runnerLog("*********** UpdateRequest ***********");
+//     runnerLog(updateRequest);
+//     return updateRequest;
+// }
+
+
+
+// function copyTGEGrid(string fromGridId, string toGridId, string fromIssueId, string toIssueId, boolean clearDestination){
+//     TwoDArray fromGridData = getTGEGridDataAs2DArray(fromGridId, fromIssueId);
+//     runnerLog("======= From grid data ======= ");
+//     runnerLog(fromGridData);
+//     string fromContent = createTGEAddRequestBody(getColumns("rowId", true, fromGridData), fromGridData.arraySize);
+//     runnerLog("======= ***** From content ****** ======= ");
+//     runnerLog(fromContent);
+    
+//     if(clearDestination){
+//         TwoDArray toGridData = getTGEGridDataAs2DArray(toGridId, toIssueId);
+//         string toContent = createTGEDeleteRequestBody(getColumns("rowId", false, toGridData));
+//         runnerLog("======= To content ======= ");
+//         runnerLog(toContent);
+//         sendClearTGEGridRequest(toContent, toIssueId, toGridId);
+//     }
+    
+//     sendUpdateTGEGridRequest(fromContent, toIssueId, toGridId, "POST");
+// }
+
+// function updateTGEGrid(string fromGridId, string toGridId, string fromIssueId, string toIssueId){
+//     TwoDArray fromGridData = getTGEGridDataAs2DArray(fromGridId, fromIssueId);
+//     string fromContent = createTGEAddRequestBody(getColumns("rowId", true, fromGridData), fromGridData.arraySize);
+    
+//     sendUpdateTGEGridRequest(fromContent, toIssueId, toGridId, "PUT");
+// }
+
+
+// /**======== fonction test =======**/
+
+// function getTGEGridDataAs2DArrayT(string gridId, string issueId) {
+//     string gridJsonString = getTGEGridData(gridId, issueId);
+//     string outputJson = "";
+//     TwoDArray grid2DValues;
+
+//     runnerLog("********* Json received *********");
+//     runnerLog(gridJsonString);
+    
+//     // Extract rows part
+//     string[] rows = split(gridJsonString, ",\"rows\":")[1];
+    
+//     string rowsPart = replace(rows, "]}", "]");
+//     string result = ""; 
+//     string chaine="";
+     
+//     string[] values = split(rowsPart, "\"columns\"") ;
+     
+//     for (int i = 0; i < size(values) - 1; i++) {
+//         string splitetmp = split(values[i], "rowId_")[1];
+//         splitetmp = replace(splitetmp, ",", "");
+//         splitetmp = replace(splitetmp, "\"", "");
+//         result += "\"rowId_" + splitetmp + "\",";
+//     }
+
+//     string resultWithoutLastComma = substring(result, 0, length(result) - 1);
+//     resultWithoutLastComma = substring(resultWithoutLastComma, 1, length(resultWithoutLastComma)-1);
+    
+//     grid2DValues.arraySize = size(resultWithoutLastComma);
+//     grid2DValues.array = resultWithoutLastComma;
+    
+//     runnerLog("========== Grid values custom version ==========");
+//     runnerLog(grid2DValues.array);
+//     return grid2DValues;
+// }
+
+// function getTGEGridDataAs2DArrayForCopyWithoutDelete(string gridId, string issueId){
+    
+//     TwoDArray grid2DValues;
+//     string gridJsonString = getTGEGridData(gridId, issueId);
+    
+//     string[] splitedLines = split(gridJsonString, "columns\":\\{");
+//     boolean firstRound = true;
+//     string[] lines;
+//     for(string splitedLine in splitedLines) {
+//         if(firstRound) {
+//             firstRound = false;
+//             continue;
+//         }
+//         lines += substring(splitedLine, 0, indexOf(splitedLine, "}"));
+//     }
+    
+//     string reg = "(?<=[^\\\\:]\"):";
+//     string[] chunks;
+//     string[] headers;
+//     string[] lineValues;
+//     string[] gridValues;
+    
+//     boolean firstIteration = true;
+//     for(string line in lines){    
+//         chunks = split(line, reg);
+//         lineValues = "";
+//         for(number i=0; i<size(chunks); i++) {
+//             string[] chunkParts = split(chunks[i], ",(?=\"[^,])");
+            
+//             if( firstIteration && (i == 0 || size(chunkParts) == 2) ){
+//                 number headerIndex = i == 0 ? 0 : 1;
+//                 headers += replace(chunkParts[headerIndex], "\"", "");
+    
+//             }
+            
+//             if(i == 0) { continue; }
+            
+//             lineValues += chunkParts[0];
+//         }
+        
+//         if(firstIteration){
+//             gridValues += headers;
+//         }
+//         gridValues += lineValues;
+        
+//         firstIteration = false;
+//     }
+    
+//     grid2DValues.array = gridValues;
+//     grid2DValues.arraySize = size(headers);
+//     runnerLog("----------- Grid values -------------");
+//     runnerLog(grid2DValues.array);
+        
+//     return grid2DValues; // gridValues;
+// }
+
+
+// function copyTGEGridT(string fromGridId, string toGridId, string fromIssueId, string toIssueId, boolean clearDestination){
+//     TwoDArray fromGridData = getTGEGridDataAs2DArrayForCopyWithoutDelete(fromGridId, fromIssueId);
+//     runnerLog("======= Table grid of offres ======= ");
+//     runnerLog(fromGridData);
+//     string fromContent = createTGEAddRequestBodyTest(getColumns("rowId", true, fromGridData), fromGridData.arraySize);
+    
+//     if(clearDestination) {
+//         TwoDArray toGridData = getTGEGridDataAs2DArrayT(toGridId, toIssueId);
+//         string toContent = createTGEDeleteRequestBody(toGridData.array);
+//         sendClearTGEGridRequest(toContent, toIssueId, toGridId);
+//     }
+    
+//     sendUpdateTGEGridRequest(fromContent, toIssueId, toGridId, "POST");
+// }
+
+
+// /*string fromGridId = "10401";
+// string toGridId = "10900";
+// string fromIssueId = "GDAG-377";
+// string toIssueId = "GDAG-377";
+// copyTGEGrid(fromGridId, toGridId, fromIssueId, toIssueId, true);*/
+// // copyTGEGridT(fromGridId, toGridId, "GDAG-377", "GDAG-377", true);

@@ -1,0 +1,23 @@
+include "Achat/Domain/Issue.incl";
+
+function getIssueId(){
+    
+    //Recuperation details demande
+    // HttpRequest request;
+    // HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+    // request.headers += authHeader;
+    // string url = getJIRABaseUrl()+"/rest/api/2/issue/" +key;
+    // string json = httpGet(url, request);
+    
+    // Issue issue = fromJson(json);
+   
+    // return issue.id;
+}
+
+function getJiraKeyFromEntity(string entityName, string _id, string source){
+    //Get jirakey 
+    string query2 = "select jira_key from "+entityName+" where id = '"+_id+"'";
+    string jira_key = sql(source, query2);
+    
+    return jira_key;
+}

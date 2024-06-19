@@ -1,0 +1,5 @@
+//Assigné la demande au responsable 
+include "Achat/Services/RequestEDB.incl";
+
+//%key%.assignee = getResponsibleAgent(currentUser());
+%key%.assignee = "rsa";

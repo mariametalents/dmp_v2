@@ -1,0 +1,27 @@
+include "Achat/utils.incl";
+include "Achat/Services/JiraIssueService.incl";
+include "Achat/Services/OrderService.incl";
+
+//Affecter au responsable budget
+%key%.assignee = getAchatResponsable();
+
+//Mettre a jour Agent traitant
+%key%.agentTraitant = currentUser();
+
+//Mis a jour Entreprise
+%key%.entreprise = fournisseur;
+
+// %key%.totalHT = getCurrentOrderTotal(getOrderLines(getIssueId()));
+// %key%.totalHT = getCurrentOrderTotal(getOrderLines(%key%.id));
+// %key%.total =   (number)%key%.totalHT * (100+tva)/100;
+// %key%.totalHT = (number)%key%.total * (100+tva)/100;
+
+
+//Total HT: C'est plutôt Total - TVA
+//Total est le total de la commande y compris la TVA
+
+//Recuperer les commandes
+ProduitServiceRows[] lines = getOrderLines(%key%.id);
+//ProduitServiceRows[] lines = getOrderLines("GDAG-107");
+ %key%.totalHT = getCurrentOrderTotal(lines);
+%key%.total = (number)((number)%key%.totalHT +((number)%key%.totalHT*(number)%key%.tva/100));

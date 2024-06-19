@@ -1,0 +1,18 @@
+include "Achat/Domain/Validation_Inventaire_Stock.incl";
+include "Achat/Services/gridFunctions.sil";
+
+int inventaireStock = 12555;
+
+function getInventaireStockLines(string issueId){
+    
+    //Recuperation ligne champ inventaire id 
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+inventaireStock+"/issue/"+issueId;
+    string json = httpGet(url, request);
+    runnerLog("STATUS : "+httpGetStatusCode());
+    runnerLog("ERROR : "+httpGetErrorMessage());
+    GInventaire gInventaire = fromJson(json);
+    return gInventaire.values;
+}

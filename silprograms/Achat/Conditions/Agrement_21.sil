@@ -1,0 +1,6 @@
+include "Achat/utils.incl";
+
+if(isNotNull(avisResponsable) && (isDepartmentAgent(reporter) || origineWorkflow != "Jira") ) {
+    return true;
+}
+return false;

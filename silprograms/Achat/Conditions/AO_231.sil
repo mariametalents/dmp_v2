@@ -1,0 +1,6 @@
+
+// cacher le bouton si la date limite est atteinte
+if(currentDate() <= dateLimiteQuestions) {
+    return true;
+}
+return false;

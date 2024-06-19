@@ -1,0 +1,28 @@
+//verifer
+if(argv["screen"]=="create"){
+    //lfWatch("issueType", {"issueType"}, "", {"change"});
+    lfInstantHook("issueType", "Achat/lf/Demandeur.sil");
+}
+    //lfDialogMessage(currentUser(), "ERROR");
+/*
+if(argv["screen"] == "view"){
+    lfHide("produitServiceEDB");
+    lfHide("produitServiceDecision");
+    lfHide("produitServiceDevis") ;
+    //lfDialogMessage(devisSend, "ERROR");
+    if(valide=="Non" && devisSend=="Non"){
+        lfShow("produitServiceEDB");
+    }else if(devisSend == "Non"){
+        lfShow("produitServiceDecision");   
+    }else{
+        lfShow("produitServiceDevis");   
+    }
+}
+
+*/
+
+if(argv["screen"]=="trans_41"){
+    lfDisable("quantiteRestante");
+}
+
+//lfDialogMessage(currentUser(), "ERROR");

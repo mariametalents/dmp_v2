@@ -1,0 +1,97 @@
+//include "Achat/Domain/Stock_immo.incl";
+
+//Retourner l'id de l""article"
+function getArticleId(string source,string label){
+
+    string query = "SELECT id from referentiel.\"Produits\" where label ="+label;
+    string id = sql(source, query);
+    return id;
+}
+
+function updateStock(string productId, string quantity,string source){
+    string query="update f_product set quantity = quantity + "+quantity+" where id="+productId;
+    sql(source, query);
+}
+
+function getStockArticle(string article, string magasin) {
+    string query = "SELECT quantite from referentiel.\"stock\" where article=? and magasin=?" ;
+    string [] stock = sql("jira_pfa",query,article, magasin);
+    return getElement(stock,0);
+}
+
+function getStock(string article) {
+    string query = "SELECT quantite from referentiel.\"stock\" where article=?" ;
+    string [] stock = sql("jira_pfa",query,article);
+    return getElement(stock,0);
+}
+
+function getProduitStockable( string article){
+    string query="SELECT \"code\" FROM referentiel.\"categories\" WHERE \"id\" =?";
+    string[] produitStockable = sql("jira_pfa", query, article);
+    return getElement(produitStockable, 0);
+}
+
+function approStock(string article, number quantity, string source){
+    string req = "update referentiel.\"stock\" set quantite = '"+quantity+"' where article='"+article+"'";
+    sql(source,req);
+}
+
+function getServiceId(string source,string service){
+
+    string query = "SELECT id from referentiel.\"Service\" where nom_service ="+service;
+    string idService = sql(source, query);
+    return idService;
+    
+}
+
+function getAgenceId(string source, string agence){
+
+    string query = "SELECT id from referentiel.\"agence\" where nom_agence ="+agence;
+    string idAgence = sql(source, query, agence);
+    return idAgence;
+}
+
+function getMagasinId(string source, string magasin){
+
+    string query = "SELECT id_magasin from referentiel.\"magasin\" where nom_magasin ="+magasin;
+    string idMagasin = sql(source, query, magasin);
+    return idMagasin;
+}
+
+function insertImmo(string description,string article, string agence, string service, string source){
+    string query = "insert into referentiel.\"immobilisation\"(description,article,agence,service) values (?,?,?);";
+    sql(source, query);
+}
+
+
+function updateImmo(string source, string description, string article, string agenceId, string serviceId ){
+    string query = "update referentiel.\"immobilisation\" set description='"+description+"', agence='"+agenceId+"', service='"+serviceId+"' where article = '" +article+"'";  
+    sql(source, query);
+}
+
+
+//Mise ? jour stock
+/*
+function updateStock(string productId,string magasinId,string quantity,string source){
+    string query="update stock set quantite = '"+quantity+"' where id='"+productId+"' and magasin_id='"+magasinId+"'";
+    sql(source, query);
+}
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

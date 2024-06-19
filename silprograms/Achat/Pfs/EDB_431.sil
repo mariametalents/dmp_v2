@@ -1,0 +1,5 @@
+if(ApprouverValidationDG == "Approuver"){
+    autotransition("311", key, true, true, true);
+}else{
+    autotransition("211", key, true, true, true);
+}

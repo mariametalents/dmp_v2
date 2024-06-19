@@ -1,0 +1,11 @@
+function hideFields(string[] fields){
+    for(int i=0; i<=size(fields); i++){
+        lfHide(fields[i]);
+    }
+}
+
+function showFields(string[] fields){
+    for(int i=0; i<=size(fields); i++){
+        lfShow(fields[i]);
+        }
+}

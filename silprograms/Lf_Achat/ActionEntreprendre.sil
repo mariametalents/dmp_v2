@@ -1,0 +1,34 @@
+//lfGlobalMessage("Bonjour le monde------");
+if(argv["ActionEntreprendre"] == "Effectuer l'achat") {
+    lfShowTab("Informations fournisseur");
+    lfShowTab("Resumé Commande");
+    lfShowTab("Détails Commande");
+    
+    // lfShow("adresseLivraison");
+    // lfShow("adresseLivraison");
+    
+    //Masquer les autres
+    
+     lfHideTab("Détails");
+    
+    lfHideTab("Produits et services");
+}else if(argv["ActionEntreprendre"] == "Lancer appel d'offres"){
+
+    lfShowTab("Détails");
+    lfShowTab("Produits et services");
+    
+    //Masquer les autres
+    lfHideTab("Informations fournisseur");
+     lfHideTab("Resumé Commande");
+     lfHideTab("Détails Commande");
+}else{
+     lfHideTab("Informations fournisseur");
+    
+    lfHideTab("Resumé Commande");
+
+    lfHideTab("Détails Commande");
+    
+    lfHideTab("Détails");
+    
+    lfHideTab("Produits et services");
+}

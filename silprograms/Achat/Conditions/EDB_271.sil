@@ -1,0 +1,5 @@
+if(rejetDga == "Oui") {
+    return true;
+} else {
+    return false;
+}

@@ -1,0 +1,23 @@
+struct Client {
+    string numero_client;
+    string agence;
+    string civilite;
+    string nom;
+    string prenom;
+    string profession;
+    string adresse;
+    string pays;
+    string ville;
+    string telephone;
+    string email;
+    string date_naissance;
+    string lieu_naissance;
+    string genre;
+    string nationalite; 
+    string type_identification;
+    string num_identification_national;
+    string revenu_annuel;
+    string numero_compte;
+   
+}
+    

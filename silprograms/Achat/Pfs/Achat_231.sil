@@ -1,0 +1,10 @@
+if( %key%.montantRestant <= %key%.total) {
+    %key%.montantRegle += %key%.montant;
+    %key%.montantRestant = %key%.montantRestant-%key%.montant;
+}
+
+%key%.montant = "";
+
+%key%.typeReglement = "";
+
+%key%.numCompte = "";

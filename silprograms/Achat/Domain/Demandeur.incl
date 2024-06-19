@@ -1,0 +1,8 @@
+// Structure demandeur-produit&service
+struct Demandeur{
+    string nom;
+    string responsable;
+    string departement;
+    string poste;
+    string matricule;
+}

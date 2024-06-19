@@ -1,0 +1,10 @@
+
+if(argv["initierComiteAgrement"] == "Oui") {
+   lfShow("membreComiteAgre");
+   lfShow("dateComiteAgrement");
+   lfSet(initierComiteAgrement, "Oui");
+}else{
+    lfHide("membreComiteAgre");
+    lfHide("dateComiteAgrement");
+    lfSet(initierComiteAgrement, "Non");
+}

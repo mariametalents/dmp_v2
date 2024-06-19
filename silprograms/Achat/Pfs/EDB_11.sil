@@ -1,0 +1,15 @@
+//Assigner la demande au responsable pour validation 
+include "Achat/Services/RequestEDB.incl";
+
+%key%.assignee = getResponsibleAgent(currentUsername());
+%key%.rejetDmg = "Non";
+%key%.rejetDga = "Non";
+%key%.groupeDemandeur = userGroups(currentUser());
+
+//%key%.assignee = "rsa";
+if(isUserInGroup("Responsable", currentUser())){
+    autotransition("Verifier stock", key, true, true, true);
+    %key%.assignee = "gestionnaire stock";
+
+}
+//runnerLog(getResponsibleAgent(currentUsername()));

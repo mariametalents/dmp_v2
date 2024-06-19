@@ -1,0 +1,9 @@
+// function to get user mail
+function getEmail(string pUser) {
+    string email = getUser(pUser)[3];
+    string reg_pattern = "^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}$";
+    if(isNotNull(email) && matches(email, reg_pattern)) {
+        runnerLog("******** Email ****** "+email);
+        return email;
+    }
+}

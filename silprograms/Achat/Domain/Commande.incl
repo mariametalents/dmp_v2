@@ -1,0 +1,211 @@
+struct Natures {
+    string name;
+    string value;
+}
+struct Categorys {
+    string name;
+    string value;
+}
+struct Products {
+    string name;
+    string value;
+}
+struct Sectors {
+    string name;
+    string value;
+}
+struct Reception{
+    string ref;
+    string nature;
+    string sector;
+    string category;
+    string product;
+    string desc;
+    number price;
+    number quantity;
+//  number recquant;
+//  number defaults;
+//  string requirereview;
+//  number remquant;
+//  number total;
+}
+//gd.columns=ref,nature,sector,category,product,desc,price,quantity,recquant,remquant,default,requirereview ,total
+
+struct ReceptionProperties {
+    string ref;
+    number qty;
+    string Description;
+//     string recu;
+//     string traite;
+}
+
+struct TypeProduit {
+    string label;
+}
+
+
+struct CommandeColumns{
+    string reference;
+    string quantity;
+    string description;
+    string price;
+    string remarque;
+    string total;
+    number typeProduit;
+    TypeProduit typeProduit;
+}
+        
+struct CommandeRows{
+    string rowId;
+    CommandeColumns columns;
+    number order;
+}
+
+
+struct Commande{
+    string customFieldId;
+    CommandeRows[] rows;
+} 
+
+
+struct RequireReview{
+    string name;
+    string value;
+}
+
+struct ReceptionLine{
+    string ref;
+    Natures nature;
+    Sectors sector;
+    Categorys category;
+    Products product;
+    string desc;
+    number price;
+    number quantity;
+    number recquant;
+    number remquant;
+    number defaults;
+    RequireReview requirereview;
+    number total;
+    int issueId;
+    int modified;
+    int id;
+}
+
+struct GReception{
+    number startAt;
+    number maxResults;
+    number total;
+    ReceptionLine[] values;
+}
+    
+struct ReceptionRows{
+Reception[] rows;
+}    
+
+struct ROrderLine{
+    string ref;
+    number price;
+    number recquant;
+}
+
+// struct ReceptionOffre {
+//     string fournisseur;
+//     number cout;
+//     string delai;
+// }
+
+
+struct Fournisseur {
+    string label;
+}
+
+struct CategoryAO{
+    string label;
+}
+
+struct ProductService {
+    string label;
+}
+
+struct DecisionOffreProperties {
+    Fournisseur fournisseur;
+    CategoryAO categorie;
+    ProductService produitsServicesOffre;
+    number delais;
+    number cout;
+    // number score_technique;
+    // number score_financier;
+}
+
+
+struct ChoixFournisseurProperties {
+    Fournisseur fournisseur;
+    CategoryAO categorie;
+    ProductService produot_service;
+    number cout;
+    number delai;
+    string fournisseur_status;
+    string score_technique;
+    string score_financier;
+    string description;
+}
+
+
+struct ChangerFournisseurProperties {
+    Fournisseur fournisseur;
+    CategoryAO categorie;
+    ProductService produit_service;
+    number cout;
+    number delais;
+    string status;
+    string score_technique;
+    string score_financier;
+    // string description;
+}
+
+struct ReceptionOffreColumns{
+    Fournisseur fournisseur;
+    CategoryAO categori;
+    ProductService produit_service;
+    number delai;
+    number cout;
+}
+        
+struct ReceptionOffreRows{
+    string rowId;
+    ReceptionOffreColumns columns;
+    number order;
+}
+
+
+struct ReceptionOffre{
+    string customFieldId;
+    ReceptionOffreRows[] rows;
+} 
+
+
+struct DecisionAOColumns{
+    Fournisseur fournisseur;
+    CategoryAO categorie;
+    ProductService produitsServicesOffre;
+    number delais;
+    number cout;
+    string score_technique;
+    string score_financier;
+    string description;
+}
+        
+struct DecisionAORows{
+    string rowId;
+    DecisionAOColumns columns;
+    number order;
+}
+
+
+struct DecisionAO{
+    string customFieldId;
+    DecisionAORows[] rows;
+} 
+
+

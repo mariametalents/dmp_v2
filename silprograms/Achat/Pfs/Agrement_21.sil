@@ -1,0 +1,2 @@
+//Affecter au membre du comité responsable
+%key%.assignee = userFullName("sc"); // membreComiteAgrement;

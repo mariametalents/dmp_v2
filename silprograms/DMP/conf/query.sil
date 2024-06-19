@@ -1,0 +1,4 @@
+string QUERY_CLIENT = "SELECT numero_client, agence, civilite, nom, prenom, profession, adresse, "+ 
++"pays,ville, telephone, email, date_naissance, lieu_naissance, genre, nationalite, "+
++"type_identification, num_identification_national, revenu_annuel, numero_compte "+ 
++"FROM public.client WHERE numero_client ='%numc'";

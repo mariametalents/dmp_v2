@@ -1,0 +1,4 @@
+//initialize field devisSend to true
+include "Achat/Grid.incl";
+%key%.devisSend = "Oui";
+%key%.totalDevis = getTotalDevis("10225", %key%.id);

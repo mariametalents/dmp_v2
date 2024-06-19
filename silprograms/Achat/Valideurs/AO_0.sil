@@ -1,0 +1,6 @@
+// if(!isNull(%key%.dateDeGrace) && !isNull(%key%.dateFinDep)) {
+//     if(%key%.dateDeGrace >= %key%.dateFinDep) {
+//         return false, "Delai de grace superieur a la date de fin de depot";
+//     }
+// }
+

@@ -1,0 +1,6 @@
+lfGlobalMessage("Valeur du champ type d'offre: "+ %key%.typeAO);
+if("typeAO" == "Restreint") {
+   lfShow("fournisseurs");
+}else{
+    lfHide("fournisseurs");
+}

@@ -1,0 +1,65 @@
+//include "Achat/lf/hide.sil";
+if(argv["typeAO"] == "Ouvert"){
+    lfHide("fournisseurs");
+}else{
+    if(argv["typeAO"] == "Restreint"){
+    lfShow("fournisseurs");
+    }
+}
+
+if(argv["garderStock"] == "Oui"){
+    lfHide("agenceDestination");
+    lfHide("service");
+    lfShow("magasinDestination");
+    lfShow("rayonDestination");
+    
+}else{
+    if(argv["garderStock"] == "Non"){
+    lfHide("magasinDestination");
+    lfHide("rayonDestination");
+    lfShow("agenceDestination");
+    lfShow("service");
+    }
+}
+
+if(argv["immobilisation"] == "Oui"){
+    lfShow("familleImmobilisation");
+    lfShow("sousFamilleImmobilisation");
+    
+}else{
+    if(argv["immobilisation"] == "Non"){
+    lfHide("familleImmobilisation");
+    lfHide("sousFamilleImmobilisation");
+    }
+}
+
+if(argv["acompte"] == "Non"){
+    lfHide("typeAcompte");
+}else{
+    if(argv["acompte"] == "Oui"){
+    lfShow("typeAcompte");
+    }
+}
+
+if (isNotNull(argv["tauxAcompte"])) {
+    number a = %key%.total;
+    number b = tauxAcompte;
+    number totaux = (number)a*(number)b;
+    //lfHide("montant");
+    lfSet("montant",a*b);
+    //lfSet("montant",100);    
+}
+
+if (isNotNull(argv["dureeText"])) {
+     // lfSet("tauxAmortissementText",100/ %key%.dureeText);
+        lfSet("tauxAmortissementText",20);    
+}
+
+/*
+if(argv["screen"] == "trans_181"){
+ for(string f in fields){
+        lfShow(f);
+    }
+}
+
+*/

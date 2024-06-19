@@ -1,0 +1,7 @@
+include "Achat/Services/RequestEDB.incl";
+
+// if(currentUser() == getResponsibleAgent(reporter) ) {
+if(isUserInGroup(%key%.groupeDemandeur, currentUser())) {
+    return true;
+}
+return false;

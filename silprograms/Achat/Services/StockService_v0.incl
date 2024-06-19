@@ -1,0 +1,11 @@
+//Update stock
+function updateStock(string productId, string quantity,string source){
+    string query="update f_product set quantity = quantity + "+quantity+" where id="+productId;
+    sql(source, query);
+}
+
+function getStock(string productName){
+    string query = "SELECT quantity FROM f_product WHERE aricle=? and magasin=?";
+    string[] stock = sql("PFA", query, productName);
+    return getElement(stock, 0);
+}

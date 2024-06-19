@@ -1,0 +1,61 @@
+include "Achat/Services/CommentService.incl";
+include "Achat/Services/DocumentService.incl";
+include "Achat/Services/ProviderService.incl";
+include "Achat/Services/JiraIssueService.incl";
+
+//Getting comments and documents
+Comment[] comments = getCommentsFromEntity("jorder","","PFA");
+Document[] documents = getDocumentsFromEntity("jorder","","PFA");
+
+runnerLog("SIZE COMMENT " + size(comments));
+runnerLog("SIZE DOCUMENT " + size(documents));
+
+//Comments Handler
+for(Comment c in comments){
+    runnerLog("IN COMMENT");
+    //Get jira key from order id
+    string key = getJiraKeyFromEntity("j_order", c.order, "PFA");
+    runnerLog("KEY : " + key);
+    //Add comment
+    string fcomment = substring(c.description,indexOf(c.description, "</span>"),-1);
+    fcomment = replace(fcomment, "</span>", "");
+    if(toUpper(c.label) == "REJET"){
+        fcomment = "{color:red}*Rejet Bon de commande*{color}" + fcomment;
+    }
+    if(toUpper(c.label) == "VALIDATION"){
+        fcomment = "{color:green}*Validation Bon de commande*{color}" + fcomment;
+    }
+    addComment(key,"admin",fcomment);
+    
+    if(isNull(%key%.message)){
+        %key%.message = fcomment;
+    }else{
+        %key%.message += "\\" +fcomment;
+    }
+    runnerLog("COMMENT DONE " +fcomment);
+    //Traitement si commande notifie rejet
+    if(toUpper(c.label) == "REJET"){
+        //auto_rejeter
+        runnerLog("IN REJET");
+        autotransition(141, key, false, true, true);
+    }
+}
+
+//Documents handler
+for(Document d in documents){
+    runnerLog("IN COMMENT");
+    //Get jira key from order id
+    string key = getJiraKeyFromEntity("j_order", d.order, "PFA");
+    runnerLog("KEY : " + key);
+    //Get provider from order
+    string rcc = getRccProviderFromEntity("j_order",d.order,"PFA");
+    runnerLog("PROVIDER : " + rcc);
+    //Save document
+ 	string inpath = "\\\\zeus\\Users\\ZEUS\\Documents\\pfa\\"+rcc+"\\documents\\"+d.name;
+	string outpath = "C:\\Users\\ZEUS\\Documents\\pfa\\tmp\\"+d.title+"."+d.ext;
+	fileCopy(inpath,outpath);
+	attachFile(outpath, key);
+	runnerLog("DOCUMENT ATTACHED");
+}
+
+//Application comments and documents

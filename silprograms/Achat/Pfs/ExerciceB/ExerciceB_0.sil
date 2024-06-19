@@ -1,0 +1,2 @@
+%key%.assignee = usersInRole("GDA", "DAF");
+%key%.summary = "Exercice Budgetaire - "+ formatDate(currentDate(), "dd/MM/yyyy");

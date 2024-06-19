@@ -1,0 +1,8 @@
+//Notifier le fournisseur pour informations complementaire
+string from = "";
+string to = email;
+string cc = "";
+string comment = getComment();
+string subject = "AGREMENT_INFOS_SUBJ.tpl";
+string body = "AGREMENT_INFOS_BODY.tpl";
+sendEmail(from,to,cc,subject,body,key, attachments);

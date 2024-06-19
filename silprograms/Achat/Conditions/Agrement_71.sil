@@ -1,0 +1,5 @@
+// Vissible que par le profil appartenent au groupe Comite agrement
+if(isUserInGroup("Comite Agrement", currentUser())) {
+    return true;
+}
+return false;

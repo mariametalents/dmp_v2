@@ -1,0 +1,7 @@
+include "Achat/utils.incl" ;
+
+
+//%key%.assignee = agentTraitant;
+//autotransition("auto_creer", key, true, true, true);
+%key%.assignee = "admg";
+//autotransition(131, key, true, true, true);

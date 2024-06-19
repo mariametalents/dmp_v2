@@ -1,0 +1,44 @@
+if(argv["screen"] == "create"){ //  && argv["issueType"] == "Agrement"
+
+ // lfWatch("capital", {"capital", "iban"}, "Achat/lf/Agrement/checkIban.incl", {"keyup"});
+ // lfWatch("iban", {"iban"}, "Achat/lf/Agrement/checkIban.incl", {"keyup"});
+    lfRestrictSelectOptions("modeLivraison", {"Aucune"});  
+    lfRestrictSelectOptions("formeJuridique", {"Aucune"});
+    lfRestrictSelectOptions("paysVille", {"Aucune"});
+    lfRestrictSelectOptions("motifRejet", {"Aucune"});
+    lfRestrictSelectOptions("motifs", {"Aucune"});
+    lfRestrictSelectOptions("motifs", {"Aucune"});
+    lfRestrictSelectOptions("certificationIso", {"Aucun"});
+    lfRestrictSelectOptions("accordVisite", {"Aucun"});
+    
+    
+    lfWatch("ninea", {"ninea", "rcc", "iban", "email", "tel"}, "Achat/lf/Agrement/checkFieldsRegex.sil", {"keyup"});
+    lfWatch("rcc", {"ninea", "rcc", "iban", "email", "tel"}, "Achat/lf/Agrement/checkFieldsRegex.sil", {"keyup"});
+    lfWatch("iban", {"ninea", "rcc", "iban", "email", "tel"}, "Achat/lf/Agrement/checkFieldsRegex.sil", {"keyup"});
+    lfWatch("email", {"ninea", "rcc", "iban", "email", "tel"}, "Achat/lf/Agrement/checkFieldsRegex.sil", {"keyup"});
+    lfWatch("tel", {"ninea", "rcc", "iban", "email", "tel"}, "Achat/lf/Agrement/checkFieldsRegex.sil", {"keyup"});
+}    
+    
+if (argv["screen"]== "trans_21") {
+    lfDisable("secteurs");
+}    
+    
+    
+    
+/*email=customfield_10308
+ninea=customfield_10301
+iban=customfield_10334
+tel=customfield_10353*/
+
+
+if(argv["screen"] == "trans_111"){
+      lfWatch("initierComiteAgrement", {"initierComiteAgrement"}, "Achat/lf/Agrement/showComiteeSelection.sil",{"change"});
+      lfRestrictSelectOptions("initierComiteAgrement", {"Aucune", "Aucun"}); //, "None"});
+      lfHide("membreComiteAgre");
+      lfHide("dateComiteAgrement");
+}
+
+
+
+
+

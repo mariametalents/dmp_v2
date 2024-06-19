@@ -1,0 +1,54 @@
+include "Achat/Domain/Comment.incl";
+
+function insertComment(Comment com, string providerId, string orderId, string offerId, string app_providerId, string app_offerId, string source){
+    //Save Comment
+    string query1 = "insert into fj_comment(sens,title,label,description,provider,jorder,offer,application_provider,application_offer) ";
+           query1 += "values('"+com.sens+"','"+com.title+"','"+com.label+"','"+com.description+"','"+providerId+"'";
+    if(isNull(orderId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+orderId+"'";
+    }
+    if(isNull(offerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+offerId+"'";
+    }    
+    if(isNull(app_offerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+app_offerId+"'";
+    }
+    if(isNull(app_providerId)){
+           query1 += ",null";
+    }else{
+           query1 += ",'"+app_providerId+"'";
+    }    
+    query1 += ")";
+    
+    sql(source, query1);
+    
+}
+
+/*function getCommentsFromProvider(string providerId, string source){
+    string query = "select sens, title, label, description from fj_comment where sens = 'OUT' and provider = "+providerId;
+    Comment[] comments = sql(source,query);
+    return comments;
+}*/
+
+function getCommentsFromEntity(string entityName, string _id, string source){
+    //Getting comments
+    string query = "select sens, title, label, description, jorder, offer, provider, application_offer, application_provider from fj_comment where sens = 'OUT' and status = 'NOK' and "+entityName+" is not null";
+    if(isNotNull(_id)){
+        query += " and "+entityName+" = "+_id;
+    }
+    Comment[] comments = sql(source,query);
+    //Updating comments
+    query = "update fj_comment set status = 'OK' where status = 'NOK'  and "+entityName+" is not null";
+    if(isNotNull(_id)){
+        query += " and "+entityName+" = "+_id;
+    }
+    sql(source,query);
+    
+    return comments;
+}

@@ -1,0 +1,49 @@
+include "Achat/Services/DocumentService.incl";
+include "Achat/Services/OfferService.incl";
+//include "Achat/Services/DocumentService.incl";
+//include "Achat/Services/gridFunctions.sil";
+include "Achat/Services/SectorLot.sil";
+
+//Insertion de l'Offre dans la BD 
+Offer offer = getOffer(key);
+//offer.requirements = getCurrentDocumentsString();
+
+//insertOffer(offer, key);
+runnerLog("ERROR test1234"+key);
+
+string offerId = getOfferId("PFA_OLD");
+
+//Get Attachment File details
+if(isNotNull(attachments)) {
+    string inpath = getAttachmentPath(key, attachments[0]);
+    string ext = substring(attachments[0], indexOf(attachments[0], ".") + 1, -1);
+    string newName = "AO"+replace(key, "-", "");    
+    string origineName = replace(attachments[0],"."+ext,"");
+    //Setting out path
+    string outpath = "\\\\zeus\\Users\\ZEUS\\Documents\\pfa\\offers\\documents\\"+newName;
+    //Setting document details
+    Document document;
+    document.sens = "IN";
+    document.title = "Appel doffre";
+    document.label = "AO";
+    document.name = newName;
+    document.ext = ext;
+    document.origineName = replace(origineName,"'","");
+    //Getting Order Id
+    runnerLog("ERROR1235 "+offerId);
+    //Inserting Document
+    insertDocument(document, "", "", offerId, "", "", "PFA_OLD");
+    //Copying file to provider folder
+    fileCopy(inpath, outpath);
+    
+    runnerLog("ERROR","test126"+document.name);
+}
+
+
+    
+//Sector insertion
+//string[] sectors = %key%.secteursAO;
+// for(string sector in sectors){
+//     string sectorId = substring(sector, 0, indexOf(sector, "-"));
+//     insertOfferSector(offerId,sectorId,"PFA");
+// }

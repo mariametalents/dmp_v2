@@ -1,0 +1,9 @@
+if(argv["issueType"]=="Agrement"){
+    if(argv["fournisseurAgree"] == "Oui"){
+        lfHide("entreprise");
+        lfShow("fournisseur");
+    }else if(argv["fournisseurAgree"] == "Non"){
+        lfHide("fournisseur");
+        lfShow("entreprise");
+    }
+}

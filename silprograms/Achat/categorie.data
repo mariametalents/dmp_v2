@@ -1,0 +1,16 @@
+[
+{
+  "categories": [
+    {
+      "id": "5",
+      "libelle": "Numero Client",
+      "endpoint": " url1"
+    },
+    {
+      "id": "10",
+      "libelle": "Type Document",
+      "endpoint": " url2"
+    }
+  ]
+}
+]

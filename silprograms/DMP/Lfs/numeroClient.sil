@@ -1,0 +1,21 @@
+include "DMP/db.sil";
+include "DMP/Domain/client.sil"; 
+
+  Client[] clients = getClient(argv["numeroClient"]);
+  lfSet("agence", clients[0].agence);
+  lfSet("civilite", clients[0].civilite);
+  lfSet("nom", clients[0].nom);
+  lfSet("prenom", clients[0].prenom);
+  lfSet("profession", clients[0].profession);
+  lfSet("adresse", clients[0].adresse);
+  lfSet("pays", clients[0].pays);
+  lfSet("ville", clients[0].ville);
+  lfSet("telephone", clients[0].telephone);
+  lfSet("email", clients[0].email);
+  lfSet("dateNaissance", clients[0].date_naissance);
+  lfSet("lieuNaissance", clients[0].lieu_naissance);
+  lfSet("genre", clients[0].genre);
+  lfSet("nationalite", clients[0].nationalite);
+  lfSet("typeIdentification", clients[0].type_identification);
+  lfSet("numeroIdentificationNationale", clients[0].num_identification_national);
+  lfSet("revenuAnnuel", clients[0].revenu_annuel);

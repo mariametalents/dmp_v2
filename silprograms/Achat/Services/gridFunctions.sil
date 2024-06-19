@@ -1,0 +1,141 @@
+include "Achat/Domain/Sector.incl";
+include "Achat/Domain/Order.incl";
+//include "Achat/Domain/Product_Order.incl";
+
+//int fieldDecision=11400;
+int commande = 11600;
+int commandes = 11704;
+int document = 10607;
+
+
+function authentication(){
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    HttpHeader header = httpCreateHeader("Content-Type", "application/json");
+    request.headers += header;
+    return request;
+}
+
+function gridAuthentication(){
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    return request;
+}
+
+function getSectorAO(string issueId){
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+commande+"/issue/"+issueId;
+    runnerLog(url);
+    string json = httpGet(url, authentication());
+    GOrder sector =  fromJson(json);
+    return sector.values;
+}
+
+/*
+// recup les produits de l'AO
+function getProduitAO(string issueId){
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+produit_commande+"/issue/"+issueId;
+    runnerLog(url);
+    string json = httpGet(url, authentication());
+    runnerLog("Statut:"+httpGetStatusCode());
+    GProduit gProduit =  fromJson(json);
+    return gProduit.values;
+    
+}
+
+*/
+//charger les donn?es de la table grid
+function loadGridDatas (string issueId, string gridId, string jsonData) {
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+gridId+"/issue/"+issueId;
+    runnerLog(url);
+    runnerLog("JSON : "+jsonData);
+    httpPut(url+"/clear", authentication());
+    httpPost(url, authentication(), jsonData);
+    runnerLog("Statut:"+httpGetStatusCode());
+    runnerLog("Error:"+httpGetErrorMessage());
+}
+
+function getGridDatas (string issueId, string gridId, string jsonData){
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+gridId+"/issue/"+issueId;
+    string datas = httpGet(url, authentication());
+    return datas;
+}
+
+
+
+
+/*
+function loadSectorDatas (string issueId, string gridId, string jsonData) {
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+gridId+"/issue/"+issueId;
+    httpPut(url+"/clear", authentication());
+    httpPost(url, authentication(), jsonData);
+    runnerLog("Statut:"+httpGetStatusCode());
+    runnerLog("Error:"+httpGetErrorMessage());
+}
+*/
+
+function getDecisionSectors(string issueId){
+
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+silEnv("fieldDecision")+"/issue/"+issueId;
+    SectorsGrid sectorGrid = httpGet(url, gridAuthentication());
+    logPrint("ERROR", "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+httpGetStatusCode());
+    logPrint("ERROR", "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"+httpGetErrorMessage());
+    runnerLog ("STATUS : "+httpGetStatusCode());
+    runnerLog ("ERROR : "+httpGetErrorMessage());
+    runnerLog ("URL : "+url);
+    return sectorGrid.values;
+}
+
+/*
+string cle = "GDA-1136";
+string [] sectors = %cle%.secteurs;
+SectorGridRows sectProvider;
+for (string s in sectors) {
+    SectorGrid sect ;
+    sect.ifournisseur="Ha Consulting";
+    sect.isecteur=s;
+    sect.idecision="OUI";
+    sectProvider.rows+=sect;
+}
+//SectorGrid[] sGrid = sectProvider.rows;
+//loadGridDatas(%cle%.id, "11400", toJson(sectProvider));
+
+//loadGridDatas(%cle%.id,"11400",sectors) ;
+runnerLog (getDecisionSectors(%cle%.id));
+
+function getDecisionSectors(string issueId){
+
+    SectorGridValues sectorGrid;
+    HttpRequest request;
+    HttpHeader authHeader = httpBasicAuthHeader(silEnv("login"),silEnv("password"));
+    request.headers += authHeader;
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+fieldDecision+"/issue/"+issueId;
+    sectorGrid = httpGet(url, request);
+    return sectorGrid.values;
+}
+
+*/
+//E8IkioJWBhu2SfZrHQ515F12
+
+function clearGrid(string issueId, string gridID){
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+gridID+"/issue/"+issueId+"/clear";
+    httpPut(url,authentication());
+    //logPrint("ERROR","STATUT"+httpGetStatusCode());
+    runnerLog("STATUT: "+httpGetStatusCode());
+}
+
+
+function addRowsInGrid(string gridID, string ticket, string json){
+    string url = getJIRABaseUrl() + "/rest/idalko-grid/1.0/api/grid/"+gridID+"/issue/"+%ticket%.id;
+    runnerLog("URL POST ::: " + url);
+    string[] results;
+    if(isNotNull(json)){
+        HttpRequest request = authentication();
+        results = httpPost(url, request, json);
+        runnerLog("RESULT :: " + results);
+        runnerLog("ERROR :::::::::::::: " + " " + httpGetErrorMessage());
+        runnerLog("STATUS ::: "+httpGetStatusCode());
+        return results;
+    }
+}

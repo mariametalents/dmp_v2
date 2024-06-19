@@ -1,0 +1,58 @@
+include "Achat/Domain/Offer.incl";
+include "Achat/Services/DocumentService.incl";
+
+function getOffer(string key){
+    Offer offer;
+//     offer.reference = %key%.referenceAO;
+//     offer.mode = %key%.typeAO;
+//     offer.title = %key%.titre;
+//     offer.description = %key%.descriptions;
+//     /*offer.requirements = %key%.documentsJoint;*/
+//     offer.requirements = getCurrentDocumentsString();
+//     offer.process = %key%.modApp;
+//     offer.objectif = %key%.objectifGeneral;
+//     offer.expected_result = %key%.resultatAttendu;
+//     offer.location = %key%.adresseDepot;
+//     offer.duedate = %key%.dateFinTravaux;
+// 	offer.ended = %key%.dateFinDep;
+// 	offer.published = currentDate();
+// 	offer.started = %key%.dateDebutTravaux;
+    	//offer.sector = %key%.secteurs;
+    	//offer.attachments = %key%.attachments;
+	
+	return offer;
+}
+
+
+function insertOffer(Offer offer, string key){
+    string query = "insert into j_offer(\"jira_key\", \"reference\", \"mode\", \"title\", \"description\", \"requirements\", \"process\", \"objectif\", \"expected_result\", \"location\", \"duedate\",\"ended\", \"published\", \"started\", \"status\") values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+    //logPrint("ERROR", "BLABLABLA "+query);
+    sql("PFA", query, key, offer.reference, offer.mode, offer.title, offer.description, offer.requirements, offer.process, offer.objectif, offer.expected_result, offer.location, offer.duedate, offer.ended, offer.published, offer.started, "OPEN");
+    
+    //string request = "insert into offer_sector(\"offer\", \"sector\") values (?,?);";
+    //sql("PFA", request, , );
+}
+
+function insertOfferSector(string offerId, string sectorId, string source){
+    string query = "insert into offer_sector(offer, sector) values (?,?);";
+    sql(source, query, (int)offerId, (int)sectorId);
+}
+
+function getOfferId(string source){
+    //Get order id
+    string query2 = "select id from j_offer where jira_key = '"+key+"'";
+    string offerId = sql(source, query2);
+    
+    return offerId;
+}
+
+function updateOfferStatus(string offerId, string status, string source){
+    string req = "update j_offer set status = '"+status+"' where jira_key='"+offerId+"'";
+    sql(source,req);
+}
+
+function updateApplicationStatus(string _key, string status, string source){
+    string query = "UPDATE fj_application SET status = '"+status+"' WHERE jira_key = '"+_key+"'";
+    logPrint("ERROR","QUERY : " + query);
+    sql(source, query);
+}

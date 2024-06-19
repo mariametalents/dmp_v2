@@ -1,0 +1,63 @@
+include "Achat/utils.incl";
+
+struct ReceptionObject{
+    
+}
+
+string ticketFrom = "";
+function cupdateMontant(string ticket, string gridId, number montantPayer) {
+    string fromGridJsonString = getTableGridValues(gridId, %ticket%.id);
+    //string[] splitedLines = split(fromGridJsonString, "columns\":\\{");
+    
+    
+    // string content = "";
+
+    // for (int i = 0; i < arraySize(fromGridStructuredValues); i++) {
+    //     for (int n = 0; n < arraySize(fromGridStructuredValues[i].rows); n++) {
+    //          content += ",{"+
+    //                 "\"fournisseur\":\""+fromGridStructuredValues[i].rows[n].columns[0].fournisseur+"\","+
+    //                 "\"categorie\":\""+fromGridStructuredValues[i].rows[n].columns[0].categorie+"\","+
+    //                 "\"produitsServicesOffre\":\""+fromGridStructuredValues[i].rows[n].columns[0].produitsServicesOffre+"\","+
+    //                 "\"cout\":"+fromGridStructuredValues[i].rows[n].columns[0].cout+","+
+    //                 "\"delais\":\""+fromGridStructuredValues[i].rows[n].columns[0].delais+"\","+
+    //                 "\"scoreTechnique\":0,"+
+    //                 "\"scoreFinancier\":0,"+
+    //                 "\"description\":\""+fromGridStructuredValues[i].rows[n].columns[0].description+"\""+
+    //         "}"; 
+            
+    //         // runnerLog("Data sent: "+updateRequest);
+    //         // updateGridColumns(updateRequest, %ticket%.id, gridIdDecision);
+    //         // runnerLog("RowId for decision: " + decisions[i].rows[n].rowId);
+    //         // // Update the scores
+    //         // decisions[i].rows[n].columns[0].scoreTechnique = 0;
+    //         // decisions[i].rows[n].columns[0].scoreFinancier = 0;
+    //         // decisions[i].rows[n].columns[0].score = 0;
+    //         // runnerLog("Updated scoreTechnique: " + decisions[i].rows[n].columns[0].scoreTechnique);
+    //         // runnerLog("Updated scoreFinancier: " + decisions[i].rows[n].columns[0].scoreFinancier);
+    //         // runnerLog("Updated score: " + decisions[i].rows[n].columns[0].score);
+
+    //         // updateGrid(decisions[i].rows[n].columns[0], %ticket%.id, decisions[i].rows[n].rowId, gridIdDecision);
+    //     }
+    // }
+    // content = substring(content, 1,content.length(content));
+    // string updateRequest = "{"+
+    //         "\"rows\":["+content+"]"+
+    //         "}";
+    // // runnerLog("Grid data::::::::::::: "+updateRequest);
+    
+    // // string updateRequest ="{"+
+    // //     "    \"rows\": ["+
+    // //     "        {"+
+    // //     "                \"produitsServicesOffre\": \"test\","+
+    // //     "                \"scoreFinancier\": 0,"+
+    // //     "                \"fournisseur\": \"test\","+
+    // //     "                \"description\": \"desc\","+
+    // //     "                \"categorie\": \"test\","+
+    // //     "                \"delais\": \"1 mois\","+
+    // //     "                \"scoreTechnique\": 0,"+
+    // //     "                \"cout\": 20000"+
+    // //     "        }"+
+    // //     "    ]"+
+    // //     "}";
+    // updateGridColumns(updateRequest, %ticket%.id, toGridId, "POST");
+}

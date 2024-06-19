@@ -1,0 +1,4 @@
+if(isUserInGroup(%key%.groupeDemandeur, currentUser())) {
+    return true;
+}
+return false;

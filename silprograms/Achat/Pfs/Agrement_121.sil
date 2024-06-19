@@ -1,0 +1,13 @@
+/*//Notifier le fournisseur pour informations complémentaire
+string from = "";
+string to = email;
+string cc = "";
+string subject = "AGREMENT_INFOS_SUBJ";
+string body = "AGREMENT_INFOS_BODY";
+sendEmail(from,to,cc,subject,body);*/
+
+//Afficher les informations complemetaires demandes dans le champ Informations Requises Text
+string _informationsRequises = infosRequis + "\n" + getComment();
+%key%.infosRequisText = _informationsRequises;
+//Assigner a l'agent traitant
+%key%.assignee = agentTraitant;

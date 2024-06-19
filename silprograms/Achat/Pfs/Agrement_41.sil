@@ -1,0 +1,13 @@
+//Notifier le fournisseur pour informations complémentaire
+string from = "";
+string to = email;
+string cc = "";
+string subject = "AGREMENT_REJET_SUBJ.tpl";
+string body = "AGREMENT_REJET_BODY.tpl";
+sendEmail(from,to,cc,subject,body);
+
+//Mettre a jour le statut fournisseur a REJECTED
+string STATUS = "DELETED";
+string SOURCE = "PFA";
+string query = "update provider set status='"+STATUS+"' where rcc = '"+%key%.rcc+"'";
+sql(SOURCE,query);

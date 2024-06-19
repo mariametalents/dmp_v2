@@ -1,0 +1,31 @@
+struct PDepenseGrid{
+    string ref;
+    string intitule;
+    string type_depense;
+    number cout;
+    string remarks;
+}
+
+struct PDepensesRows{
+    PDepenseGrid[] rows;
+}
+
+struct TypeDepense{
+    string value;
+    string name;
+}
+
+struct PDepensesGridValue{
+    string ref;
+    string intitule;
+    TypeDepense type_depense;
+    number cout;
+    string remarks;
+}
+
+struct PDepensesGrid {
+    number startAt;
+    number maxResults;
+    number total;
+    PDepensesGridValue[] values;
+}

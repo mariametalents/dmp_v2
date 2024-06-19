@@ -1,0 +1,13 @@
+include "Achat/Services/gridFunctions.sil";
+include "Achat/Domain/Product_Order.incl";
+
+int produit_commande = 11600;
+
+function getProduitAO(string issueId){
+    string url = getJIRABaseUrl()+"/rest/idalko-igrid/1.0/grid/"+produit_commande+"/issue/"+issueId;
+    runnerLog(url);
+    string json = httpGet(url, authentication());
+    runnerLog("Statut:"+httpGetStatusCode());
+    GProduit gProduit =  fromJson(json);
+    return gProduit.values;
+}

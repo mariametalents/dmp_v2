@@ -1,0 +1,4 @@
+//Afficher que pour l'agent traitant
+if(currentUser() != agentTraitant){
+    return false;
+}

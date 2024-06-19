@@ -1,0 +1,17 @@
+struct Provider{ //champsProvider{
+	string code;
+	string name;
+	string adress; 
+	string city; 
+	string country;  
+	string ninea;  
+	string rcc;      
+	string status; 
+	string legal;
+	string exoTaxe;
+	string iban;
+	string email;
+	string phone;
+	string capital;
+	string id;
+}

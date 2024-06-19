@@ -1,0 +1,80 @@
+include "Achat/utils.incl";
+include "Achat/Services/AgrementService.incl";
+
+string STATUS = "CREATED";
+string SOURCE = "PFA";
+
+// verifier d'où provient la demande
+//%key%.origineWorkflow = "Jira";
+
+// // Assigner au responsable achat ou moyens generaux
+
+     //Mis a jour resume
+     %key%.summary = "Agrement " + %key%.entreprise;
+    if(automatique != "Oui"){
+        string columnsValues = "'"+%key%.adresse+"', '"+%key%.paysVille+"', '"+key+"','"+%key%.email+"', '"+%key%.entreprise+"', '"+%key%.web+"', "+
+        "'"+%key%.tel+"', '"+%key%.fax+"', '"+%key%.codePostal+"', '"+%key%.ninea+"', '"+%key%.capital+"','"+%key%.iban+"', '"+STATUS+"', '"+%key%.rcc+"'";
+        string req = "INSERT INTO public.provider(address, city, code , email, name, website, phone, fax, post, ninea, capital, iban, status, rcc ) VALUES ("+columnsValues+");";
+        
+        sql(SOURCE, req);
+        
+        if(isDepartmentAgent(%key%.reporter)) {
+            autotransition("161", key, true, true, true);
+        } else {
+            %key%.assignee = getAchatResponsable();
+        }
+    }
+    
+   //updateStatusProvider(key);
+	
+// 	if(isNotNull(%key%.adresse)){
+// 	    columnsValues += "'"+%key%.adresse+"'"
+// 	}
+	
+// 	if(isNotNull()){
+	    
+// 	}
+	
+
+
+// test fonction retournant le responsable d'un departement
+// avisResponsableDepartement = getDepartmentResponsable(currentUser());
+// lfGlobalMessage("Responsable du departement: "+avisResponsableDepartement);
+
+//Update des champs
+//Verifier si la creation est necessaire
+
+// if(automatique != "Oui"){
+//     string columnsValues = "code="+"'"+key+"'";
+    
+//     if(isNotNull(fax)){
+//         columnsValues += ",fax="+"'"+fax+"'";
+//     }
+//     if(isNotNull(codePostal)){
+//         columnsValues += ",post="+"'"+codePostal+"'";
+//     }
+//     if(isNotNull(web)){
+//         columnsValues += ",website="+"'"+web+"'";
+//     }
+    
+//     // try{
+//     //     string qUpdateProvider = "update j_provider set %cv where rcc = '"+rcc+"'";
+//     //     string query = replace(qUpdateProvider,"%cv",columnsValues);
+//     //     databaseAvailable(SOURCE,query);
+//     // } catch string s {
+//     //     // will not match
+//     // }
+    
+//     //  autotransition(21, key, true, true, true);
+    
+//     //Mise a jour secteurs
+//     /*string qRetrieveProviderId = "select id from j_provider where rcc ='" + rcc + "'";
+//     string qRetrieveSectorId = "select id from f_product where id ='%pid'";
+    
+//     string providerId = sql(SOURCE, qRetrieveProviderId);*/
+    
+//
+    
+//     //Assignation au createur
+//     %key%.agentTraitant = currentUser();
+// }

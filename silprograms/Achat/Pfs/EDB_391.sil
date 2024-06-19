@@ -1,0 +1,7 @@
+string akey = createIssue("GDAG", "", "Appel d'offre", "Appel d'offre " + " - " + split(currentDate(), " ")[0]);
+
+%akey%.commande = %key%.commande;
+%akey%.typeAO = %key%.typeAO;
+%akey%.secteurs = %key%.secteurs;
+%akey%.fournisseurs = %key%.fournisseurs;
+    linkIssue(key, akey, "Relates");

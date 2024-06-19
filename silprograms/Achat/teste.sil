@@ -1,0 +1,642 @@
+// include "Achat/utils.incl";
+// include "Achat/Domain/Provider.incl";
+// include "Achat/Domain/Demandeur.incl";
+// include "Achat/Domain/Commande.incl";
+// //include "Achat/Services/CommandeService.incl";
+// // include "Achat/Services/RequestEDB.incl";
+
+// include "Achat/Services/gridFunctions.sil";
+
+include "helpers/TGEUtil.sil";
+
+
+// string ticket = "GDAG-496";
+
+// // Function start to copy reception offre data in decision offre
+// function getDecisionOffreInfos(string issueId) {
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+silEnv("GRID_DECISION_OFFRE_ID")+"/issue/"+issueId;
+//     string json = httpGet(url, authentication());
+//     runnerLog("JSON ::: " + json);
+//     return json;
+// }
+
+
+// // Function to get reception offre columns DATA
+// function getDecisionAOColumnsData(string ticket) {
+//     string decisionOffreJson = getDecisionOffreInfos(%ticket%.id);
+    
+//     DecisionAO[] DecisionAOObject = fromJson(decisionOffreJson);
+//     runnerLog("Decision columns :::: " + DecisionAOObject[0].rows);
+    
+//     return DecisionAOObject[0].rows;
+// }
+
+
+// function copyDecisionAoToChoixFournisseurGrid(string ticket, DecisionAORows[] decisionAORows){
+
+//     ChangerFournisseurProperties[] changerFournisseurProperties;
+    
+//     for (DecisionAORows decisionAORow in decisionAORows){
+
+//         ChangerFournisseurProperties changerFournisseurProperty;
+        
+//         changerFournisseurProperty.fournisseur.label = decisionAORow.columns.fournisseur.label;
+//         changerFournisseurProperty.categorie.label = decisionAORow.columns.categorie.label;
+//         changerFournisseurProperty.produit_service.label = decisionAORow.columns.produitsServicesOffre.label;
+//         changerFournisseurProperty.cout = decisionAORow.columns.cout;
+//         changerFournisseurProperty.delais = decisionAORow.columns.delais;
+//         changerFournisseurProperty.status = "EN ATTENTE";
+//         changerFournisseurProperty.score_technique = "0"; //decisionAORow.columns.score_technique;
+//         changerFournisseurProperty.score_financier = "0"; //decisionAORow.columns.score_financier;
+//       // changerFournisseurProperty.description = decisionAORow.columns.description;
+        
+//         changerFournisseurProperties+=changerFournisseurProperty;
+        
+//         runnerLog("reception :::" + changerFournisseurProperty);
+        
+//     }
+    
+    
+//     runnerLog("RECEPTION OFFRE AFTER COPY :::: " + changerFournisseurProperties);
+    
+//     string jsonData = "{ \"rows\" : "+toJson(changerFournisseurProperties)+" }" ;
+    
+    
+//     runnerLog("JSON DATA :::: " + jsonData);
+    
+//     addRowsInGrid(silEnv("GRID_CHANGER_FOURNISSEUR_ID"), ticket, jsonData);
+    
+// }
+
+// copyDecisionAoToChoixFournisseurGrid(ticket, getDecisionAOColumnsData(ticket));
+
+string ticket = "GDAG-504";
+
+
+copyTGEGrid(silEnv("GRID_TEST_1_ID"), silEnv("GRID_TEST_1_ID"), ticket.id, ticket.id, false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Function start to copy reception offre data in decision offre
+// function getReceptionOffreInfos(string issueId) {
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+silEnv("GRID_RECEPTION_OFFRE_ID")+"/issue/"+issueId;
+//     string json = httpGet(url, authentication());
+//     return json;
+// }
+
+
+// // Function to get reception offre columns DATA
+// function getReceptionOffreColumnsData(string ticket) {
+//     string receptionOffreJson = getReceptionOffreInfos(%ticket%.id);
+    
+//     ReceptionOffre[] receptionOffreObject = fromJson(receptionOffreJson);
+//     runnerLog("Commande columns :::: " + receptionOffreObject[0].rows);
+    
+//     return receptionOffreObject[0].rows;
+// }
+
+// // Function start to copy reception offre data in decision offre
+// function getDecisionOffreInfos(string issueId) {
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+silEnv("GRID_DECISION_OFFRE_ID")+"/issue/"+issueId;
+//     string json = httpGet(url, authentication());
+//     runnerLog("JSON :::: " + json);
+//     return json;
+// }
+
+
+// // Function to get command columns DATA
+// function getReceptionOffreColumnsData(string ticket) {
+//     string decisionOffreJson = getDecisionOffreInfos(%ticket%.id);
+    
+//     runnerLog("RECEPTION OFFRE JSON :::: "  + decisionOffreJson);
+    
+//     DecisionOffre[] decisionOffreObject = fromJson(decisionOffreJson);
+//     runnerLog("Reception offre ::::: " + decisionOffreObject);
+//     runnerLog("Reception offre columns :::: " + decisionOffreObject[0].rows);
+    
+//     return decisionOffreObject[0].rows;
+// }
+
+// string ticket = "GDAG-493";
+
+// function copyDecisionOffreToChoixFournisseurGrid(string ticket, ReceptionOffreRows[] receptionOffreRows){
+
+//     ChoixFournisseurProperties[] choixFournisseurProperties;
+    
+//     for (ReceptionOffreRows receptionOffreRow in receptionOffreRows){
+
+//         ChoixFournisseurProperties choixFournisseurProperty;
+        
+//         choixFournisseurProperty.fournisseur.label = receptionOffreRow.columns.fournisseur.label;
+//         choixFournisseurProperty.delai = receptionOffreRow.columns.delai;
+//         choixFournisseurProperty.fournisseur_status = "EN ATTENTE";
+//         // choixFournisseurProperty.score_technique = decisionOffreRows.columns.score_technique;
+//         // choixFournisseurProperty.score_financier = decisionOffreRows.columns.score_financier;
+
+        
+//         choixFournisseurProperties+=choixFournisseurProperty;
+        
+//         runnerLog("reception :::" + choixFournisseurProperty);
+        
+//     }
+    
+    
+//     runnerLog("RECEPTION OFFRE AFTER COPY :::: " + choixFournisseurProperties);
+    
+//     string jsonData = "{ \"rows\" : "+toJson(choixFournisseurProperties)+" }" ;
+    
+    
+//     runnerLog("JSON DATA :::: " + jsonData);
+    
+//     addRowsInGrid(silEnv("GRID_CHOIX_FOURNISSEUR"), ticket, jsonData);
+    
+// }
+
+// copyDecisionOffreToChoixFournisseurGrid(ticket, getReceptionOffreColumnsData(ticket));
+
+
+
+// function copyReceptionOffreToDecisionOffreGrid(string ticket, ReceptionOffreRows[] receptionOffreRows){
+
+//     DecisionOffreProperties[] decisionOffreProperties;
+    
+//     for (ReceptionOffreRows receptionOffreRow in receptionOffreRows){
+    
+//         DecisionOffreProperties decisionOffreProperty;
+        
+//         decisionOffreProperty.fournisseur.label = receptionOffreRow.columns.fournisseur.label;
+//         decisionOffreProperty.categorie.label = receptionOffreRow.columns.categori.label;
+//         decisionOffreProperty.produitsServicesOffre.label = receptionOffreRow.columns.produit_service.label;
+//         decisionOffreProperty.delais = receptionOffreRow.columns.delai;
+//         decisionOffreProperty.cout = receptionOffreRow.columns.cout;
+        
+//         decisionOffreProperties+=decisionOffreProperty;
+        
+//         runnerLog("reception :::" + decisionOffreProperty);
+        
+//     }
+    
+    
+//     runnerLog("RECEPTION OFFRE AFTER COPY :::: " + decisionOffreProperties);
+    
+//     string jsonData = "{ \"rows\" : "+toJson(decisionOffreProperties)+" }" ;
+    
+    
+//     runnerLog("JSON DATA :::: " + jsonData);
+    
+//     addRowsInGrid(silEnv("GRID_CHOIX_FOURNISSEUR"), ticket, jsonData);
+    
+// }
+
+// function copyReceptionOffreToDecisionOffreGrid(string ticket, ReceptionOffreRows[] receptionOffreRows){
+
+//     DecisionOffreProperties[] decisionOffreProperties;
+    
+//     for (ReceptionOffreRows receptionOffreRow in receptionOffreRows){
+    
+//         DecisionOffreProperties decisionOffreProperty;
+        
+//         decisionOffreProperty.fournisseur.label = receptionOffreRow.columns.fournisseur.label;
+//         decisionOffreProperty.categorie.label = receptionOffreRow.columns.categori.label;
+//         decisionOffreProperty.produitsServicesOffre.label = receptionOffreRow.columns.produit_service.label;
+//         decisionOffreProperty.delais = receptionOffreRow.columns.delai;
+//         decisionOffreProperty.cout = receptionOffreRow.columns.cout;
+        
+//         decisionOffreProperties+=decisionOffreProperty;
+        
+//         runnerLog("reception :::" + decisionOffreProperty);
+        
+//     }
+    
+    
+//     runnerLog("RECEPTION OFFRE AFTER COPY :::: " + decisionOffreProperties);
+    
+//     string jsonData = "{ \"rows\" : "+toJson(decisionOffreProperties)+" }" ;
+    
+    
+//     runnerLog("JSON DATA :::: " + jsonData);
+    
+//     addRowsInGrid(silEnv("GRID_DECISION_OFFRE_ID"), ticket, jsonData);
+// }
+
+
+// copyReceptionOffreToDecisionOffreGrid(ticket, getReceptionOffreColumnsData(ticket));
+
+
+
+// string query = "select name from j_provider";
+
+// string[] results = sql("PFA_OLD", query);
+
+// runnerLog("result :::: " + results);
+
+// string fromGridId = "10258";
+// string toGridId = "10268";
+// string fromIssueId = "12110";
+// string toIssueId = "12110";
+// boolean clearDestination = false;
+
+// string ticket = "GDAG-464";
+// string gridID = "10258";
+// string issueId = "12110";
+
+// function getCommandInfos(string issueId) {
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridID+"/issue/"+issueId;
+//     runnerLog(url);
+//     // string json = httpGet(url, authentication());
+//     // return json;
+// }
+
+// runnerLog("Command tikcet id" + getCommandInfos(%ticket%.id));
+
+// // Function to get command columns DATA
+// function getCommandColumnsData(string ticket) {
+//     string commandeJson = getCommandInfos(%ticket%.id);
+    
+//     Commande commandeObject = fromJson(commandeJson);
+//     runnerLog("Commande columns :::: " + commandeObject.rows[0].columns);
+    
+//     return commandeObject.rows[0].columns;
+// }
+
+
+
+
+// runnerLog(copyTGEGrid(fromGridId, toGridId, fromIssueId, toIssueId, clearDestination));
+
+// string ticket = "GDAG-451";
+// ticket.membreComiteAgre += "sc";
+
+// Demandeur demandeur = getInfoDemandeur("ri");
+
+// runnerLog("DEMANDEUR :: " + demandeur);
+
+// struct Reception {
+//     string ref;
+//     number qty;
+//     string Description;
+// //     string recu;
+// //     string traite;
+// }
+
+// struct TypeProduit {
+//     string label;
+// }
+
+
+// struct CommandeColumns{
+//     string reference;
+//     string quantity;
+//     string description;
+//     string price;
+//     string remarque;
+//     string total;
+//     number typeProduit;
+//     TypeProduit typeProduit;
+// }
+        
+// struct CommandeRows{
+//     string rowId;
+//     CommandeColumns columns;
+//     number order;
+// }
+
+
+// struct Commande{
+//     string customFieldId;
+//     CommandeRows[] rows;
+// }   
+
+
+
+// string gridCustomFieldId = "10258";
+// string gridID = "10268";
+// string ticket = "GDAG-468";
+
+// function gridAuthentication(){
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin","admin");
+//     request.headers += authHeader;
+//     HttpHeader header = httpCreateHeader("Content-Type", "application/json");
+//     request.headers += header;
+//     return request;
+// }
+
+// function getCommandInfos(string issueId) {
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridCustomFieldId+"/issue/"+issueId;
+//     string json = httpGet(url, gridAuthentication());
+//     return json;
+// }
+
+// function getCommandColumnsData(string issueId) {
+//     string commandeJson = getCommandInfos(issueId);
+//     Commande[] commandeObject = fromJson(commandeJson);
+//     return commandeObject[0].rows;
+// }
+
+// function addRowsInGrid(string gridID, string issueID, string json){
+//     string url = getJIRABaseUrl() + "/rest/idalko-grid/1.0/api/grid/"+gridID+"/issue/"+issueID;
+//     runnerLog("URL POST ::: " + url);
+//     string[] results;
+//     if(isNotNull(json)){
+//         HttpRequest request = gridAuthentication();
+//         results = httpPost(url, request, json);
+//         runnerLog("RESULT :: " + results);
+//         runnerLog("ERROR :::::::::::::: " + " " + httpGetErrorMessage());
+//         runnerLog("STATUS ::: "+httpGetStatusCode());
+//         return results;
+//     }
+// }
+
+
+// function copyCommandToReceptionGrid(string ticket, CommandeRows[] commandRows){
+
+//     Reception[] receptions;
+    
+//     for (CommandeRows commandRow in commandRows){
+//         Reception reception;
+        
+//         reception.ref = commandRow.columns.reference;
+//         reception.qty = commandRow.columns.quantity;
+//         reception.Description = commandRow.columns.description;
+        
+//         receptions+=reception;
+        
+//         runnerLog("reception :::" + reception);
+        
+//     }
+    
+    
+//     runnerLog("RECEPTIONS AFTER COPY :::: " + receptions);
+    
+//     string jsonData = "{ \"rows\" : "+toJson(receptions)+" }" ;
+    
+    
+//     runnerLog("JSON DATA :::: " + jsonData);
+    
+//     addRowsInGrid(gridID, ticket.id, jsonData);
+    
+// }
+
+// copyCommandToReceptionGrid(ticket, getCommandColumnsData(ticket.id));
+
+// string issueId = "12110";
+// getCommandColumnsData(issueId);
+
+
+
+// // Convertir la réponse JSON en objet JavaScript
+// string receptionObject = toJson(receptionJson);
+
+// // Accéder aux données spécifiques
+// string row = receptionObject.rows[0]; // Supposons qu'il n'y a qu'une seule ligne dans la réponse
+// string columns = row.columns;
+
+// string reference = columns.reference;
+// string quantity = columns.quantity;
+// string description = columns.description;
+// string price = columns.price;
+// string remarque = columns.remarque;
+// string total = columns.total;
+// string typeProduitLabel = columns.typeProduit.label;
+
+
+
+
+
+// function retrieveCommandData(string ticket){
+//     ReceptionLine reception;
+//     string jsonData = "{ \"rows\" : ["+toJson(reception)+"] }" ;
+//     runnerLog("DATA:: "+jsonData);
+//     runnerLog("KEY:::::" + ticket);
+//     getCommandInfos("12110");
+//     // addRowsInGrid(cardGrid, %ticket%.id, jsonData);
+// }
+
+
+//retrieveCommandData("GDAG-462");
+
+
+
+//runnerLog(userName("sc"));
+// ticket.membreComiteAgre[size(ticket.membreComiteAgre)] = getUser(currentUser()); 
+// runnerLog(getUser(currentUser())[1]);
+
+// runnerLog("FOURNISSEUR ::::" + ticket.membreComiteAgre);
+
+// function getChoosedProviderFournisseurName(string name){
+
+//     string query = "select address, rcc, capital, city, phone from public.provider where name = '"+name+"'";
+    
+//     Provider[] result = sql("PFA", query);
+    
+//     runnerLog("RESULT :::::" + " " + result);
+    
+//     return result;
+// }
+
+
+// getChoosedProviderFournisseurName("TELENTS");
+
+
+//string ticket="GDAG-370";
+
+// // updateScore(ticket);
+
+// // resetDecisionTable(10728);
+
+// struct Decision {
+//     string fournisseur;
+//     string categorie;
+//     string produitsServicesOffre;
+//     number cout;
+//     string delais;
+//     number scoreTechnique;
+//     number scoreFinancier;
+//     number score;
+//     string description;
+// }
+
+// struct DecisionRows {
+//     string rowId;
+//     Decision [] columns;
+//     number order;
+// }
+
+// struct DecisionValue {
+//     string customFieldId;
+//     DecisionRows [] rows;
+// }
+
+// function encode(string text){
+
+//     // Accent aigu
+//     text = replace(text, "?", "&eacute;");
+//     text = replace(text, "?", "&Eacute;");
+    
+//     // Accent grave
+//     text = replace(text, "?", "&egrave;");
+//     text = replace(text, "?", "&Egrave;");
+    
+//     // Accent circonflexe 
+//     text = replace(text, "?", "&icirc;");
+//     text = replace(text, "?", "&Icirc;");
+    
+//     runnerLog("text"+text);
+//     return text;
+    
+// }
+
+
+// function getTableGridValues(string gridId, string issueId){
+
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+   
+//     string result = httpGet(url, request);
+//     runnerLog(httpGetStatusCode());
+
+//     //runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+//     return result;
+// }
+
+
+
+// function updateGrid(Decision decision, string issueId, string rowId, string gridId) {
+//     HttpRequest request;
+//     HttpHeader authHeader = httpBasicAuthHeader("admin", "admin");
+//     request.headers += authHeader;
+//     request.headers += httpCreateHeader("Content-type", "application/json; charset=utf-8");//; 
+   
+//     string url = getJIRABaseUrl()+"/rest/idalko-grid/1.0/api/grid/"+gridId+"/issue/"+issueId;
+//     string data = "{ \"rows\":[{ \"rowId\":\""+rowId+"\",\"columns\":"+toJson(decision)+"}]}";
+//     runnerLog("URL :::::::: "+url);
+//     runnerLog("DATA :::::::: "+data);
+//     httpPut(url, request, encode(data));
+//     runnerLog(httpGetStatusCode());
+//      runnerLog("THE ERROR ::: "+httpGetErrorMessage());
+// }
+
+// function updateScore(string ticket) {
+//     lfGlobalMessage("Id du ticket: "+ticket);
+//     string gridIdDecision = "10402";
+//     string gridIdOffre = "10401";
+
+//     string tableauDecision = getTableGridValues(gridIdDecision, %ticket%.id);
+//     // lfGlobalMessage("Tableau décision avant conversion: "+tableauDecision);
+//     DecisionValue[] decisions = fromJson(tableauDecision);
+    
+//     string tableauOffre = getTableGridValues(gridIdOffre, %ticket%.id);
+//     DecisionValue[] offres = fromJson(tableauOffre);
+
+//     lfGlobalMessage("Decision: "+decisions);
+//     lfShowFieldMessage("Offre", "offres", "INFO");
+//     // lfGlobalMessage("Offre: "+offres);
+//     runnerLog("Decision: " + decisions);
+//     runnerLog("Offre: " + offres);
+
+//     for (int i = 0; i < arraySize(decisions); i++) {
+//         for (int n = 0; n < arraySize(decisions[i].rows); n++) {
+//             for (int j = 0; j < arraySize(offres); j++) {
+//                 for (int m = 0; m < arraySize(offres[j].rows); m++) {
+//                     runnerLog("RowId for decision: " + decisions[i].rows[n].rowId);
+//                     if (decisions[i].rows[n].rowId == offres[j].rows[m].rowId) {
+//                         runnerLog("RowId for decision: " + decisions[i].rows[n].rowId);
+
+//                         // Update the scores
+//                         offres[j].rows[m].columns[0].scoreTechnique += decisions[i].rows[n].columns[0].scoreTechnique;
+//                         offres[j].rows[m].columns[0].scoreFinancier += decisions[i].rows[n].columns[0].scoreFinancier;
+//                         offres[j].rows[m].columns[0].score += decisions[i].rows[n].columns[0].score;
+//                         runnerLog("Score technique du tableau de décision: " + decisions[i].rows[n].columns[0].scoreTechnique);
+//                         runnerLog("Score financier du tableau de décision: " + decisions[i].rows[n].columns[0].scoreFinancier);
+//                         runnerLog("Score du tableau de décision: " + decisions[i].rows[n].columns[0].score);
+//                         runnerLog("========================================================================");
+//                         runnerLog("Score technique du tableau offre: " + offres[j].rows[m].columns[0].scoreTechnique);
+//                         runnerLog("Score financier du tableau offre: " + offres[j].rows[m].columns[0].scoreFinancier);
+//                         runnerLog("Score du tableau offre: " + offres[j].rows[m].columns[0].score);
+
+//                         // Update offre grid
+//                         updateGrid(offres[j].rows[m].columns[0], %ticket%.id, offres[j].rows[m].rowId, gridIdOffre);
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
+// updateScore(ticket);
+// string gridIdDecision = "10900";
+// string gridIdOffre = "10401";
+// copyGridRow(ticket, gridIdOffre, gridIdDecision);
+
+
+// // runnerLog(elementExists(%key%.commiteOffre, currentUser()));
+
+// // runnerLog(currentUser());
+
+// // sendEmail("cherif.diallo@talentsconsult.org", "cherif.diallo@talentsconsult.org", "", "Test", "Bonjour le monde");
+
+// // test de la fonction
+
+// // runnerLog("Responsable de l'agent "+%key%.reporter+": "+getDepartmentResponsable(%key%.reporter));
+
+// /*runnerLog("Date d'aujourd'hui: "+split(currentDate(), " ")[0]);
+// date d = currentDate()+"3d";
+// runnerLog(d);
+// runnerLog(currentDate()>=d);*/
+
+// string content = "";
+
+//  content+= ",{ "+
+//               " \"rowId\":\"decisions\","+
+//                 "\"columns\":{"+
+//                     "\"scoreTechnique\":0,"+
+//                     "\"scoreFinancier\":0,"+
+//                     "\"score\":0"+
+//                 "}"+
+//             "}"; 
+// string data = substring(content, 1, content.length(content));
+// string updateRequest = "{"+
+//             "\"rows\":["+data+"]"+
+//             "}";
+// runnerLog(updateRequest);
+//currentUsername() == getResponsibleAgent(%key%.agentTraitant)
+// string ticket = "GDAG-393";
+// runnerLog(" Createur ::: " +getUser(ticket.reporter)[1]  );
+
+// string ticket = "GDAG-402";
+// string columnsValues = "";
+	
+// 	string[] fieldsJira = {"adresse","capital","paysVille","emailFournisseur"};
+	
+// 	for(string field in fieldsJira){
+// 	   // columnsValues += ", '"+%ticket%.field+"'";
+// 	   runnerLog(%ticket%.field);
+// 	}
+	//runnerLog(columnsValues);
+
+
+
+
+//runnerLog(getUser(currentUser()));
