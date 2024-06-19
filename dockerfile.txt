@@ -1,0 +1,54 @@
+FROM atlassian/jira-software:9.5 
+
+WORKDIR /var/atlassian/application-data/jira
+
+# Installer Git, Git LFS et OpenSSH
+RUN apt-get update && \
+    apt-get install -y git openssh-client && \
+    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    apt-get install -y git-lfs && \
+    git lfs install && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh 
+COPY ./.ssh/id_rsa /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+RUN ssh-keyscan -t rsa -H github.com >> /root/.ssh/known_hosts
+# Cloner le dépôt avec Git LFS et déplacer les plugins
+# RUN git clone git@github.com:mariametalents/dmp.git ./tmp/plugins && \
+#     cd ./tmp/plugins && \
+#     git lfs pull && \
+#     mv ./tmp/plugins/*.jar ./plugins/
+
+
+RUN mkdir -p ./tmp/plugins \
+    && mkdir -p /var/atlassian/application-data/jira/plugins/installed-plugins \
+    && \ git clone git@github.com:mariametalents/dmp.git /tmp/plugins && \
+    cd ./tmp/plugins && \
+    git lfs pull && \
+    mv ./tmp/plugins/plugins/installed-plugins/*.jar ./plugins/installed-plugins/
+RUN rm -r /root/.ssh
+
+
+# Copier les fichiers de configuration si nécessaire
+RUN mkdir -p /var/atlassian/application-data/jira/silprograms \  
+    && mkdir -p /var/atlassian/application-data/jira/kepler
+COPY  ./export/backup.zip ./export/
+COPY  ./silprograms/ ./silprograms/
+COPY  ./kepler/ ./kepler/
+COPY  ./plugin.txt ./
+
+# Octroyer les droit a l'instance jira
+RUN chown -R jira:jira /var/atlassian/application-data/jira
+RUN chmod -R 755 /var/atlassian/application-data/jira
+
+# Définir le volume pour les données Jira
+#VOLUME ["/var/atlassian/application-data/jira"]
+
+# Exposer le port Jira
+# EXPOSE 8080
+
+# Commande par défaut pour démarrer Jira
+# CMD ["start-jira.sh", "-fg"]
+
+
