@@ -1,28 +1,54 @@
-version: '3'
+version: '3.9'
 
 services:
   jira:
-    image: atlassian/jira-software:latest
-    ports:
-      - "8080:8080"
+    depends_on:
+      - postgres
+    image: atlassian/jira-software:9.5 
+    container_name: jira
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - jiranet
+   
     volumes:
-      - jira-home:/var/atlassian/application-data/jira
-      - ./config/server.xml:/opt/atlassian/jira/conf/server.xml
-      - ./config/dbconfig.xml:/var/atlassian/application-data/jira/dbconfig.xml
+      - /var/atlassian/application-data/jira
+      #- ./Achat_backup/app:/opt/atlassian/jira
     environment:
-      - ATL_JDBC_URL=jdbc:postgresql://db:5432/jiradb
-      - ATL_JDBC_USER=jirauser
-      - ATL_JDBC_PASSWORD=secretpassword
+      ATL_JDBC_URL: "jdbc:postgresql://postgres:5432/jiradb"
+      ATL_JDBC_USER: jirauser
+      ATL_JDBC_PASSWORD: jirapassword
+      ATL_DB_DRIVER: org.postgresql.Driver
+      ATL_DB_TYPE: postgres72
+      JVM_SUPPORT_RECOMMENDED_ARGS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
 
-  db:
-    image: postgres:latest
+      #JVM_MINIMUM_MEMORY: 1g
+      #JVM_MAXIMUM_MEMORY: 2g
+    ports:
+      - 8080:8080
+      - 8000:8000
+
+  postgres:
+    image: postgres:14
+    container_name: postgres_V2
+    networks:
+      - jiranet
+    ports:
+      - 5433:5432
     environment:
-      POSTGRES_DB: jiradb
       POSTGRES_USER: jirauser
-      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_PASSWORD: jirapassword
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      # - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    
+  
+networks:
+  jiranet:
+    driver: bridge
 
 volumes:
-  jira-home:
-  db-data:
+  #jira-home:
+  postgres_data:
+    external: false

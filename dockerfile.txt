@@ -1,54 +1,46 @@
-FROM atlassian/jira-software:9.5 
+FROM atlassian/jira-software:9.5
 
 WORKDIR /var/atlassian/application-data/jira
 
-# Installer Git, Git LFS et OpenSSH
-RUN apt-get update && \
-    apt-get install -y git openssh-client && \
-    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-    apt-get install -y git-lfs && \
-    git lfs install && \
-    rm -rf /var/lib/apt/lists/*
+# Installer Git et OpenSSH
+# RUN apt-get update && \
+#     apt-get install -y git openssh-client && \
+#     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh 
-COPY ./.ssh/id_rsa /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
-RUN ssh-keyscan -t rsa -H github.com >> /root/.ssh/known_hosts
-# Cloner le dépôt avec Git LFS et déplacer les plugins
-# RUN git clone git@github.com:mariametalents/dmp.git ./tmp/plugins && \
-#     cd ./tmp/plugins && \
-#     git lfs pull && \
-#     mv ./tmp/plugins/*.jar ./plugins/
+# Préparer le répertoire SSH et copier la clé privée
+# RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
+# COPY ./.ssh/id_rsa /root/.ssh/id_rsa
+# RUN chmod 400 /root/.ssh/id_rsa
+# RUN ssh-keyscan -t rsa -H github.com >> /root/.ssh/known_hosts
 
-
-RUN mkdir -p ./tmp/plugins \
-    && mkdir -p /var/atlassian/application-data/jira/plugins/installed-plugins \
-    && \ git clone git@github.com:mariametalents/dmp.git /tmp/plugins && \
-    cd ./tmp/plugins && \
-    git lfs pull && \
-    mv ./tmp/plugins/plugins/installed-plugins/*.jar ./plugins/installed-plugins/
-RUN rm -r /root/.ssh
-
+# # Cloner le dépôt avec Git LFS et déplacer les plugins
+# RUN rm -rf /var/atlassian/application-data/jira/tmp/plugins \
+#     && mkdir -p /var/atlassian/application-data/jira/tmp/plugins \
+#     && mkdir -p /var/atlassian/application-data/jira/plugins/installed-plugins \
+#     && git lfs clone git@github.com:mariametalents/dmp.git /var/atlassian/application-data/jira/tmp/plugins \
+#     && cd /var/atlassian/application-data/jira/tmp/plugins \
+#     && git lfs pull 
+#    # && mv /var/atlassian/application-data/jira/tmp/plugins/plugins/installed-plugins/*.jar /var/atlassian/application-data/jira/plugins/installed-plugin
+# # RUN mkdir -p /var/atlassian/application-data/jira/tmp/plugins \
+# #     && mkdir -p /var/atlassian/application-data/jira/plugins/installed-plugins \
+# #     && git clone git@github.com:mariametalents/dmp.git /var/atlassian/application-data/jira/tmp/plugins \
+# #     && cd /var/atlassian/application-data/jira/tmp/plugins/ \
+# #     && git lfs pull 
+#    # && mv /var/atlassian/application-data/jira/tmp/plugins/plugins/installed-plugins/*.jar /var/atlassian/application-data/jira/plugins/installed-plugins/
+# RUN rm -rf /root/.ssh
 
 # Copier les fichiers de configuration si nécessaire
-RUN mkdir -p /var/atlassian/application-data/jira/silprograms \  
-    && mkdir -p /var/atlassian/application-data/jira/kepler
-COPY  ./export/backup.zip ./export/
-COPY  ./silprograms/ ./silprograms/
-COPY  ./kepler/ ./kepler/
-COPY  ./plugin.txt ./
+# RUN mkdir -p /var/atlassian/application-data/jira/silprograms \
+#     && mkdir -p /var/atlassian/application-data/jira/kepler
+# COPY ./export/backup.zip /var/atlassian/application-data/jira/export/
+# COPY ./silprograms/ /var/atlassian/application-data/jira/silprograms/
+# COPY ./kepler/ /var/atlassian/application-data/jira/kepler/
+# COPY ./plugin.txt /var/atlassian/application-data/jira/
 
-# Octroyer les droit a l'instance jira
-RUN chown -R jira:jira /var/atlassian/application-data/jira
-RUN chmod -R 755 /var/atlassian/application-data/jira
-
-# Définir le volume pour les données Jira
-#VOLUME ["/var/atlassian/application-data/jira"]
-
-# Exposer le port Jira
-# EXPOSE 8080
-
+# # Octroyer les droits à l'instance Jira
+#  RUN chown -R jira:jira /var/atlassian/application-data/jira \
+#  && chmod -R 755 /var/atlassian/application-data/jira
+#  RUN chown -R jira:jira /opt/atlassian/jira \
+#  && chmod -R 755 /opt/atlassian/jira
 # Commande par défaut pour démarrer Jira
-# CMD ["start-jira.sh", "-fg"]
-
-
+#CMD ["start-jira.sh", "-fg"]
