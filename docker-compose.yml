@@ -14,7 +14,7 @@ services:
    
     volumes:
       - /var/atlassian/application-data/jira
-      #- ./Achat_backup/app:/opt/atlassian/jira
+      - shared_volume:/shared
     environment:
       ATL_JDBC_URL: "jdbc:postgresql://postgres:5432/jiradb"
       ATL_JDBC_USER: jirauser
@@ -41,7 +41,8 @@ services:
       POSTGRES_PASSWORD: jirapassword
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      # - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - shared_volume:/shared
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
     
   
 networks:
@@ -51,4 +52,6 @@ networks:
 volumes:
   #jira-home:
   postgres_data:
+    external: false
+  shared_volume:
     external: false

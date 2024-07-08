@@ -6,10 +6,7 @@ if(argv["typePaiement"]=="CARTE"){
     //showFields(fieldsCarte);
     //hideFields(fieldsCheque);/* package : lf*/
      showCarteFields();
-<<<<<<< HEAD
      
-=======
->>>>>>> 1b682d6ff4cf7e002ab022aeb99bb08e9dc430fb
 }else if(argv["typePaiement"]=="CHEQUES"){
     showChequeFields();
      //showFields(fieldsCheque);

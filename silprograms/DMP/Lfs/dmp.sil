@@ -3,14 +3,9 @@ include "DMP/db.sil";
 include "DMP/Domain/client.sil";
 
 if(argv["screen"] == "create"){
-<<<<<<< HEAD
       lfSet("summary","Bienvenue cher client");
     lfHide("summary");
   
-=======
-    lfHide("summary");
-    lfSet("summaty","Bienvenue cher client");
->>>>>>> 1b682d6ff4cf7e002ab022aeb99bb08e9dc430fb
     
     lfWatch("numeroClient", {"numeroClient"}, "DMP/Lfs/numeroClient.sil",{"change"});
  
