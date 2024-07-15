@@ -1,49 +1,56 @@
-# Dockerfile.postgres
 
-FROM postgres:14
+FROM atlassian/jira-software:9.5
 
+WORKDIR /var/atlassian/application-data/jira
 
-# Installer Git et OpenSSH
+# # Installer Git et OpenSSH
 RUN apt-get update && \
     apt-get install -y git openssh-client && \
+   # apt-get install -y postgresql-client && \
+    apt-get install sshpass && \
     rm -rf /var/lib/apt/lists/*
 
 
 # #Préparer le répertoire SSH et copier la clé privée
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
-COPY ./.ssh/id_rsa /root/.ssh/id_rsa
+COPY ./id_rsa /root/.ssh/id_rsa
 RUN chmod 400 /root/.ssh/id_rsa
 RUN ssh-keyscan -t rsa -H github.com >> /root/.ssh/known_hosts
 
 
-# Cloner le dépôt avec Git 
-RUN rm -rf /tmp \
-    && mkdir -p /tmp \
-    && git clone git@github.com:mariametalents/dmp_v2.git /tmp \
-    && cd /tmp
+# Cloner le dépôt avec Git
+RUN rm -rf /var/atlassian/application-data/jira/tmp \
+    && mkdir -p /var/atlassian/application-data/jira/import \
+    && mkdir -p /var/atlassian/application-data/jira/silprograms \
+    && mkdir -p /var/atlassian/application-data/jira/kepler \
+    && mkdir -p /var/atlassian/application-data/jira/plugins \
+    && mkdir -p /var/atlassian/application-data/jira/plugins/installed-plugins \
+    && mkdir -p /var/atlassian/application-data/jira/tmp \
+    && git clone git@github.com:mariametalents/dmp_v2.git /var/atlassian/application-data/jira/tmp
 
-# Define environment variables for remote access
-ENV POSTGRES_USER=jirauser
-ENV POSTGRES_DB=dmp
+#RUN cd /var/atlassian/application-data/jira/tmp
+RUN cp -r /var/atlassian/application-data/jira/tmp/export /var/atlassian/application-data/jira/import
+RUN cp -r /var/atlassian/application-data/jira/tmp/silprograms/ /var/atlassian/application-data/jira/silprograms/
+RUN cp -r /var/atlassian/application-data/jira/tmp/kepler/ /var/atlassian/application-data/jira/kepler/
+RUN cp -r /var/atlassian/application-data/jira/tmp/backup_db/achats-talent/ /shared/
+RUN cp -r /var/atlassian/application-data/jira/tmp/init-db.sh  /shared/
 
-#RUN psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f backup_db/achats-talent/backup_dmp.sql
+ENV REMOTE_USER=jira
+ENV REMOTE_HOST=192.168.1.39
+ENV REMOTE_DIR=/home/jira/plugins/achat-talents/plugins
+ENV LOCAL_DIR=/var/atlassian/application-data/jira/plugins/installed-plugins
+ENV REMOTE_PASSWORD=jira
 
+RUN sshpass -p "$REMOTE_PASSWORD" scp -v -o StrictHostKeyChecking=no "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/*.jar" "$LOCAL_DIR/"
 
-# Copier le script d'initialisation et le fichier de sauvegarde SQL
-COPY ./init-db.sh /docker-entrypoint-initdb.d/
-COPY ./backup_db/achats-talent/backup_dmp.sql /docker-entrypoint-initdb.d/
-
-# Commande pour restaurer la sauvegarde SQL
-RUN psql -U "$POSTGRES_USER" -d dmp -f /docker-entrypoint-initdb.d/backup_dmp.sql
+#RUN psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /shared/backup_dmp.sql
 RUN rm -rf /root/.ssh
-# Commande par défaut pour démarrer PostgreSQL
-CMD ["postgres"]
+
+
 # # Octroyer les droits à l'instance Jira
-#  RUN chown -R jira:jira /opt/atlassian/jira \
-#  && chmod -R 755 /opt/atlassian/jira
-#  RUN chown -R jira:jira /var/atlassian/application-data/jira \
-#  && chmod -R 755 /var/atlassian/application-data/jira 
-# Commande par défaut pour démarrer Jira
-#CMD ["start-jira.sh", "-fg"]
+ RUN chown -R jira:jira /opt/atlassian/jira \
+ && chmod -R 755 /opt/atlassian/jira
+ RUN chown -R jira:jira /var/atlassian/application-data/jira \
+ && chmod -R 755 /var/atlassian/application-data/jira
 
-
+ RUN rm -rf /var/atlassian/application-data/jira/plugins/.osgi-plugins/
